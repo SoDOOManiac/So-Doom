@@ -151,14 +151,21 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### Crispy Doom 5.6.3 
 
-Crispy Doom 5.6.3 has been released on September XX, 2019. This release addresses the community feedback received after 5.6.2 release.
+Crispy Doom 5.6.3 has been released on September 25, 2019. This release addresses the community feedback received after 5.6.2 release.
+
+**Features**
+
+ * Versions 1.2 and 1.21 of Episode 5: Sigil are supported.  
 
 **Improvements**
- 
+
+ * Par times for Episode 4: Thy Flesh Consumed and Episode 5: Sigil can now be provided in BEX format.
+ * `BLOCKMAP` (re-)creation is now indicated on the command line.
  * A workaround has been implemented for missing textures in SWITCHES lumps: if one texture is missing, the whole pair is disabled. Thanks to Aurelius for reporting this issue with the OTEX 1.0 texture pack in the Doomworld forum.
 
 **Bug Fixes**
  
+ * Configuration not saved on exiting game while recording a demo has been fixed, reported by Zodomaniac. Now configuraton is always saved on exit.
  * Player weapon sound source is now set properly when loading a savegame, thanks to maxmanium from the Doomworld forum for bringing attention to this. 
 
 **Known Issues**
