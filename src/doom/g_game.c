@@ -783,6 +783,12 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 
         carry = desired_angleturn - cmd->angleturn;
     }
+
+    if (crispy->fliplevels)
+    {
+	cmd->angleturn = -cmd->angleturn;
+	cmd->sidemove = -cmd->sidemove;
+    }
 } 
  
 
