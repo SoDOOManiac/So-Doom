@@ -451,7 +451,9 @@ void R_DrawMaskedColumn (column_t* column)
 
 	    // Drawn by either R_DrawColumn
 	    //  or (SHADOW) R_DrawFuzzColumn.
+	    dc_x = flipwidth[dc_x];
 	    colfunc ();	
+	    dc_x = flipwidth[dc_x];
 	}
 	column = (column_t *)(  (byte *)column + column->length + 4);
     }
@@ -723,7 +725,7 @@ void R_ProjectSprite (mobj_t* thing)
     vis->x2 = x2 >= viewwidth ? viewwidth-1 : x2;	
     iscale = FixedDiv (FRACUNIT, xscale);
 
-    if (flip)
+    if (flip ^ crispy->fliplevels)
     {
 	vis->startfrac = spritewidth[lump]-1;
 	vis->xiscale = -iscale;

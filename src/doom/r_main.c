@@ -772,6 +772,8 @@ boolean		setsizeneeded;
 int		setblocks;
 int		setdetail;
 
+// [crispy] lookup table for horizontal screen coordinates
+int		*flipwidth = NULL;
 
 void
 R_SetViewSize
@@ -887,6 +889,13 @@ void R_ExecuteSetViewSize (void)
 
 	    scalelight[i][j] = colormaps + level*256;
 	}
+    }
+
+    // [crispy] lookup table for horizontal screen coordinates
+    flipwidth = I_Realloc(flipwidth, viewwidth * sizeof(*flipwidth));
+    for (i = 0, j = viewwidth - 1; i < viewwidth; i++, j--)
+    {
+	flipwidth[i] = crispy->fliplevels ? j : i;
     }
 }
 

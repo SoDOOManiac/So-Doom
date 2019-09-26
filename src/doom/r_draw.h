@@ -109,15 +109,6 @@ void R_FillBackScreen (void);
 // If the view size is not full screen, draws a border around it.
 void R_DrawViewBorder (void);
 
-static inline void flipcolfunc (void)
-{
-	if (crispy->fliplevels)
-	{
-		dc_x = viewwidth - dc_x - 1;
-	}
-
-	return colfunc();
-};
 
 
 #endif

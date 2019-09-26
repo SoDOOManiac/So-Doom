@@ -410,7 +410,9 @@ void R_RenderSegLoop (void)
 	    dc_source = R_GetColumn(midtexture,texturecolumn,true);
 	    dc_texheight = textureheight[midtexture]>>FRACBITS; // [crispy] Tutti-Frutti fix
 	    dc_brightmap = texturebrightmap[midtexture];
-	    flipcolfunc ();
+	    dc_x = flipwidth[dc_x];
+	    colfunc ();
+	    dc_x = flipwidth[dc_x];
 	    ceilingclip[rw_x] = viewheight;
 	    floorclip[rw_x] = -1;
 	}
@@ -434,7 +436,9 @@ void R_RenderSegLoop (void)
 		    dc_source = R_GetColumn(toptexture,texturecolumn,true);
 		    dc_texheight = textureheight[toptexture]>>FRACBITS; // [crispy] Tutti-Frutti fix
 		    dc_brightmap = texturebrightmap[toptexture];
-		    flipcolfunc ();
+		    dc_x = flipwidth[dc_x];
+		    colfunc ();
+		    dc_x = flipwidth[dc_x];
 		    ceilingclip[rw_x] = mid;
 		}
 		else
@@ -466,7 +470,9 @@ void R_RenderSegLoop (void)
 					    texturecolumn,true);
 		    dc_texheight = textureheight[bottomtexture]>>FRACBITS; // [crispy] Tutti-Frutti fix
 		    dc_brightmap = texturebrightmap[bottomtexture];
-		    flipcolfunc ();
+		    dc_x = flipwidth[dc_x];
+		    colfunc ();
+		    dc_x = flipwidth[dc_x];
 		    floorclip[rw_x] = mid;
 		}
 		else
