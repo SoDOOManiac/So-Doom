@@ -451,7 +451,9 @@ void R_DrawMaskedColumn (column_t* column)
 
 	    // Drawn by either R_DrawColumn
 	    //  or (SHADOW) R_DrawFuzzColumn.
+	    dc_x = flipwidth[dc_x];
 	    colfunc ();	
+	    dc_x = flipwidth[dc_x];
 	}
 	column = (column_t *)(  (byte *)column + column->length + 4);
     }

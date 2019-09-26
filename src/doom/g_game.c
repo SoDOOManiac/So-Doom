@@ -764,6 +764,12 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	cmd->buttons = BT_SPECIAL | BTS_SAVEGAME | (savegameslot<<BTS_SAVESHIFT); 
     } 
 
+    if (crispy->fliplevels)
+    {
+	cmd->angleturn = -cmd->angleturn;
+	cmd->sidemove = -cmd->sidemove;
+    }
+
     // low-res turning
 
     if (lowres_turn)
@@ -782,12 +788,6 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         // next tic, so that successive small movements can accumulate.
 
         carry = desired_angleturn - cmd->angleturn;
-    }
-
-    if (crispy->fliplevels)
-    {
-	cmd->angleturn = -cmd->angleturn;
-	cmd->sidemove = -cmd->sidemove;
     }
 } 
  
