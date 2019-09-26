@@ -180,8 +180,8 @@ R_MapPlane
     ds_y = y;
     if (crispy->fliplevels)
     {
-	ds_x1 = SCREENWIDTH - x2 - 1;
-	ds_x2 = SCREENWIDTH - x1 - 1;
+	ds_x1 = viewwidth - x2 - 1;
+	ds_x2 = viewwidth - x1 - 1;
     }
     else
     {

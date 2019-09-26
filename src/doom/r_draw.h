@@ -113,7 +113,7 @@ static inline void flipcolfunc (void)
 {
 	if (crispy->fliplevels)
 	{
-		dc_x = SCREENWIDTH - dc_x - 1;
+		dc_x = viewwidth - dc_x - 1;
 	}
 
 	return colfunc();
