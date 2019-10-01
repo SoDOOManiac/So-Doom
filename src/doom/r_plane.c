@@ -178,16 +178,8 @@ R_MapPlane
     }
 	
     ds_y = y;
-    if (crispy->fliplevels)
-    {
-	ds_x1 = flipwidth[x2];
-	ds_x2 = flipwidth[x1];
-    }
-    else
-    {
     ds_x1 = x1;
     ds_x2 = x2;
-    }
 
     // high or low detail
     spanfunc ();	
