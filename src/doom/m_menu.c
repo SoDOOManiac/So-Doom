@@ -362,7 +362,7 @@ enum
 menuitem_t NewGameMenu[]=
 {
     {1,"M_JKILL",	M_ChooseSkill, 'i'},
-    {1,"M_ROUGH",	M_ChooseSkill, 'h'},
+    {1,"M_ROUGH",	M_ChooseSkill, 'r'},
     {1,"M_HURT",	M_ChooseSkill, 'h'},
     {1,"M_ULTRA",	M_ChooseSkill, 'u'},
     {1,"M_NMARE",	M_ChooseSkill, 'n'}
@@ -621,6 +621,10 @@ enum
     crispness_recoil,
     crispness_sep_physical_,
 
+	crispness_sep_interover,
+	crispness_evadinginterover,
+	crispness_sep_interover_,
+
     crispness_sep_demos,
     crispness_demotimer,
     crispness_demotimerdir,
@@ -638,9 +642,12 @@ static menuitem_t Crispness4Menu[]=
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleFreeaim,'v'},
     {1,"",	M_CrispyToggleJumping,'a'},
-    {1,"",	M_CrispyToggleOverunder,'w'},
+    {1,"",	M_CrispyToggleOverunder,'o'},
     {1,"",	M_CrispyToggleRecoil,'w'},
     {-1,"",0,'\0'},
+    {-1,"",0,'\0'},
+	{1,"",	M_CrispyToggleEvadingInterOver,'i'},
+	{-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleDemoTimer,'v'},
     {1,"",	M_CrispyToggleDemoTimerDir,'a'},
@@ -1559,6 +1566,9 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
+
+	M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
+	M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
 
     M_DrawCrispnessSeparator(crispness_sep_demos, "Demos");
 

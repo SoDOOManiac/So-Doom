@@ -629,8 +629,15 @@ PIT_AddLineIntercepts (line_t* ld)
 	else
 	    // [crispy] print a warning
 	    //fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
-		fprintf(stderr, "PIT_AddLineIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
-	    return false;
+		
+		// [So Doom] Avoid INTERCEPTS overflow emulation if evasion is enabled
+		if (crispy->evadinginterover)
+		{
+			fprintf(stderr, "PIT_AddLineIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
+			return false;
+		}
+		else
+		fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
     }
     intercept_p++;
 
@@ -707,8 +714,15 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
 	else
 	    // [crispy] print a warning
 	    //fprintf(stderr, "PIT_AddThingIntercepts: Triggered INTERCEPTS overflow!\n");
-		fprintf(stderr, "PIT_AddThingIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
-	    return false;
+		
+		// [So Doom] Avoid INTERCEPTS overflow emulation if evasion is enabled
+		if (crispy->evadinginterover)
+		{
+			fprintf(stderr, "PIT_AddLineIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
+			return false;
+		}
+		else
+		fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
     }
     intercept_p++;
 

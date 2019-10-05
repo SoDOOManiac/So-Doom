@@ -279,6 +279,12 @@ void M_CrispyToggleDemoTimerDir(int choice)
     crispy->demotimerdir = !crispy->demotimerdir;
 }
 
+void M_CrispyToggleEvadingInterOver(int choice)
+{
+    choice = 0;
+    crispy->evadinginterover = !crispy->evadinginterover;
+}
+
 void M_CrispyToggleExtAutomap(int choice)
 {
     choice = 0;

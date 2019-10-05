@@ -50,6 +50,7 @@ typedef struct
 	int demotimer;
 	int demotimerdir;
 	int demobar;
+	int evadinginterover;
 	int extautomap;
 	int extsaveg;
 	int flipcorpses;
