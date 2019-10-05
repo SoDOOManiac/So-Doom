@@ -489,9 +489,9 @@ static menuitem_t Crispness1Menu[]=
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleColoredhud,'c'},
     {1,"",	M_CrispyToggleTranslucency,'e'},
-    {1,"",	M_CrispyToggleSmoothLighting,'s'},
+    {1,"",	M_CrispyToggleSmoothLighting,'l'},
     {1,"",	M_CrispyToggleBrightmaps,'b'},
-    {1,"",	M_CrispyToggleColoredblood,'c'},
+    {1,"",	M_CrispyToggleColoredblood,'d'},
     {1,"",	M_CrispyToggleFlipcorpses,'r'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
@@ -533,9 +533,9 @@ enum
 static menuitem_t Crispness2Menu[]=
 {
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleFullsounds,'p'},
-    {1,"",	M_CrispyToggleSoundfixes,'m'},
-    {1,"",	M_CrispyToggleSndChannels,'s'},
+    {1,"",	M_CrispyToggleFullsounds,'f'},
+    {1,"",	M_CrispyToggleSoundfixes,'x'},
+    {1,"",	M_CrispyToggleSndChannels,'c'},
     {1,"",	M_CrispyToggleSoundMono,'m'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
@@ -586,17 +586,17 @@ static menuitem_t Crispness3Menu[]=
 {
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleFreelook,'a'},
-    {1,"",	M_CrispyToggleMouseLook,'p'},
-    {1,"",	M_CrispyToggleNeghealth,'n'},
+    {1,"",	M_CrispyToggleMouseLook,'m'},
+    {1,"",	M_CrispyToggleNeghealth,'g'},
     {1,"",	M_CrispyToggleCenterweapon,'c'},
-    {1,"",	M_CrispyTogglePitch,'w'},
+    {1,"",	M_CrispyTogglePitch,'i'},
     {1,"",	M_CrispyToggleWeaponSquat,'w'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleCrosshair,'d'},
-    {1,"",	M_CrispyToggleCrosshairtype,'c'},
-    {1,"",	M_CrispyToggleCrosshairHealth,'c'},
-    {1,"",	M_CrispyToggleCrosshairTarget,'h'},
+    {1,"",	M_CrispyToggleCrosshairtype,'s'},
+    {1,"",	M_CrispyToggleCrosshairHealth,'h'},
+    {1,"",	M_CrispyToggleCrosshairTarget,'t'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -621,9 +621,9 @@ enum
     crispness_recoil,
     crispness_sep_physical_,
 
-	crispness_sep_interover,
-	crispness_evadinginterover,
-	crispness_sep_interover_,
+    crispness_sep_interover,
+    crispness_evadinginterover,
+    crispness_sep_interover_,
 
     crispness_sep_demos,
     crispness_demotimer,
@@ -643,14 +643,14 @@ static menuitem_t Crispness4Menu[]=
     {1,"",	M_CrispyToggleFreeaim,'v'},
     {1,"",	M_CrispyToggleJumping,'a'},
     {1,"",	M_CrispyToggleOverunder,'o'},
-    {1,"",	M_CrispyToggleRecoil,'w'},
+    {1,"",	M_CrispyToggleRecoil,'r'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-	{1,"",	M_CrispyToggleEvadingInterOver,'i'},
-	{-1,"",0,'\0'},
+    {1,"",	M_CrispyToggleEvadingInterOver,'i'},
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleDemoTimer,'v'},
-    {1,"",	M_CrispyToggleDemoTimerDir,'a'},
+    {-1,"",0,'\0'},
+    {1,"",	M_CrispyToggleDemoTimer,'t'},
+    {1,"",	M_CrispyToggleDemoTimerDir,'d'},
     {1,"",	M_CrispyToggleDemoBar,'w'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
@@ -1567,8 +1567,8 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
 
-	M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
-	M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
+    M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
+    M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
 
     M_DrawCrispnessSeparator(crispness_sep_demos, "Demos");
 
