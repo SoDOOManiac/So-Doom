@@ -268,13 +268,6 @@ boolean D_Display (void)
 	R_FillBackScreen ();    // draw the pattern into the back screen
     }
 
-    // [crispy] in automap overlay mode,
-    // draw the automap beneath the bezel
-    if (automapactive && crispy->automapoverlay)
-    {
-	AM_Drawer ();
-    }
-
     // see if the border needs to be updated to the screen
     if (gamestate == GS_LEVEL && (!automapactive || crispy->automapoverlay) && scaledviewwidth != SCREENWIDTH)
     {
@@ -301,9 +294,10 @@ boolean D_Display (void)
     oldgamestate = wipegamestate = gamestate;
     
     // [crispy] in automap overlay mode,
-    // draw the HUD on top of everything else
+    // draw the automap and HUD on top of everything else
     if (automapactive && crispy->automapoverlay)
     {
+	AM_Drawer ();
 	HU_Drawer ();
 
 	// [crispy] force redraw of status bar and border
@@ -2281,13 +2275,14 @@ void D_DoomMain (void)
     if (p > 0)
     {
         crispy->fliplevels = !crispy->fliplevels;
+        crispy->flipweapons = !crispy->flipweapons;
     }
 
     p = M_CheckParm("-flipweapons");
 
     if (p > 0)
     {
-        crispy->flipweapons = true;
+        crispy->flipweapons = !crispy->flipweapons;
     }
 
     // Check for load game parameter
