@@ -405,7 +405,7 @@ menuitem_t OptionsMenu[]=
     {-1,"",0,'\0'},
     {1,"M_MSENS",	M_Mouse,'m', "Mouse Sensitivity"}, // [crispy] mouse sensitivity menu
     {1,"M_SVOL",	M_Sound,'s', "Sound Volume"},
-    {1,"M_CRISPY",	M_CrispnessCur,'c', "Crispness"} // [crispy] Crispness menu
+    {1,"M_CRISPY",	M_CrispnessCur,'c', "SoDOOMy"} // [So Doom] renamed Crispness menu
 };
 
 menu_t  OptionsDef =
@@ -1446,9 +1446,9 @@ static void M_DrawCrispnessBackground(void)
 		for (x = 0; x < SCREENWIDTH; x++)
 		{
 #ifndef CRISPY_TRUECOLOR
-			*dest++ = src[(y & 63) * 64 + (x & 63)];
+			*dest++ = src[x*(2-crispy->hires)+y*(2-crispy->hires)*(2-crispy->hires)*SCREENWIDTH];
 #else
-			*dest++ = colormaps[src[(y & 63) * 64 + (x & 63)]];
+			*dest++ = colormaps[src[x*(2-crispy->hires)+y*(2-crispy->hires)*(2-crispy->hires)*SCREENWIDTH]];
 #endif
 		}
 	}
@@ -1501,7 +1501,7 @@ static void M_DrawCrispness1(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("Crispness 1/4");
+    M_DrawCrispnessHeader("SoDOOMy 1/4");
 
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering");
     M_DrawCrispnessItem(crispness_hires, "High Resolution Rendering", crispy->hires, true);
@@ -1528,7 +1528,7 @@ static void M_DrawCrispness2(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("Crispness 2/4");
+    M_DrawCrispnessHeader("SoDOOMy 2/4");
 
     M_DrawCrispnessSeparator(crispness_sep_audible, "Audible");
     M_DrawCrispnessItem(crispness_soundfull, "Play sounds in full length", crispy->soundfull, true);
@@ -1553,7 +1553,7 @@ static void M_DrawCrispness3(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("Crispness 3/4");
+    M_DrawCrispnessHeader("SoDOOMy 3/4");
 
     M_DrawCrispnessSeparator(crispness_sep_tactical, "Tactical");
 
@@ -1582,7 +1582,7 @@ static void M_DrawCrispness4(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("Crispness 4/4");
+    M_DrawCrispnessHeader("SoDOOMy 4/4");
 
     M_DrawCrispnessSeparator(crispness_sep_physical, "Physical");
 
