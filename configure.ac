@@ -1,14 +1,14 @@
-AC_INIT(Crispy Doom, 5.6.3,
-        fabian@greffrath.com, crispy-doom)
+AC_INIT(So Doom, 5.6.3,
+        zodomaniac@gmail.com, so-doom)
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"
-PACKAGE_COPYRIGHT="Copyright (C) 1993-2018"
+PACKAGE_COPYRIGHT="Copyright (C) 1993-2019"
 PACKAGE_LICENSE="GNU General Public License, version 2"
-PACKAGE_MAINTAINER="Fabian Greffrath"
-PACKAGE_URL="http://fabiangreffrath.github.io/crispy-doom"
-PACKAGE_RDNS="io.github.fabiangreffrath"
-PACKAGE_ISSUES="https://github.com/fabiangreffrath/crispy-doom/issues"
+PACKAGE_MAINTAINER="Zodomaniac"
+PACKAGE_URL="http://zodomaniac.github.io/so-doom"
+PACKAGE_RDNS="io.github.zodomaniac"
+PACKAGE_ISSUES="https://github.com/zodomaniac/so-doom/issues"
 
 AC_CONFIG_AUX_DIR(autotools)
 AC_CANONICAL_HOST

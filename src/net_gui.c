@@ -140,11 +140,11 @@ static void UpdateGUI(void)
     {
         txt_color_t color = TXT_COLOR_BRIGHT_WHITE;
 
-        if ((signed) i == net_client_wait_data.consoleplayer)
+/*        if ((signed) i == net_client_wait_data.consoleplayer)
         {
             color = TXT_COLOR_YELLOW;
         }
-
+*/
         TXT_SetFGColor(player_labels[i], color);
         TXT_SetFGColor(ip_labels[i], color);
 
@@ -402,11 +402,16 @@ void NET_WaitForLaunch(void)
 
     TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14, 0x40); // Romero's "funky blue" color
 
-    // [crispy] Crispy colors for Crispy Network GUI
-    TXT_SetColor(TXT_COLOR_BRIGHT_GREEN, 249, 227, 0);  // 0xF9, 0xE3, 0x00
+    // [crispy] Crispy colors for Crispy Setup
+/*    TXT_SetColor(TXT_COLOR_BRIGHT_GREEN, 249, 227, 0);  // 0xF9, 0xE3, 0x00
     TXT_SetColor(TXT_COLOR_CYAN, 220, 153, 0);          // 0xDC, 0x99, 0x00
-    TXT_SetColor(TXT_COLOR_BRIGHT_CYAN, 76, 160, 223);  // 0x4C, 0xA0, 0xDF
-    
+    TXT_SetColor(TXT_COLOR_BRIGHT_CYAN, 76, 160, 223);  // 0x4C, 0xA0, 0xDF */
+
+    // [So Doom] So Doomy colors for So Doom Setup
+    TXT_SetColor(TXT_COLOR_BRIGHT_GREEN, 255, 0, 0);  // 0xFF, 0x00, 0x00
+    TXT_SetColor(TXT_COLOR_CYAN, 160, 0, 40); // 0xA0, 0x00, 0x28
+    TXT_SetColor(TXT_COLOR_BRIGHT_CYAN, 76, 160, 223); // 0x4C, 0xA0, 0xDF
+
     I_InitWindowIcon();
 
     ParseCommandLineArgs();
