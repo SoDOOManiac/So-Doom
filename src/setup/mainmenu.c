@@ -226,7 +226,7 @@ void MainMenu(void)
                        (TxtWidgetSignalFunc) ConfigMouse, NULL),
         TXT_NewButton2("Configure Gamepad/Joystick",
                        (TxtWidgetSignalFunc) ConfigJoystick, NULL),
-        TXT_NewButton2(gamemission == doom ? "Crispness" : "Compatibility",
+        TXT_NewButton2(gamemission == doom ? "SoDOOMy" : "Compatibility",
                        (TxtWidgetSignalFunc) CompatibilitySettings, NULL),
         GetLaunchButton(),
         TXT_NewStrut(0, 1),

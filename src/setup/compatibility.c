@@ -32,10 +32,10 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 {
     txt_window_t *window;
 
-    // [crispy]
+    // [So Doom]
     if (gamemission == doom)
     {
-        TXT_MessageBox(NULL, "Please refer to the in-game Crispness menu.");
+        TXT_MessageBox(NULL, "Please refer to the in-game SoDOOMy menu.");
     }
     else
     {
