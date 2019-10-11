@@ -2540,35 +2540,34 @@ boolean M_Responder (event_t* ev)
 	crispy->cleanscreenshot = (screenblocks > 10) ? 2 : 1;
     }
 
-	// [So Doom] flip levels
+    // [So Doom] flip levels
 	if (key == key_menu_fliplevels)
     {
-		crispy->fliplevels = !crispy->fliplevels;
-		crispy->flipweapons = !crispy->flipweapons;
-        
+        crispy->fliplevels = !crispy->fliplevels;
+        crispy->flipweapons = !crispy->flipweapons;
+
 		R_ExecuteSetViewSize();
-		
-		M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS: %s%s",
+
+        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS: %s%s",
             crstr[CR_GREEN],
             (crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
-		
-		
+
 		S_UpdateStereoSeparation();
         S_StartSound(NULL,sfx_swtchn);
         return true;
     }
-	
-	// [So Doom] flip weapons
+
+    // [So Doom] flip weapons
 	if (key == key_menu_flipweapons)
     {
         crispy->flipweapons = !crispy->flipweapons;
-  
+
 		M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS: %s%s",
             crstr[CR_GREEN],
             (crispy->flipweapons^crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
-  
+
         S_StartSound(NULL,sfx_swtchn);
         return true;
     }
