@@ -1,4 +1,5 @@
 # So Doom
+[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/doom.png)](https://github.com/zodomaniac/so-doom)
 
 [![Top Language](https://img.shields.io/github/languages/top/fabiangreffrath/crispy-doom.svg?style=flat)](https://github.com/fabiangreffrath/crispy-doom)
 [![Code Size](https://img.shields.io/github/languages/code-size/fabiangreffrath/crispy-doom.svg?style=flat)](https://github.com/fabiangreffrath/crispy-doom)
@@ -16,7 +17,7 @@ Its name is a tribute to [Sodom, German thrash metal band](http://sodomized.info
 
 ## Synopsis
 
-So Doom is a friendly fork of [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom) that removes the [static limits](https://doomwiki.org/wiki/Static_limits) of the Doom engine, including a singleplayer-optional removal of INTERCEPTS limit.
+So Doom is a friendly fork of [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom) that removes the [static limits](https://doomwiki.org/wiki/Static_limits) of the Doom engine, including a singleplayer-only optional removal of INTERCEPTS limit.
 
 ## Objectives and features
 
