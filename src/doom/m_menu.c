@@ -69,6 +69,7 @@ extern boolean		message_dontfuckwithme;
 
 extern boolean		chat_on;		// in heads-up code
 
+extern void R_ExecuteSetViewSize();
 //
 // defaulted values
 //
@@ -2534,6 +2535,38 @@ boolean M_Responder (event_t* ev)
     if (key != 0 && key == key_menu_cleanscreenshot)
     {
 	crispy->cleanscreenshot = (screenblocks > 10) ? 2 : 1;
+    }
+
+	// [So Doom] flip levels
+	if (key == key_menu_fliplevels)
+    {
+		crispy->fliplevels = !crispy->fliplevels;
+		crispy->flipweapons = !crispy->flipweapons;
+        
+		R_ExecuteSetViewSize();
+		
+		if (crispy->fliplevels)
+	    players[consoleplayer].message = DEH_String(FLIPLON);
+        else
+	    players[consoleplayer].message = DEH_String(FLIPLOFF);
+		
+		S_UpdateStereoSeparation();
+        S_StartSound(NULL,sfx_swtchn);
+        return true;
+    }
+	
+	// [So Doom] flip weapons
+	if (key == key_menu_flipweapons)
+    {
+        crispy->flipweapons = !crispy->flipweapons;
+  
+        if (crispy->flipweapons^crispy->fliplevels)
+	    players[consoleplayer].message = DEH_String(FLIPWON);
+        else
+	    players[consoleplayer].message = DEH_String(FLIPWOFF);
+  
+        S_StartSound(NULL,sfx_swtchn);
+        return true;
     }
 
     if ((devparm && key == key_menu_help) ||

@@ -183,6 +183,8 @@ int key_menu_gamma     = KEY_F11;
 
 int key_menu_incscreen = KEY_EQUALS;
 int key_menu_decscreen = KEY_MINUS;
+int key_menu_fliplevels = 0; // [So Doom]
+int key_menu_flipweapons = 0; // [So Doom]
 int key_menu_screenshot = 0;
 int key_menu_cleanscreenshot = 0; // [crispy]
 int key_menu_del = KEY_DEL; // [crispy]
@@ -402,6 +404,8 @@ void M_BindMenuControls(void)
 
     M_BindIntVariable("key_menu_incscreen", &key_menu_incscreen);
     M_BindIntVariable("key_menu_decscreen", &key_menu_decscreen);
+	M_BindIntVariable("key_menu_fliplevels",&key_menu_fliplevels);
+	M_BindIntVariable("key_menu_flipweapons",&key_menu_flipweapons);
     M_BindIntVariable("key_menu_screenshot",&key_menu_screenshot);
     M_BindIntVariable("key_menu_cleanscreenshot",&key_menu_cleanscreenshot); // [crispy]
     M_BindIntVariable("key_menu_del",       &key_menu_del); // [crispy]

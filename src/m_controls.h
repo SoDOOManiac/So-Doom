@@ -129,6 +129,8 @@ extern int key_menu_gamma;
 
 extern int key_menu_incscreen;
 extern int key_menu_decscreen;
+extern int key_menu_fliplevels; // [So Doom]
+extern int key_menu_flipweapons; // [So Doom]
 extern int key_menu_screenshot;
 extern int key_menu_cleanscreenshot; // [crispy]
 extern int key_menu_del; // [crispy]

@@ -55,6 +55,10 @@
 "this is the shareware version of doom.\n\n"\
 "you need to order the entire trilogy.\n\n"PRESSKEY
 
+#define FLIPLON "Flipped levels ON"
+#define FLIPLOFF "Flipped levels OFF"
+#define FLIPWON "Flipped weapons ON"
+#define FLIPWOFF "Flipped weapons OFF"
 #define MSGOFF	"Messages OFF"
 #define MSGON		"Messages ON"
 #define NETEND	"you can't end a netgame!\n\n"PRESSKEY

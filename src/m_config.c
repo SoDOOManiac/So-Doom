@@ -1466,6 +1466,18 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_KEY(key_menu_decscreen),
 
     //!
+    // Keyboard shortcut to flip levels.
+    //
+
+    CONFIG_VARIABLE_KEY(key_menu_fliplevels),
+
+    //!
+    // Keyboard shortcut to flip weapons.
+    //
+	
+    CONFIG_VARIABLE_KEY(key_menu_flipweapons),
+
+    //!
     // Keyboard shortcut to save a screenshot.
     //
 
@@ -1937,6 +1949,22 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_flipcorpses),
+	
+    //!
+    // @game doom
+    //
+    // Enable Flipped Levels.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_fliplevels),
+	
+    //!
+    // @game doom
+    //
+    // Enable Flipped Weapons.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_flipweapons),
 
     //!
     // @game doom

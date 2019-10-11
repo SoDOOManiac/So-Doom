@@ -54,6 +54,8 @@ typedef struct
 	int extautomap;
 	int extsaveg;
 	int flipcorpses;
+	int fliplevels;
+	int flipweapons;
 	int freeaim;
 	int freelook;
 	int hires;
@@ -86,8 +88,8 @@ typedef struct
 	int fps;
 
 	boolean flashinghom;
-	boolean fliplevels;
-	boolean flipweapons;
+//	boolean fliplevels;
+//	boolean flipweapons;
 	boolean haved1e5;
 	boolean havee1m10;
 	boolean havemap33;

@@ -423,6 +423,8 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_extautomap",      &crispy->extautomap);
     M_BindIntVariable("crispy_extsaveg",        &crispy->extsaveg);
     M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);
+    M_BindIntVariable("crispy_fliplevels",      &crispy->fliplevels);
+    M_BindIntVariable("crispy_flipweapons",     &crispy->flipweapons);
     M_BindIntVariable("crispy_freeaim",         &crispy->freeaim);
     M_BindIntVariable("crispy_freelook",        &crispy->freelook);
     M_BindIntVariable("crispy_hires",           &crispy->hires);
@@ -2274,8 +2276,8 @@ void D_DoomMain (void)
 
     if (p > 0)
     {
-        crispy->fliplevels = !crispy->fliplevels;
-        crispy->flipweapons = !crispy->flipweapons;
+        crispy->fliplevels = true; //[So Doom] regardless of the fliplevels setting in config
+        crispy->flipweapons = true; //[So Doom] if you also want to flip weapons, toggle it with hotkey or specify -flipweapons 
     }
 
     p = M_CheckParm("-flipweapons");
