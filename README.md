@@ -35,6 +35,7 @@ So Doom inherits all the core features of its parent Crispy Doom:
  * Intermediate gamma correction levels (0.5, 1.5, 2.5 and 3.5).
  * Removal of all static engine limits, or at least raising of the less crucial ones.
  * Full support for the "Doom Classic" WADs shipped with the "Doom 3: BFG Edition", especially the "No Rest For The Living" episode shipped in the NERVE.WAD file.
+ * Support for all versions of John Romero's Episode 5: Sigil for Ultimate Doom.
 
 Furthermore, all the optional Crispy's user-visible and audible features are available:
 
@@ -116,15 +117,11 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
-https://github.com/fabiangreffrath/crispy-doom/releases/download/crispy-doom-5.6.3/crispy-doom-5.6.3-win32.zip
-
-Daily builds of Crispy Doom can be found here:
-http://latest.chocolate-doom.org/
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.3/so-doom-5.6.3-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
 ### Sources
-[![Open Hub](https://www.openhub.net/p/crispy-doom/widgets/project_thin_badge?style=flat&format=gif)](https://www.openhub.net/p/crispy-doom)
 
 So Doom source code is available at GitHub: https://github.com/zodomaniac/so-doom.
 It can be [downloaded in either ZIP or TAR.GZ format](https://github.com/zodomaniac/so-doom/releases) 
@@ -172,8 +169,7 @@ as well as flipped levels and weapons swappable on the run.
  * Some clipping optimizations taken from JNechaevsky's Russian Doom (and there from MBF respectively) have been implemented.
  * Savegame name is automatically overridden on saving if it already starts with a map identifier, proposed by zebzorb.
  * Status bar optimizations, including numbers to be only redrawn if necessary, on JNechaevsky's suggestion.
- * In automap overlay mode the automap is now drawn on top of everything as JNechaevsky suggested, not beneath the
-bezel for decreased screen sizes.
+ * In automap overlay mode the automap is now drawn on top of everything as JNechaevsky suggested, not beneath the bezel for decreased screen sizes.
 
 **Bug Fixes**
  * Loss of grid lines near the automap boundary has been fixed, spotted by JNechaevsky.
@@ -185,111 +181,6 @@ bezel for decreased screen sizes.
 
 So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Crispy Doom master branch up to commit [`af14e55d`](https://github.com/fabiangreffrath/crispy-doom/commit/af14e55dc45a846e28d7b0e99851f1548a9c6b1b).
 
-### Crispy Doom 5.6.3 
-
-Crispy Doom 5.6.3 has been released on October 04, 2019. This release addresses the community feedback received after 5.6.2 release and brings support for the updated Episode 5: Sigil v1.2/v1.21.
-
-**Features**
-
- * Automap overlay and rotate modes are now stored as config variables, suggested by JNechaevsky.
- * Versions 1.2 and 1.21 of Episode 5: Sigil are now supported.
-
-**Improvements**
-
- * Par times provided by Sigil 1.21 have been coded in, their introduction noticed by JNechaevsky.
- * Par times for Episode 4: Thy Flesh Consumed and Episode 5: Sigil can now be provided in BEX format.
- * A workaround has been implemented for missing textures in SWITCHES lumps: if one texture is missing, the whole pair is disabled. Thanks to Aurelius for reporting this issue with the OTEX 1.0 texture pack in the Doomworld forum.
-
-**Bug Fixes**
-
- * Sigil's DEHACKED patch is no longer loaded when auto-loading the WAD, as this would break any episode-finishing demo for Doom 1.
- * Status bar background appearing at low framerates with Crispy HUD and automap overlay on when holding <kbd>TAB</kbd> key has been fixed, spotted by JNechaevsky and confirmed by Zodomaniac.
- * Configuration not being saved when exiting the game while recording a demo has been fixed, reported by Zodomaniac. Now configuration is always saved on exit.
- * Player weapon sound source is now set properly when loading a savegame, thanks to maxmanium from the Doomworld forum for bringing attention to this.
-
-**Known Issues**
-
- * [No music and high-pitched sound effects](https://github.com/fabiangreffrath/crispy-doom/issues/454) occur with SDL2.dll v2.0.10 and SDL2_mixer.dll v2.0.4 on Windows in case of 5.1 speaker configuration, according to investigation by StasBFG. [An unofficial DLL pack fixing this and providing fluidsynth soundfont support](https://github.com/fabiangreffrath/crispy-doom/files/3616050/crispy-doom-DLL-fix-pack.zip) is provided by Zodomaniac.
-
-Crispy Doom 5.6.3 is based on Chocolate Doom 3.0.0 and has merged all changes to the Chocolate Doom master branch up to commit [`ee9fc21f`](https://github.com/chocolate-doom/chocolate-doom/commit/ee9fc21fd6b7e50706fa093b9ccabd6dd56b02db).
-
-### Crispy Doom 5.6.2 
-
-Crispy Doom 5.6.2 has been released on September 13, 2019. The primary aim of this release is to fix the music-related bugs that surfaced in 5.6.1 and previous releases.
-
-**Bug Fixes**
- 
- * Pulled midiproc-related bug fixes from Chocolate Doom.
-   * Use inherited handles to communicate with midiproc to prevent libraries that print error messages to standard streams from disrupting communication with the subprocess. Thanks to Zodomaniac for noticing this years ago when playing with the Memento Mori music PWAD, to Fabian Greffrath for spotting where this bug lurks and to AlexMax for finally fixing it!
-   * Call `UnregisterSong()` where appropriate and do not unset `midi_server_registered` in `StopSong()`. This fixes the same song being played over and over again despite level changes when using MP3/OGG/FLAC music PWADs, pointed out by Zodomaniac.
- * Clean screenshots are now saved without demo progress bar after Zodomaniac spotted that it gets burned into them.
- * Screenshots are now saved without alpha channel, they were transparent before on MacOS as JamesDunne reported.
-
-**Other Games**
-
- * Heretic's `BLOCKMAP` limit has been removed. Thanks to Jeff Green for the contribution.
-
-Crispy Doom 5.6.2 is based on Chocolate Doom 3.0.0 and has merged all changes to the Chocolate Doom master branch up to commit [`ee9fc21f`](https://github.com/chocolate-doom/chocolate-doom/commit/ee9fc21fd6b7e50706fa093b9ccabd6dd56b02db).
-
-### Crispy Doom 5.6.1 
-
-Crispy Doom 5.6.1 has been released on August 23, 2019. It is dedicated to hotfixing the bugs reported by the community after the 5.6 release.
-
-**Bug Fixes**
-
- * The `IDBEHOLD0` cheat not cancelling the player's invisibility has been fixed, thanks to maxmanium for being watchful.
- * The crash when a door that is actually a platform is opened again while going down has now actually been fixed, thanks to maxmanium for pointing this out at the Doomworld forums and Zodomaniac for the confirmation.
- * The door-closing sound playing even when the door is already closed has been fixed, thanks to Worm from the Doomworld forums for the heads-up. This especially affects repeatable walkover triggers.
- * SIGIL.wad is no longer auto-loaded anymore if another PWAD already modifies the texture files. This fixes the buttons in REKKR being rendered incorrectly, thanks to IsBebs for the report.
-
-**Regressions**
-
- * The "Show Player Coords: Always" setting is now disabled to prevent cheating while speedrunning. Thanks to ZeroMaster010 for the repeated suggestions at the Doomworld forums.
-
-Crispy Doom 5.6.1 is based on Chocolate Doom 3.0.0 and has merged all changes to the Chocolate Doom master branch up to commit [`b9d4c04c`](https://github.com/chocolate-doom/chocolate-doom/commit/b9d4c04c840321f5ec70787d8afb1256766aaa01).
-
-### Crispy Doom 5.6
-
-Crispy Doom 5.6 has been released on August 1, 2019. This release features support for the new Ultimate Doom Episode 5: Sigil by John Romero (with its MP3 soundtrack by Buckethead) and the Doom Metal Vol. 5 metal soundtrack mod for all IWADs.
-
-**Features**
-
- * SIGIL.wad and SIGIL_SHREDS.wad are auto-loaded with Ultimate Doom IWAD when available, suggested by buvk. The Sigil art screen is only used when finishing episode 5. If you want to replace DMENUPIC and other art by Sigil's, load it manually.
- * Support for alternative music tracks for Final Doom has been implemented as introduced in DoomMetalVol5.wad, music replacement tables provided by Zodomaniac.
-
-**Improvements**
-
- * Joystick jump button can now be assigned, contributed by Jeff Green.
- * Item position in Crispness menu is now remembered as well as in the rest of Doom menu, fixing the non-Doominess spotted by JNechaevsky.
- * Ambiguity in music backend name `Native MIDI` pointed out by pmjdebruijn has been eliminated, now it reads `MIDI/MP3/OGG/FLAC`.
- * Automap colors for different things (visible with IDDT) have been figured out by Zodomaniac: orange for projectiles, including Lost Souls, and dark gold for shootable things like barrels.
- * Extra Arch-Vile fire spawn sound is only played if available, which makes Capellan's SpecBoss.wad work with Doom 1 as IWAD.
- * Optional secret counting in the "secret revealed" message has been introduced, suggested by Ledmeister.
- * Green brightmap is applied to barrels according to JNechaevsky's idea.
- * Colors for HUD digits have been improved on artistic advice by JNechaevsky.
- * Zooming and moving Automap with the mouse wheel has been implemented, thanks to JNechaevsky for the suggestion and testing.
- * Tally screen is displayed after ExM8, requested by Sector 147 and tested by JNechaevsky.
- * Weapon pickup message is printed when using the `TNTWEAPx` cheat, requested by Zodomaniac.
-
-**Bug Fixes**
-
- * Support for SMMU swirling flats has been repaired.
- * Playing with 32 sound channels is now actually enabled, thanks to seed and SiFi270 for pointing this out and providing examples.
- * More crashes with maps without map title graphics lump are prevented.
- * Level transitions back from MAP33 when playing Doom 2 extensions (e.g. NERVE) have been fixed, thanks to buvk for reporting.
- * Playing up to three sounds from lines with more than one switch texture has been fixed, squashing the button spamming sound bug reported by Looper in the forums.
- * A crash when a door that is actually a platform is closed manually has been fixed, spotted by glyphic from the forums.
- * An off-by-one typo in the par time drawing decision has been fixed.
- * The SSG reloading sounds being breakable have been fixed, reported by JNechaevsky.
- * Flat lumps are prevented from being mistaken as patches, at least when composing textures. This fixes a crash when loading any map with Sunder.wad (and who knows where else) spotted by JNechaevsky. If the flat lump name is unambiguous, though, then the one found is used, as Brad Harding pointed out. This fixes WOS.wad.
- * The ammo type is reset in `P_CheckAmmo()` when a weapon is removed (by the `TNTWEAPx` cheat) after Zodomaniac's report, so that even the chainsaw which consumes no ammo is removed properly.
- 
-**Regressions**
-
- * Crispy's own WAD autoload mechanism has been replaced by Choco's one, autoloading files from the `doom-all` subdirectory of the config directory.
-
-Crispy Doom 5.6 is based on Chocolate Doom 3.0.0 and has merged all changes to the Chocolate Doom master branch up to commit [`485b939b`](https://github.com/chocolate-doom/chocolate-doom/commit/485b939b9b01e00ab47cd34a9de4a4e901d96a33).
-
 ## Documentation
 
  * **[Changelog](https://github.com/fabiangreffrath/crispy-doom/wiki/Changelog)**
@@ -299,23 +190,27 @@ Crispy Doom 5.6 is based on Chocolate Doom 3.0.0 and has merged all changes to t
 
 ## Versioning
 
-Crispy Doom's major version number is increased whenever a new Chocolate Doom (pre-)release got merged into its code base. The minor version number is increased for intermediate releases that do only contain Crispy-specific changes or unreleased changes to the Chocolate Doom code base. The micro or patch version is reserved for post-release hotfixes, it remained unused until the 5.5 release.
+So Doom's version number is increased whenever a new Crispy Doom (pre-)release got merged into its code base.
 
 ## Contact
 
-The canonical homepage for Crispy Doom is https://github.com/fabiangreffrath/crispy-doom
+The canonical homepage for So Doom is https://github.com/zodomaniac/so-doom
 
-Crispy Doom is maintained by [Fabian Greffrath](mailto:fabian@greffXremovethisXrath.com). 
+So Doom is maintained by [Vladislav Melnichuk](mailto:zodomaniac@gmXremovethisXail.com). 
 
 Please report any bugs, glitches or crashes that you encounter to the GitHub [Issue Tracker](https://github.com/fabiangreffrath/crispy-doom/issues).
 
 ## Acknowledgement
 
-Although I have played the thought of hacking on Chocolate Doom's renderer for quite some time already, it was Brad Harding's [Doom Retro](https://www.chocolate-doom.org/wiki/index.php/Doom_Retro) that provided the incentive to finally do it. However, his fork aims at a different direction and I did not take a single line of code from it. Lee Killough's [MBF](https://doomwiki.org/wiki/WinMBF) was studied and used to debug the code, especially in the form of Team Eternity's [WinMBF](https://doomwiki.org/wiki/WinMBF) source port, which made it easier to compile and run on my machine. And of course there is fraggle's [Chocolate Doom](https://www.chocolate-doom.org/wiki/index.php/Chocolate_Doom) with its exceptionally clean and legible source code. Please let me take this opportunity to appreciate all these authors for their work!
+Thanks a lot to Crispy Doom's developer Fabian Greffrath for sharing his work openly! 
+
+I join all Fabian's acknoledgements I cite here:
+
+"Although I have played the thought of hacking on Chocolate Doom's renderer for quite some time already, it was Brad Harding's [Doom Retro](https://www.chocolate-doom.org/wiki/index.php/Doom_Retro) that provided the incentive to finally do it. However, his fork aims at a different direction and I did not take a single line of code from it. Lee Killough's [MBF](https://doomwiki.org/wiki/WinMBF) was studied and used to debug the code, especially in the form of Team Eternity's [WinMBF](https://doomwiki.org/wiki/WinMBF) source port, which made it easier to compile and run on my machine. And of course there is fraggle's [Chocolate Doom](https://www.chocolate-doom.org/wiki/index.php/Chocolate_Doom) with its exceptionally clean and legible source code. Please let me take this opportunity to appreciate all these authors for their work!
 
 Also, thanks to plums of the [Doomworld forums](https://www.doomworld.com/vb/) for beta testing, "release manager" Zodomaniac and "art director" JNechaevsky for the continuous flow of support and inspiration during the post-3.x development cycle and (last but not the least) [Cacodemon9000](http://www.moddb.com/members/cacodemon9000) for his [Infested Outpost](http://www.moddb.com/games/doom-ii/addons/infested-outpost) map that helped to track down quite a few bugs!
 
-Furthermore, thanks to VGA for his aid with adding support for his two mods: [PerK & NightFright's Black Ops smooth weapons add-on converted to DEHACKED](https://www.doomworld.com/forum/topic/84859-black-ops-smooth-weapons-dehacked-mod) and [Gifty's Smooth Doom smooth monster animations converted to DEHACKED](https://www.doomworld.com/forum/topic/85991-smoothed-smooth-monsters-for-doom-retro-and-crispy-doom) that can make the gameplay even more pleasing to the eyes.
+Furthermore, thanks to VGA for his aid with adding support for his two mods: [PerK & NightFright's Black Ops smooth weapons add-on converted to DEHACKED](https://www.doomworld.com/forum/topic/84859-black-ops-smooth-weapons-dehacked-mod) and [Gifty's Smooth Doom smooth monster animations converted to DEHACKED](https://www.doomworld.com/forum/topic/85991-smoothed-smooth-monsters-for-doom-retro-and-crispy-doom) that can make the gameplay even more pleasing to the eyes".
 
 ## Legalese
 
@@ -327,7 +222,8 @@ PrBoom+ is © 1999 id Software, Chi Hoang, Lee Killough, Jim Flynn, Rand Phares,
 Chocolate Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard; 
 Chocolate Hexen is © 1993-1996 Id Software, Inc., © 1993-2008 Raven Software, © 2008 Simon Howard;
 Strawberry Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard, © 2008-2010 GhostlyDeath; 
-Crispy Doom is additionally © 2014-2019 Fabian Greffrath;
+Crispy Doom is © 2014-2019 Fabian Greffrath;
+additionally So Doom is © 2019 Vladislav Melnichuk;
 all of the above are released under the [GPL-2+](https://www.gnu.org/licenses/gpl-2.0.html).
 
 SDL 2.0, SDL_mixer 2.0 and SDL_net 2.0 are © 1997-2016 Sam Lantinga and are released under the [zlib license](http://www.gzip.org/zlib/zlib_license.html).
