@@ -1,5 +1,5 @@
 # So Doom
-[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/doom.png)](https://github.com/zodomaniac/so-doom)
+[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/zodomaniac/so-doom)
 
 [![Top Language](https://img.shields.io/github/languages/top/fabiangreffrath/crispy-doom.svg?style=flat)](https://github.com/fabiangreffrath/crispy-doom)
 [![Code Size](https://img.shields.io/github/languages/code-size/fabiangreffrath/crispy-doom.svg?style=flat)](https://github.com/fabiangreffrath/crispy-doom)
