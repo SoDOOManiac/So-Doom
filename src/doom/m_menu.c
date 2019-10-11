@@ -2546,7 +2546,7 @@ boolean M_Responder (event_t* ev)
         crispy->fliplevels = !crispy->fliplevels;
         crispy->flipweapons = !crispy->flipweapons;
 
-		R_ExecuteSetViewSize();
+        R_ExecuteSetViewSize();
 
         M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS: %s%s",
             crstr[CR_GREEN],
