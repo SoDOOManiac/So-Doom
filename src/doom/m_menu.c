@@ -62,7 +62,7 @@
 #include "m_menu.h"
 #include "m_crispy.h" // [crispy] Crispness menu
 
-#include "v_trans.h" // [crispy] colored "invert mouse" message
+#include "v_trans.h" // [crispy] colored "invert mouse" message and [So Doom] flipped levels and weapons messages
 
 extern patch_t*		hu_font[HU_FONTSIZE];
 extern boolean		message_dontfuckwithme;
@@ -119,6 +119,9 @@ char gammamsg[5+4][26+2] =
     GAMMALVL35,
     GAMMALVL4
 };
+
+//[So Doom] Colorized message string
+char		ColorMessageString[48];
 
 // we are going to be entering a savegame string
 int			saveStringEnter;              
@@ -2545,10 +2548,11 @@ boolean M_Responder (event_t* ev)
         
 		R_ExecuteSetViewSize();
 		
-		if (crispy->fliplevels)
-	    players[consoleplayer].message = DEH_String(FLIPLON);
-        else
-	    players[consoleplayer].message = DEH_String(FLIPLOFF);
+		M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS: %s%s",
+            crstr[CR_GREEN],
+            (crispy->fliplevels) ? "ON" : "OFF");
+        players[consoleplayer].message = ColorMessageString;
+		
 		
 		S_UpdateStereoSeparation();
         S_StartSound(NULL,sfx_swtchn);
@@ -2560,10 +2564,10 @@ boolean M_Responder (event_t* ev)
     {
         crispy->flipweapons = !crispy->flipweapons;
   
-        if (crispy->flipweapons^crispy->fliplevels)
-	    players[consoleplayer].message = DEH_String(FLIPWON);
-        else
-	    players[consoleplayer].message = DEH_String(FLIPWOFF);
+		M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS: %s%s",
+            crstr[CR_GREEN],
+            (crispy->flipweapons^crispy->fliplevels) ? "ON" : "OFF");
+        players[consoleplayer].message = ColorMessageString;
   
         S_StartSound(NULL,sfx_swtchn);
         return true;

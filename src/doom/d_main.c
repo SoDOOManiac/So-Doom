@@ -2276,8 +2276,8 @@ void D_DoomMain (void)
 
     if (p > 0)
     {
-        crispy->fliplevels = true; //[So Doom] regardless of the fliplevels setting in config
-        crispy->flipweapons = true; //[So Doom] if you also want to flip weapons, toggle it with hotkey or specify -flipweapons 
+        crispy->fliplevels = true; // [So Doom] regardless of the fliplevels setting in config
+        crispy->flipweapons = true; // [So Doom] if you also want to flip weapons, toggle it with hotkey or specify -flipweapons 
     }
 
     p = M_CheckParm("-flipweapons");
