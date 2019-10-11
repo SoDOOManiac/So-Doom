@@ -2541,7 +2541,7 @@ boolean M_Responder (event_t* ev)
     }
 
     // [So Doom] flip levels
-	if (key == key_menu_fliplevels)
+    if (key == key_menu_fliplevels)
     {
         crispy->fliplevels = !crispy->fliplevels;
         crispy->flipweapons = !crispy->flipweapons;
@@ -2553,17 +2553,17 @@ boolean M_Responder (event_t* ev)
             (crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
 
-		S_UpdateStereoSeparation();
+        S_UpdateStereoSeparation();
         S_StartSound(NULL,sfx_swtchn);
         return true;
     }
 
     // [So Doom] flip weapons
-	if (key == key_menu_flipweapons)
+    if (key == key_menu_flipweapons)
     {
         crispy->flipweapons = !crispy->flipweapons;
 
-		M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS: %s%s",
+        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS: %s%s",
             crstr[CR_GREEN],
             (crispy->flipweapons^crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
