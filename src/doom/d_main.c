@@ -918,7 +918,7 @@ void D_IdentifyVersion(void)
         gamemode = commercial;
 
         // We can manually override the gamemission that we got from the
-        // IWAD detection code. This allows us to eg. play Plutonia 2
+        // IWAD detection code. This allows us to e.g. play Plutonia 2
         // with Freedoom and get the right level names.
 
         //!

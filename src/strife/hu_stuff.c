@@ -114,7 +114,7 @@ extern char *nickname;
 static boolean hu_setting_name = false;
 
 //
-// Builtin map names.
+// Built-in map names.
 // The actual names can be found in DStrings.h.
 //
 

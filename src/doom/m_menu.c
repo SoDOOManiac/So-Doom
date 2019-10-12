@@ -1689,7 +1689,7 @@ void M_ChangeMessages(int choice)
 		
         else
         {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s", // [So Doom] Colorize OFF in the message setting string
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s", // [So Doom] Colorize ON in the message setting string
             crstr[CR_GREEN], "ON");                                                     // if it has not been DEHACKED
             players[consoleplayer].message = ColorMessageString;
         }
@@ -2697,7 +2697,7 @@ boolean M_Responder (event_t* ev)
 		usegamma = 0;
         if (usegamma == 1)
         {
-        if (strcmp(GAMMALVL05, DEH_String(GAMMALVL05))) // [So Doom] colorizing the gamma values
+        if (strcmp(GAMMALVL05, DEH_String(GAMMALVL05))) // [So Doom] colorizing the gamma values if the messages had not been Dehacked
         
             players[consoleplayer].message = DEH_String(GAMMALVL05);
 			
