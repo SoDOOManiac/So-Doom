@@ -1670,7 +1670,7 @@ void M_ChangeMessages(int choice)
 	
     if (!showMessages)
     {
-        if (strcmp(MSGOFF, DEH_String(MSGOFF)))
+        if (DEH_HasStringReplacement(MSGOFF))
 			
         players[consoleplayer].message = DEH_String(MSGOFF);
 			
@@ -1683,7 +1683,7 @@ void M_ChangeMessages(int choice)
     }
     else
     {
-        if (strcmp(MSGON, DEH_String(MSGON)))
+        if (DEH_HasStringReplacement(MSGON))
 			
         players[consoleplayer].message = DEH_String(MSGON);
 		
@@ -2697,7 +2697,7 @@ boolean M_Responder (event_t* ev)
 		usegamma = 0;
         if (usegamma == 1)
         {
-        if (strcmp(GAMMALVL05, DEH_String(GAMMALVL05))) // [So Doom] colorizing the gamma values if the messages had not been Dehacked
+        if (DEH_HasStringReplacement(GAMMALVL05)) // [So Doom] colorizing the gamma values if the messages had not been Dehacked
         
             players[consoleplayer].message = DEH_String(GAMMALVL05);
 			
@@ -2710,7 +2710,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 2)
         {
-        if (strcmp(GAMMALVL1, DEH_String(GAMMALVL1)))
+        if (DEH_HasStringReplacement(GAMMALVL1))
         
             players[consoleplayer].message = DEH_String(GAMMALVL1);
 			
@@ -2723,7 +2723,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 3)
         {
-        if (strcmp(GAMMALVL15, DEH_String(GAMMALVL15)))
+        if (DEH_HasStringReplacement(GAMMALVL15))
         
             players[consoleplayer].message = DEH_String(GAMMALVL15);
 			
@@ -2736,7 +2736,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 4)
         {
-        if (strcmp(GAMMALVL2, DEH_String(GAMMALVL2)))
+        if (DEH_HasStringReplacement(GAMMALVL2))
         
             players[consoleplayer].message = DEH_String(GAMMALVL2);
 			
@@ -2749,7 +2749,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 5)
         {
-        if (strcmp(GAMMALVL25, DEH_String(GAMMALVL25)))
+        if (DEH_HasStringReplacement(GAMMALVL25))
         
             players[consoleplayer].message = DEH_String(GAMMALVL25);
 			
@@ -2762,7 +2762,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 6)
         {
-        if (strcmp(GAMMALVL3, DEH_String(GAMMALVL3)))
+        if (DEH_HasStringReplacement(GAMMALVL3))
         
             players[consoleplayer].message = DEH_String(GAMMALVL3);
 			
@@ -2775,7 +2775,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 7)
         {
-        if (strcmp(GAMMALVL35, DEH_String(GAMMALVL35)))
+        if (DEH_HasStringReplacement(GAMMALVL35))
         
             players[consoleplayer].message = DEH_String(GAMMALVL35);
 			
@@ -2788,7 +2788,7 @@ boolean M_Responder (event_t* ev)
         }
         else if (usegamma == 8)
         {
-        if (strcmp(GAMMALVL4, DEH_String(GAMMALVL4)))
+        if (DEH_HasStringReplacement(GAMMALVL4))
         
             players[consoleplayer].message = DEH_String(GAMMALVL4);
 			
@@ -2801,7 +2801,7 @@ boolean M_Responder (event_t* ev)
         }
         else
         {
-        if (strcmp(GAMMALVL0, DEH_String(GAMMALVL0)))
+        if (DEH_HasStringReplacement(GAMMALVL0))
         
             players[consoleplayer].message = DEH_String(GAMMALVL0);
 			
