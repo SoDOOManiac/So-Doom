@@ -107,7 +107,7 @@ boolean			messageNeedsInput;
 void    (*messageRoutine)(int response);
 
 // [crispy] intermediate gamma levels
-char gammamsg[5+4][26+2] =
+/*char gammamsg[5+4][26+2] =
 {
     GAMMALVL0,
     GAMMALVL05,
@@ -118,7 +118,7 @@ char gammamsg[5+4][26+2] =
     GAMMALVL3,
     GAMMALVL35,
     GAMMALVL4
-};
+};*/
 
 //[So Doom] Colorized message string
 char		ColorMessageString[48];
@@ -1676,8 +1676,8 @@ void M_ChangeMessages(int choice)
 			
         else
         {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
-            crstr[CR_GREEN], "OFF");
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s", // [So Doom] Colorize OFF in the message setting string
+            crstr[CR_GREEN], "OFF");                                                    // if it has not been DEHACKED
             players[consoleplayer].message = ColorMessageString;
         }
     }
@@ -1689,8 +1689,8 @@ void M_ChangeMessages(int choice)
 		
         else
         {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
-            crstr[CR_GREEN], "ON");
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s", // [So Doom] Colorize OFF in the message setting string
+            crstr[CR_GREEN], "ON");                                                     // if it has not been DEHACKED
             players[consoleplayer].message = ColorMessageString;
         }
     }
@@ -2695,7 +2695,124 @@ boolean M_Responder (event_t* ev)
 	    usegamma++;
 	    if (usegamma > 4+4) // [crispy] intermediate gamma levels
 		usegamma = 0;
-	    players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
+        if (usegamma == 1)
+        {
+        if (strcmp(GAMMALVL05, DEH_String(GAMMALVL05))) // [So Doom] colorizing the gamma values
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL05);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "0.5");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 2)
+        {
+        if (strcmp(GAMMALVL1, DEH_String(GAMMALVL1)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL1);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "1");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 3)
+        {
+        if (strcmp(GAMMALVL15, DEH_String(GAMMALVL15)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL15);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "1.5");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 4)
+        {
+        if (strcmp(GAMMALVL2, DEH_String(GAMMALVL2)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL2);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "2");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 5)
+        {
+        if (strcmp(GAMMALVL25, DEH_String(GAMMALVL25)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL25);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "2.5");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 6)
+        {
+        if (strcmp(GAMMALVL3, DEH_String(GAMMALVL3)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL3);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "3");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 7)
+        {
+        if (strcmp(GAMMALVL35, DEH_String(GAMMALVL35)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL35);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "3.5");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else if (usegamma == 8)
+        {
+        if (strcmp(GAMMALVL4, DEH_String(GAMMALVL4)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL4);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
+            crstr[CR_GREEN], "4");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+        else
+        {
+        if (strcmp(GAMMALVL0, DEH_String(GAMMALVL0)))
+        
+            players[consoleplayer].message = DEH_String(GAMMALVL0);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction %s%s",
+            crstr[CR_GREEN], "OFF");
+            players[consoleplayer].message = ColorMessageString;
+        }
+        }
+	    //players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
 #ifndef CRISPY_TRUECOLOR
             I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
 #else
