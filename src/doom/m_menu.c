@@ -1670,25 +1670,29 @@ void M_ChangeMessages(int choice)
 	
     if (!showMessages)
     {
-		if (strcmp(MSGOFF, DEH_String(MSGOFF)))
+        if (strcmp(MSGOFF, DEH_String(MSGOFF)))
+			
+        players[consoleplayer].message = DEH_String(MSGOFF);
+			
+        else
         {
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
             crstr[CR_GREEN], "OFF");
             players[consoleplayer].message = ColorMessageString;
         }
-		else
-        players[consoleplayer].message = DEH_String(MSGOFF);
     }
-	else
+    else
     {
-		if (strcmp(MSGON, DEH_String(MSGON)))
+        if (strcmp(MSGON, DEH_String(MSGON)))
+			
+        players[consoleplayer].message = DEH_String(MSGON);
+		
+        else
         {
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
             crstr[CR_GREEN], "ON");
             players[consoleplayer].message = ColorMessageString;
         }
-		else
-        players[consoleplayer].message = DEH_String(MSGON);
     }
     message_dontfuckwithme = true;
 }
