@@ -1669,10 +1669,27 @@ void M_ChangeMessages(int choice)
     showMessages = 1 - showMessages;
 	
     if (!showMessages)
-	players[consoleplayer].message = DEH_String(MSGOFF);
-    else
-	players[consoleplayer].message = DEH_String(MSGON);
-
+    {
+		if (strcmp(MSGOFF, DEH_String(MSGOFF)))
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
+            crstr[CR_GREEN], "OFF");
+            players[consoleplayer].message = ColorMessageString;
+        }
+		else
+        players[consoleplayer].message = DEH_String(MSGOFF);
+    }
+	else
+    {
+		if (strcmp(MSGON, DEH_String(MSGON)))
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s",
+            crstr[CR_GREEN], "ON");
+            players[consoleplayer].message = ColorMessageString;
+        }
+		else
+        players[consoleplayer].message = DEH_String(MSGON);
+    }
     message_dontfuckwithme = true;
 }
 
@@ -2548,7 +2565,7 @@ boolean M_Responder (event_t* ev)
 
         R_ExecuteSetViewSize();
 
-        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS: %s%s",
+        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS %s%s",
             crstr[CR_GREEN],
             (crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
@@ -2563,7 +2580,7 @@ boolean M_Responder (event_t* ev)
     {
         crispy->flipweapons = !crispy->flipweapons;
 
-        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS: %s%s",
+        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS %s%s",
             crstr[CR_GREEN],
             (crispy->flipweapons^crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
