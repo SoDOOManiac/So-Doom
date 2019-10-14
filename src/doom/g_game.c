@@ -428,7 +428,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         }
 
         M_snprintf(playermessage, sizeof(playermessage), "ALWAYS RUN %s%s",
-            crstr[CR_GREEN],
+            (joybspeed >= MAX_JOY_BUTTONS) ? crstr[CR_GREEN] : crstr[CR_RED],
             (joybspeed >= MAX_JOY_BUTTONS) ? "ON" : "OFF");
         player->message = playermessage;
         S_StartSound(NULL, sfx_swtchn);
@@ -443,7 +443,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 
         M_snprintf(playermessage, sizeof(playermessage),
             "vertical mouse movement %s%s",
-            crstr[CR_GREEN],
+            !novert ? crstr[CR_GREEN] : crstr[CR_RED],
             !novert ? "ON" : "OFF");
         player->message = playermessage;
         S_StartSound(NULL, sfx_swtchn);

@@ -1372,6 +1372,10 @@ static const char *msgNames[2] = {"M_MSGOFF","M_MSGON"};
 
 void M_DrawOptions(void)
 {
+
+    char detail_setting[48];
+    char messages_setting[48];
+
     V_DrawPatchShadow2(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
                                                PU_CACHE));
 	
@@ -1382,9 +1386,18 @@ void M_DrawOptions(void)
 			              PU_CACHE));
 */
 
-    M_WriteText(OptionsDef.x + M_StringWidth("Graphic Detail: "),
+    /*M_WriteText(OptionsDef.x + M_StringWidth("Graphic Detail: "),
                 OptionsDef.y + LINEHEIGHT * detail + 8 - (M_StringHeight("HighLow")/2),
-                detailLevel ? "Low" : "High");
+                detailLevel ? "Low" : "High");*/
+
+    M_snprintf(detail_setting, sizeof(detail_setting), "Graphic Detail: %s%s%s", // [So Doom] colorized option setting like in Crispness menu
+            !detailLevel ? crstr[CR_GREEN]:crstr[CR_RED],
+            !detailLevel ? "High" : "Low",
+            crstr[CR_NONE]);
+
+    M_WriteText(OptionsDef.x,
+                OptionsDef.y + LINEHEIGHT * detail + 8 - (M_StringHeight("HighLow")/2),
+                detail_setting);
 
 // [crispy] no patches are drawn in the Options menu anymore
 /*
@@ -1392,9 +1405,19 @@ void M_DrawOptions(void)
                       W_CacheLumpName(DEH_String(msgNames[showMessages]),
                                       PU_CACHE));
 */
-    M_WriteText(OptionsDef.x + M_StringWidth("Messages: "),
+
+    /*M_WriteText(OptionsDef.x + M_StringWidth("Messages: "),
                 OptionsDef.y + LINEHEIGHT * messages + 8 - (M_StringHeight("OnOff")/2),
-                showMessages ? "On" : "Off");
+                showMessages ? "On" : "Off");*/
+
+    M_snprintf(messages_setting, sizeof(messages_setting), "Messages: %s%s%s", // [So Doom] colorized option setting like in Crispness menu
+            showMessages ? crstr[CR_GREEN]:crstr[CR_RED],
+            showMessages ? "ON" : "OFF",
+            crstr[CR_NONE]);
+
+    M_WriteText(OptionsDef.x,
+                OptionsDef.y + LINEHEIGHT * messages + 8 - (M_StringHeight("OnOff")/2),
+                messages_setting);
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
 		 9 + 2,screenSize); // [crispy] Crispy HUD
@@ -1677,7 +1700,7 @@ void M_ChangeMessages(int choice)
         else
         {
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "MESSAGES %s%s", // [So Doom] Colorize OFF in the message setting string
-            crstr[CR_GREEN], "OFF");                                                    // if it has not been DEHACKED
+            crstr[CR_RED], "OFF");                                                    // if it has not been DEHACKED
             players[consoleplayer].message = ColorMessageString;
         }
     }
@@ -1907,9 +1930,33 @@ void M_ChangeDetail(int choice)
     R_SetViewSize (screenblocks, detailLevel);
 
     if (!detailLevel)
-	players[consoleplayer].message = DEH_String(DETAILHI);
+	//players[consoleplayer].message = DEH_String(DETAILHI);
+    {
+        if (DEH_HasStringReplacement(DETAILHI))
+			
+        players[consoleplayer].message = DEH_String(DETAILHI);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "%s%s%s DETAIL", // [So Doom] Colorize HIGH DETAIL in the detail setting string
+            crstr[CR_GREEN], "HIGH", crstr[CR_NONE]);                                                    // if it has not been DEHACKED
+            players[consoleplayer].message = ColorMessageString;
+        }
+    }
     else
-	players[consoleplayer].message = DEH_String(DETAILLO);
+	//players[consoleplayer].message = DEH_String(DETAILLO);
+    {
+        if (DEH_HasStringReplacement(DETAILLO))
+			
+        players[consoleplayer].message = DEH_String(DETAILLO);
+			
+        else
+        {
+            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "%s%s%s DETAIL", // [So Doom] Colorize LOW DETAIL in the detail setting string
+            crstr[CR_RED], "LOW", crstr[CR_NONE]);                                                    // if it has not been DEHACKED
+            players[consoleplayer].message = ColorMessageString;
+        }
+    }
 }
 
 
@@ -2570,7 +2617,7 @@ boolean M_Responder (event_t* ev)
         R_ExecuteSetViewSize();
 
         M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED LEVELS %s%s",
-            crstr[CR_GREEN],
+            (crispy->fliplevels) ? crstr[CR_GREEN] : crstr[CR_RED],
             (crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
 
@@ -2585,7 +2632,7 @@ boolean M_Responder (event_t* ev)
         crispy->flipweapons = !crispy->flipweapons;
 
         M_snprintf(ColorMessageString, sizeof(ColorMessageString), "FLIPPED WEAPONS %s%s",
-            crstr[CR_GREEN],
+            (crispy->flipweapons^crispy->fliplevels) ? crstr[CR_GREEN] : crstr[CR_RED],
             (crispy->flipweapons^crispy->fliplevels) ? "ON" : "OFF");
         players[consoleplayer].message = ColorMessageString;
 
@@ -2808,7 +2855,7 @@ boolean M_Responder (event_t* ev)
         else
         {
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction %s%s",
-            crstr[CR_GREEN], "OFF");
+            crstr[CR_RED], "OFF");
             players[consoleplayer].message = ColorMessageString;
         }
         }
