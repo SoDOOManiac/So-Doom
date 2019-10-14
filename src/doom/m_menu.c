@@ -1468,7 +1468,19 @@ static void M_DrawCrispnessBackground(void)
 
 	dest = I_VideoBuffer;
 
-	for (y = 0; y < SCREENHEIGHT; y++)
+    /*for (y = 0; y < SCREENHEIGHT; y++)  // [crispy] tiling 64x64 background crisps texture
+	{
+		for (x = 0; x < SCREENWIDTH; x++)
+		{
+#ifndef CRISPY_TRUECOLOR
+			*dest++ = src[(y & 63) * 64 + (x & 63)];
+#else
+			*dest++ = colormaps[src[(y & 63) * 64 + (x & 63)]];
+#endif
+		}
+	}*/
+
+	for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
 	{
 		for (x = 0; x < SCREENWIDTH; x++)
 		{
