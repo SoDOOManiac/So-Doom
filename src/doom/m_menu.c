@@ -1261,12 +1261,13 @@ void M_MusicVol(int choice)
 
 
 
-
+#include "m_logo.h"
 //
 // M_DrawMainMenu
 //
 void M_DrawMainMenu(void)
 {
+    V_DrawPatchDirect(0, 0, &main_menu_background); // [So Doom] logo in the background
     V_DrawPatchDirect(94, 2,
                       W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
 }

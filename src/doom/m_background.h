@@ -2,6 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
 // Copyright(C) 2018 Fabian Greffrath
+// Copyright(C) 2019 Vladislav Melnichuk aka Zodomaniac
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,12 +15,12 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//	[crispy] Crispness menu tiled background
+//	[So Doom] The following array contains the background of SoDOOMy menu (Zodomaniac)
 //
 
 /*
 
-The following array contains the background of SoDOOMy menu (Zodomaniac)
+
 
 #include <stdio.h>
 
