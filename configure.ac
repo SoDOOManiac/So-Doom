@@ -1,4 +1,4 @@
-AC_INIT(So Doom, 5.6.4,
+AC_INIT(So Doom, 5.6.5,
         zodomaniac@gmail.com, so-doom)
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
