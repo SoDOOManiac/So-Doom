@@ -1486,9 +1486,9 @@ static void M_DrawCrispnessBackground(void)
 		for (x = 0; x < SCREENWIDTH; x++)
 		{
 #ifndef CRISPY_TRUECOLOR
-			*dest++ = src[x*(2-crispy->hires)+y*(2-crispy->hires)*(2-crispy->hires)*SCREENWIDTH];
+			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*SCREENWIDTH];
 #else
-			*dest++ = colormaps[src[x*(2-crispy->hires)+y*(2-crispy->hires)*(2-crispy->hires)*SCREENWIDTH]];
+			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*SCREENWIDTH]];
 #endif
 		}
 	}
