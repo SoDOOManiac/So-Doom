@@ -428,7 +428,7 @@ cheatseq_t cheat_mus1 = CHEAT("idmus", 1);
 cheatseq_t cheat_clev1 = CHEAT("idclev", 1);
 
 // [crispy] new cheats
-cheatseq_t cheat_weapon = CHEAT("tntweap", 1);
+cheatseq_t cheat_weapon = CHEAT("tw", 1); // [So Doom] Crispy cheat giving specific weapon. TNTWEAPx is too long IMO - Zodomaniac
 cheatseq_t cheat_massacre = CHEAT("tntem", 0); // [crispy] PrBoom+
 cheatseq_t cheat_massacre2 = CHEAT("killem", 0); // [crispy] MBF
 cheatseq_t cheat_massacre3 = CHEAT("fhhall", 0); // [crispy] Doom95
@@ -443,15 +443,15 @@ cheatseq_t cheat_goobers = CHEAT("goobers", 0);
 cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] Russian Doom
 cheatseq_t cheat_skill = CHEAT("skill", 0);
 
-cheatseq_t	cheat_specificammo[7] = // [crispy] idbehold0
+cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
 {
-    CHEAT("tntam0", 0),
-    CHEAT("tntam1", 0),
-    CHEAT("tntam2", 0),
-    CHEAT("tntam3", 0),
-    CHEAT("tntam4", 0),
-    CHEAT("tntam5", 0),
-    CHEAT("tntam", 0),
+    CHEAT("ta0", 0),
+    CHEAT("ta1", 0),
+    CHEAT("ta2", 0),
+    CHEAT("ta3", 0),
+    CHEAT("ta4", 0),
+    CHEAT("ta5", 0),
+    CHEAT("ta", 0),
 };
 
 static char msg[ST_MSGWIDTH];
