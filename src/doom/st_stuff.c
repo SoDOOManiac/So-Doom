@@ -1119,7 +1119,6 @@ ST_Responder (event_t* ev)
     }
     plyr->ammo[i-2] = plyr->maxammo[i-2]; 
     
-	// [crispy] trigger evil grin now
     plyr->bonuscount += 2;
     S_StartSound(NULL, sfx_itemup);
 
@@ -1130,12 +1129,6 @@ ST_Responder (event_t* ev)
 	}
 	}
     }
-
-
-
-
-
-
 
 }
 
