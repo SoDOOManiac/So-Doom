@@ -442,6 +442,18 @@ cheatseq_t cheat_showfps2 = CHEAT("idrate", 0); // [crispy] PrBoom+
 cheatseq_t cheat_goobers = CHEAT("goobers", 0);
 cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] Russian Doom
 cheatseq_t cheat_skill = CHEAT("skill", 0);
+
+cheatseq_t	cheat_specificammo[7] = // [crispy] idbehold0
+{
+    CHEAT("tntam0", 0),
+    CHEAT("tntam1", 0),
+    CHEAT("tntam2", 0),
+    CHEAT("tntam3", 0),
+    CHEAT("tntam4", 0),
+    CHEAT("tntam5", 0),
+    CHEAT("tntam", 0),
+};
+
 static char msg[ST_MSGWIDTH];
 
 // [crispy] restrict cheat usage
@@ -635,7 +647,6 @@ boolean
 ST_Responder (event_t* ev)
 {
   int		i;
-    
   // Filter automap on/off.
   if (ev->type == ev_keyup
       && ((ev->data1 & 0xffff0000) == AM_MSGHEADER))
@@ -831,7 +842,7 @@ ST_Responder (event_t* ev)
                  && */ cht_CheckCheatSP(&cheat_commercial_noclip,ev->data2)))
       {	
         // Noclip cheat.
-        // For Doom 1, use the idspipsopd cheat; for all others, use
+        // For Doom 1, use the idspispopd cheat; for all others, use
         // idclip
 
 	plyr->cheats ^= CF_NOCLIP;
@@ -1049,7 +1060,83 @@ ST_Responder (event_t* ev)
 	    plyr->message = msg;
 	}
       }
+
+    // [So Doom] implement "tntam" cheats giving specific ammo
+
+	else if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
+	{
+	M_snprintf(msg, sizeof(msg), "Ammo type: %s1%s = melee, %s2-5%s = 1-4 HUD lines",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	}
+    
+    for (i=0;i<6;i++)
+    {
+	int loopvar;
+    int atswap;
+    if (cht_CheckCheatSP (&cheat_specificammo[i], ev->data2))
+    {
+    if (i == 0) //tntam0 takes all ammo, backpack and berserk power away
+    {
+    for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
+		{
+        plyr->ammo[loopvar] = 0;
+        if (plyr->backpack)
+        {
+        plyr->maxammo[loopvar] /= 2;
+        }
+        }
+    plyr->backpack = false;
+    plyr->powers[pw_strength] = 0;
     }
+	// [So Doom] let ammo for the fist be the berserk pack, why not?
+	else if (i == 1)
+	{
+		P_GivePower(plyr, pw_strength);
+		S_StartSound(NULL, sfx_getpow);
+		plyr->message = DEH_String(GOTBERSERK);
+	}
+	else
+	{
+	// [crispy] give backpack if no backpack equipped
+	if (!plyr->backpack)
+	{
+	    for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
+		plyr->maxammo[loopvar] *= 2;
+	    plyr->backpack = true;
+	}
+    atswap=i;
+    if (i==5)
+    {
+    atswap=5;
+	i=4; // [So Doom] Energy cells, last in the HUD, are ammo type #2 (ammo type=i-2) in the ammo types array
+    }
+    if (i==4 && atswap!=5) // if ammo type==2 is not the consequence of swapping
+    {
+    i=5;    
+    atswap=4;
+    }
+    plyr->ammo[i-2] = plyr->maxammo[i-2]; 
+    
+	// [crispy] trigger evil grin now
+    plyr->bonuscount += 2;
+    S_StartSound(NULL, sfx_itemup);
+
+	M_snprintf(msg, sizeof(msg), "Got ammo type %s%d%s",
+	               crstr[CR_GOLD], atswap , crstr[CR_NONE]);
+	plyr->message = msg;
+    
+	}
+	}
+    }
+
+
+
+
+
+
+
+}
 
 // [crispy] now follow "harmless" Crispy Doom specific cheats
 
