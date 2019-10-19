@@ -1072,7 +1072,7 @@ ST_Responder (event_t* ev)
     
     for (i=0;i<6;i++)
     {
-	int loopvar;
+    int loopvar;
     int atswap;
     if (cht_CheckCheatSP (&cheat_specificammo[i], ev->data2))
     {
@@ -1088,6 +1088,7 @@ ST_Responder (event_t* ev)
         }
     plyr->backpack = false;
     plyr->powers[pw_strength] = 0;
+    plyr->message = "All ammo removed";
     }
 	// [So Doom] let ammo for the fist be the berserk pack, why not?
 	else if (i == 1)
