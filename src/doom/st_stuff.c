@@ -428,7 +428,8 @@ cheatseq_t cheat_mus1 = CHEAT("idmus", 1);
 cheatseq_t cheat_clev1 = CHEAT("idclev", 1);
 
 // [crispy] new cheats
-cheatseq_t cheat_weapon = CHEAT("tw", 1); // [So Doom] Crispy cheat giving specific weapon. TNTWEAPx is too long IMO - Zodomaniac
+cheatseq_t cheat_weapon = CHEAT("tntweap", 1); // [crispy] cheat giving specific weapon
+cheatseq_t cheat_weapon2 = CHEAT("tw", 1);// [So Doom] TNTWEAPx is too long IMO - Zodomaniac
 cheatseq_t cheat_massacre = CHEAT("tntem", 0); // [crispy] PrBoom+
 cheatseq_t cheat_massacre2 = CHEAT("killem", 0); // [crispy] MBF
 cheatseq_t cheat_massacre3 = CHEAT("fhhall", 0); // [crispy] Doom95
@@ -647,6 +648,9 @@ boolean
 ST_Responder (event_t* ev)
 {
   int		i;
+  extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
+  extern boolean P_CheckAmmo (player_t* player);
+  extern const char *const WeaponPickupMessages[NUMWEAPONS];
   // Filter automap on/off.
   if (ev->type == ev_keyup
       && ((ev->data1 & 0xffff0000) == AM_MSGHEADER))
@@ -997,6 +1001,10 @@ ST_Responder (event_t* ev)
 	char		buf[2];
 	int		w;
 
+/*	M_snprintf(msg, sizeof(msg), "Take or leave weapon %s1-9%s",
+	               crstr[CR_GOLD], crstr[CR_NONE]);
+	    plyr->message = msg;*/
+
 	cht_GetParam(&cheat_weapon, buf);
 	w = *buf - '1';
 
@@ -1023,8 +1031,6 @@ ST_Responder (event_t* ev)
 	{
 	    if (!plyr->weaponowned[w])
 	    {
-		extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
-		extern const char *const WeaponPickupMessages[NUMWEAPONS];
 
 		P_GiveWeapon(plyr, w, false);
 		S_StartSound(NULL, sfx_wpnup);
@@ -1045,22 +1051,87 @@ ST_Responder (event_t* ev)
 		// [crispy] removed current weapon, select another one
 		if (w == plyr->readyweapon)
 		{
-		    extern boolean P_CheckAmmo (player_t* player);
-
 		    P_CheckAmmo(plyr);
 		}
 	    }
 	}
 
 	if (!plyr->message)
-	{
+    {
 	    M_snprintf(msg, sizeof(msg), "Weapon %s%d%s %s",
 	               crstr[CR_GOLD], w + 1, crstr[CR_NONE],
 	               plyr->weaponowned[w] ? "added" : "removed");
 	    plyr->message = msg;
-	}
-      }
+    }
+    }
+    else if (cht_CheckCheatSP(&cheat_weapon2, ev->data2))
+    {
+	char		buf[2];
+	int		w;
 
+	/*M_snprintf(msg, sizeof(msg), "Take or leave weapon %s1-9%s",
+	               crstr[CR_GOLD], crstr[CR_NONE]);
+	    plyr->message = msg;*/
+
+	cht_GetParam(&cheat_weapon2, buf);
+	w = *buf - '1';
+
+	// [crispy] only give available weapons
+	if (!WeaponAvailable(w))
+	    return false;
+
+	// make '1' apply beserker strength toggle
+	if (w == wp_fist)
+	{
+	    if (!plyr->powers[pw_strength])
+	    {
+		P_GivePower(plyr, pw_strength);
+		S_StartSound(NULL, sfx_getpow);
+		plyr->message = DEH_String(GOTBERSERK);
+	    }
+	    else
+	    {
+		plyr->powers[pw_strength] = 0;
+		plyr->message = DEH_String(STSTR_BEHOLDX);
+	    }
+	}
+	else
+	{
+	    if (!plyr->weaponowned[w])
+	    {
+
+		P_GiveWeapon(plyr, w, false);
+		S_StartSound(NULL, sfx_wpnup);
+
+		if (w > 1)
+		{
+		    plyr->message = DEH_String(WeaponPickupMessages[w]);
+		}
+
+		// [crispy] trigger evil grin now
+		plyr->bonuscount += 2;
+	    }
+	    else
+	    {
+		// [crispy] no reason for evil grin
+		oldweaponsowned[w] = plyr->weaponowned[w] = false;
+
+		// [crispy] removed current weapon, select another one
+		if (w == plyr->readyweapon)
+		{
+		    P_CheckAmmo(plyr);
+		}
+	    }
+	}
+
+	if (!plyr->message)
+    {
+	    M_snprintf(msg, sizeof(msg), "Weapon %s%d%s %s",
+	               crstr[CR_GOLD], w + 1, crstr[CR_NONE],
+	               plyr->weaponowned[w] ? "added" : "removed");
+	    plyr->message = msg;
+    }
+    }
     // [So Doom] implement "tntam" cheats giving specific ammo
 
 	else if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
