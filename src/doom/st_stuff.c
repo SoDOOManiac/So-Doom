@@ -1093,9 +1093,9 @@ ST_Responder (event_t* ev)
 	// [So Doom] let ammo for the fist be the berserk pack, why not?
 	else if (i == 1)
 	{
-		P_GivePower(plyr, pw_strength);
-		S_StartSound(NULL, sfx_getpow);
-		plyr->message = DEH_String(GOTBERSERK);
+	    P_GivePower(plyr, pw_strength);
+	    S_StartSound(NULL, sfx_getpow);
+	    plyr->message = DEH_String(GOTBERSERK);
 	}
 	else
 	{
@@ -1103,19 +1103,19 @@ ST_Responder (event_t* ev)
 	if (!plyr->backpack)
 	{
 	    for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
-		plyr->maxammo[loopvar] *= 2;
+	    plyr->maxammo[loopvar] *= 2;
 	    plyr->backpack = true;
 	}
     atswap=i;
     if (i==5)
     {
-    atswap=5;
-	i=4; // [So Doom] Energy cells, last in the HUD, are ammo type #2 (ammo type=i-2) in the ammo types array
+	    atswap=5;
+	    i=4; // [So Doom] Energy cells, last in the HUD, are ammo type #2 (ammo type=i-2) in the ammo types array
     }
     if (i==4 && atswap!=5) // if ammo type==2 is not the consequence of swapping
     {
-    i=5;    
-    atswap=4;
+	    i=5;    
+	    atswap=4;
     }
     plyr->ammo[i-2] = plyr->maxammo[i-2]; 
     
