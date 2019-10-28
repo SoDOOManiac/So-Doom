@@ -738,12 +738,12 @@ AM_Responder
         {
             // [crispy] keep the map static in overlay mode
             // if not following the player
-            if (!followplayer && !crispy->automapoverlay) m_paninc.x = FTOM(F_PANINC);
+            if (!followplayer && !crispy->automapoverlay) m_paninc.x = crispy->fliplevels ? -FTOM(F_PANINC) : FTOM(F_PANINC);
             else rc = false;
         }
         else if (key == key_map_west)     // pan left
         {
-            if (!followplayer && !crispy->automapoverlay) m_paninc.x = -FTOM(F_PANINC);
+            if (!followplayer && !crispy->automapoverlay) m_paninc.x = crispy->fliplevels ? FTOM(F_PANINC) : -FTOM(F_PANINC);
             else rc = false;
         }
         else if (key == key_map_north)    // pan up
@@ -1164,9 +1164,9 @@ AM_drawFline
     }
 
 #ifndef CRISPY_TRUECOLOR
-#define PUTDOT(xx,yy,cc) fb[(yy)*f_w+(flipwidth[xx])]=(cc)
+#define PUTDOT(xx,yy,cc) fb[(yy)*f_w+(flipscreenwidth[xx])]=(cc)
 #else
-#define PUTDOT(xx,yy,cc) fb[(yy)*f_w+(flipwidth[xx])]=(colormaps[(cc)])
+#define PUTDOT(xx,yy,cc) fb[(yy)*f_w+(flipscreenwidth[xx])]=(colormaps[(cc)])
 #endif
 
     dx = fl->b.x - fl->a.x;
@@ -1737,7 +1737,7 @@ void AM_drawMarks(void)
 	    {
 		AM_rotatePoint(&pt);
 	    }
-	    fx = (flipwidth[CXMTOF(pt.x)] >> crispy->hires) - 1;
+	    fx = (flipscreenwidth[CXMTOF(pt.x)] >> crispy->hires) - 1;
 	    fy = (CYMTOF(pt.y) >> crispy->hires) - 2;
 	    if (fx >= f_x && fx <= (f_w >> crispy->hires) - w && fy >= f_y && fy <= (f_h >> crispy->hires) - h)
 		V_DrawPatch(fx, fy, marknums[i]);
