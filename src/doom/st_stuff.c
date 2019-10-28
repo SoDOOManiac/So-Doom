@@ -1094,7 +1094,7 @@ ST_Responder (event_t* ev)
     }
     }
 */
-    // [So Doom] implement "tntam" cheats giving specific ammo
+    // [So Doom] implement "ta" cheats giving specific ammo
 
 	else if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
 	{
@@ -1109,7 +1109,7 @@ ST_Responder (event_t* ev)
     int atswap;
     if (cht_CheckCheatSP (&cheat_specificammo[i], ev->data2))
     {
-    if (i == 0) //tntam0 takes all ammo, backpack and berserk power away
+    if (i == 0) //ta0 takes all ammo, backpack and berserk power away
     {
     for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
 		{
@@ -1163,7 +1163,7 @@ ST_Responder (event_t* ev)
 	}
     }
 
-    // [So Doom] re-write of "tntweap" cheats to display the weapon selection hint
+    // [So Doom] re-write of "tntweap"/"tw" cheats to display the weapon selection hint
 
 	if (cht_CheckCheatSP (&cheat_weapon[0], ev->data2)||cht_CheckCheatSP (&cheat_weapon2[0], ev->data2))
 	{
