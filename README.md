@@ -101,8 +101,8 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ### New cheat codes
 
- * `TNTWEAP` followed by a weapon number gives or removes this weapon (8 = Chainsaw, 9 = SSG). Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TNTWEAP9` to play the SSG in Doom 1.
- * `TNTAM` followed by a number gives the specified type of ammo (1-berserk pack, 2-5 - ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
+ * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (8 = Chainsaw, 9 = SSG). Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TNTWEAP9` to play the SSG in Doom 1.
+ * `TA` followed by a number gives the specified type of ammo (1-berserk pack, 2-5 - ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
  * `NOTARGET` or `FHSHH` toggle deaf and blind monsters that do not act until attacked.
@@ -154,6 +154,49 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.6.6
+
+So Doom 5.6.6 is to be released on Oct 23, 2019.
+
+**So Doom-specific changes**
+
+ * New cheat for getting specific ammo (TAx) and shorter one for getting specific weapon (TWx) have been introduced.
+
+**Changes pulled from Crispy Doom**
+
+ * DOOM.WAD v0.99-v1.2 are now supported along with v1.2 demos, merged from Chocolate Doom, contributed by SmileTheory. 
+ * Automap panning in flippedlevels mode has been fixed, thanks to JNechaevsky for reporting.
+ * Self-repeating states in `P_LatestSafeState()` are now handled.
+ * Max-sized background buffer is now allocated for the bezel. This fixes a crash when the game is started with `crispy->hires == 0` and `scaledviewwidth != SCREENWIDTH` and then `crispy->hires` is switched to `1`.
+ * Early exit from the tally screen after ExM8 is now forced, which enables demos to progress to the end of game sequence.
+ * TNTWEAP2 now removes the pistol.
+
+### So Doom 5.6.5
+
+So Doom 5.6.5 has been released on Oct 15, 2019.
+
+**So Doom-specific changes**
+
+ * The main menu logo has been edited, and its position changed to the left upper corner.
+ *  Brightness of the SoDOOMy menu logo has been reduced, thanks to JNechaevsky﻿ for the help with file conversion.
+
+**Changes pulled from Crispy Doom**
+/////////////7uyyyyyyyyyyyy
+ * Switching to the fist after typing a cheat expecting two parameters has been fixed. This affects IDMUSx1 and IDCLEVx1, thanks to maxmanium for pointing this out.
+
+### So Doom 5.6.4
+
+So Doom 5.6.4 has been released on Oct 14, 2019.
+
+**So Doom-specific changes**
+
+ * The values of message-producing settings (detail, messages, always run etc.) are now colorized: low (off) values in red, high (on) values in green. Sodom-style S has been added to the main menu background as port signature.
+
+**Changes pulled from Crispy Doom**
+
+ * Automap marker coordinate for flipped levels has been fixed.
+
 
 ### So Doom 5.6.3 
 
