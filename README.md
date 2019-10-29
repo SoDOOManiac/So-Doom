@@ -119,7 +119,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.3/so-doom-5.6.3-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.6/so-doom-5.6.6.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -157,7 +157,7 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.6.6
 
-So Doom 5.6.6 is to be released on Oct 23, 2019.
+So Doom 5.6.6 has been released on Oct 28, 2019.
 
 **So Doom-specific changes**
 
@@ -182,7 +182,7 @@ So Doom 5.6.5 has been released on Oct 15, 2019.
  *  Brightness of the SoDOOMy menu logo has been reduced, thanks to JNechaevsky﻿ for the help with file conversion.
 
 **Changes pulled from Crispy Doom**
-/////////////7uyyyyyyyyyyyy
+
  * Switching to the fist after typing a cheat expecting two parameters has been fixed. This affects IDMUSx1 and IDCLEVx1, thanks to maxmanium for pointing this out.
 
 ### So Doom 5.6.4
