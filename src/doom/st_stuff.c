@@ -431,9 +431,9 @@ cheatseq_t cheat_mus1 = CHEAT("idmus", 1);
 cheatseq_t cheat_clev1 = CHEAT("idclev", 1);
 
 // [crispy] new cheats
-cheatseq_t cheat_weapon [10] = 
+cheatseq_t cheat_weapon [11] = 
 {
-    CHEAT("tntweap", 0), // [crispy] cheat giving specific weapon
+    CHEAT("tntweap0", 0), // [crispy] cheat giving specific weapon
     CHEAT("tntweap1", 0),
     CHEAT("tntweap2", 0),
     CHEAT("tntweap3", 0),
@@ -443,11 +443,12 @@ cheatseq_t cheat_weapon [10] =
     CHEAT("tntweap7", 0),
     CHEAT("tntweap8", 0),
     CHEAT("tntweap9", 0),
+    CHEAT("tntweap", 0),
 };
 
-cheatseq_t cheat_weapon2 [10] = // [So Doom] TNTWEAPx is too long IMO - Zodomaniac
+cheatseq_t cheat_weapon2 [11] = // [So Doom] TNTWEAPx is too long IMO - Zodomaniac
 {
-    CHEAT("tw", 0), // [crispy] cheat giving specific weapon
+    CHEAT("tw0", 0), // [crispy] cheat giving specific weapon
     CHEAT("tw1", 0),
     CHEAT("tw2", 0),
     CHEAT("tw3", 0),
@@ -457,6 +458,7 @@ cheatseq_t cheat_weapon2 [10] = // [So Doom] TNTWEAPx is too long IMO - Zodomani
     CHEAT("tw7", 0),
     CHEAT("tw8", 0),
     CHEAT("tw9", 0),
+    CHEAT("tw", 0),
 };
 
 cheatseq_t cheat_massacre = CHEAT("tntem", 0); // [crispy] PrBoom+
@@ -675,6 +677,30 @@ static boolean WeaponAvailable (int w)
 	return true;
 }
 
+// [crispy] give or take backpack
+static void GiveBackpack (boolean give)
+{
+	int i;
+
+	if (give && !plyr->backpack)
+	{
+		for (i = 0; i < NUMAMMO; i++)
+		{
+			plyr->maxammo[i] *= 2;
+		}
+		plyr->backpack = true;
+	}
+	else
+	if (!give && plyr->backpack)
+	{
+		for (i = 0; i < NUMAMMO; i++)
+		{
+			plyr->maxammo[i] /= 2;
+		}
+		plyr->backpack = false;
+	}
+}
+
 // Respond to keyboard input events,
 //  intercept cheats.
 boolean
@@ -752,12 +778,7 @@ ST_Responder (event_t* ev)
 	plyr->armortype = deh_idfa_armor_class;
 	
 	// [crispy] give backpack
-	if (!plyr->backpack)
-	{
-	    for (i=0 ; i<NUMAMMO ; i++)
-		plyr->maxammo[i] *= 2;
-	    plyr->backpack = true;
-	}
+	GiveBackpack(true);
 
 	for (i=0;i<NUMWEAPONS;i++)
 	 if (WeaponAvailable(i)) // [crispy] only give available weapons
@@ -778,12 +799,7 @@ ST_Responder (event_t* ev)
 	plyr->armortype = deh_idkfa_armor_class;
 	
 	// [crispy] give backpack
-	if (!plyr->backpack)
-	{
-	    for (i=0 ; i<NUMAMMO ; i++)
-		plyr->maxammo[i] *= 2;
-	    plyr->backpack = true;
-	}
+	GiveBackpack(true);
 
 	for (i=0;i<NUMWEAPONS;i++)
 	 if (WeaponAvailable(i)) // [crispy] only give available weapons
@@ -1037,6 +1053,35 @@ ST_Responder (event_t* ev)
 	cht_GetParam(&cheat_weapon, buf);
 	w = *buf - '1';
 
+	// [crispy] TNTWEAP0 takes away all weapons and ammo except for the pistol and 50 bullets
+	if (w == -1)
+	{
+	    GiveBackpack(false);
+	    plyr->powers[pw_strength] = 0;
+
+	    for (i = 0; i < NUMWEAPONS; i++)
+	    {
+		oldweaponsowned[i] = plyr->weaponowned[i] = false;
+	    }
+	    oldweaponsowned[wp_fist] = plyr->weaponowned[wp_fist] = true;
+	    oldweaponsowned[wp_pistol] = plyr->weaponowned[wp_pistol] = true;
+
+	    for (i = 0; i < NUMAMMO; i++)
+	    {
+		plyr->ammo[i] = 0;
+	    }
+	    plyr->ammo[am_clip] = deh_initial_bullets;
+
+	    if (plyr->readyweapon > wp_pistol)
+	    {
+		plyr->pendingweapon = wp_pistol;
+	    }
+
+	    plyr->message = "All weapons removed!";
+
+	    return true;
+	}
+
 	// [crispy] only give available weapons
 	if (!WeaponAvailable(w))
 	    return false;
@@ -1098,8 +1143,8 @@ ST_Responder (event_t* ev)
 
 	else if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
 	{
-	M_snprintf(msg, sizeof(msg), "Ammo type: %s1%s = melee, %s2-5%s = 1-4 HUD lines",
-	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	M_snprintf(msg, sizeof(msg), "Melee: %s1%s, 1-4 HUD ammo: %s2-5%s, leave all: %s0",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD]);
 	plyr->message = msg;
 	}
     
@@ -1114,14 +1159,10 @@ ST_Responder (event_t* ev)
     for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
 		{
         plyr->ammo[loopvar] = 0;
-        if (plyr->backpack)
-        {
-        plyr->maxammo[loopvar] /= 2;
         }
-        }
-    plyr->backpack = false;
+    GiveBackpack (false);
     plyr->powers[pw_strength] = 0;
-    plyr->message = "All ammo removed";
+    plyr->message = "All ammo removed!";
     }
 	// [So Doom] let ammo for the fist be the berserk pack, why not?
 	else if (i == 1)
@@ -1133,12 +1174,7 @@ ST_Responder (event_t* ev)
 	else
 	{
 	// [crispy] give backpack if no backpack equipped
-	if (!plyr->backpack)
-	{
-	    for (loopvar=0 ; loopvar<NUMAMMO ; loopvar++)
-	    plyr->maxammo[loopvar] *= 2;
-	    plyr->backpack = true;
-	}
+	GiveBackpack(true);
     atswap=i;
     if (i==5)
     {
@@ -1165,11 +1201,30 @@ ST_Responder (event_t* ev)
 
     // [So Doom] re-write of "tntweap"/"tw" cheats to display the weapon selection hint
 
-	if (cht_CheckCheatSP (&cheat_weapon[0], ev->data2)||cht_CheckCheatSP (&cheat_weapon2[0], ev->data2))
+
+    if (cht_CheckCheatSP (&cheat_weapon[0], ev->data2)||cht_CheckCheatSP (&cheat_weapon2[0], ev->data2))
 	{
-	M_snprintf(msg, sizeof(msg), "Take/leave weapon: %s1-9%s",
-	           crstr[CR_GOLD],crstr[CR_NONE]);
-	plyr->message = msg;
+        GiveBackpack(false);
+	    plyr->powers[pw_strength] = 0;
+
+	    for (i = 0; i < NUMWEAPONS; i++)
+	    {
+		oldweaponsowned[i] = plyr->weaponowned[i] = false;
+	    }
+	    oldweaponsowned[wp_fist] = plyr->weaponowned[wp_fist] = true;
+	    oldweaponsowned[wp_pistol] = plyr->weaponowned[wp_pistol] = true;
+
+	    for (i = 0; i < NUMAMMO; i++)
+	    {
+		plyr->ammo[i] = 0;
+	    }
+	    plyr->ammo[am_clip] = deh_initial_bullets;
+
+	    if (plyr->readyweapon > wp_pistol)
+	    {
+		plyr->pendingweapon = wp_pistol;
+	    }
+	plyr->message = "All weapons removed!";
 	}
 
     for (i=0;i<9;i++)
@@ -1232,6 +1287,14 @@ ST_Responder (event_t* ev)
     }
     }
     }
+
+	if (cht_CheckCheatSP (&cheat_weapon[10], ev->data2)||cht_CheckCheatSP (&cheat_weapon2[10], ev->data2))
+	{
+	M_snprintf(msg, sizeof(msg), "Take/leave weapon: %s1-9%s, leave all weapons: %s0%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	}
+
 }
 
 // [crispy] now follow "harmless" Crispy Doom specific cheats
@@ -1434,6 +1497,8 @@ int ST_calcPainOffset(void)
 // the precedence of expressions is:
 //  dead > evil grin > turned head > straight ahead
 //
+// [crispy] fix status bar face hysteresis
+static int faceindex;
 void ST_updateFaceWidget(void)
 {
     int		i;
@@ -1445,7 +1510,6 @@ void ST_updateFaceWidget(void)
 
     // [crispy] fix status bar face hysteresis
     int		painoffset;
-    static int	faceindex;
     // [crispy] no evil grin or rampage face in god mode
     const boolean invul = (plyr->cheats & CF_GODMODE) || plyr->powers[pw_invulnerability];
 
@@ -2243,6 +2307,7 @@ void ST_initData(void)
     st_oldchat = st_chat = false;
     st_cursoron = false;
 
+    faceindex = 0; // [crispy] fix status bar face hysteresis across level changes
     st_faceindex = 0;
     st_palette = -1;
 
