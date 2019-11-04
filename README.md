@@ -161,6 +161,7 @@ So Doom 5.6.7 has been released on Nov 4, 2019.
 
 **So Doom-specific changes**
 
+ * INTERCEPTS overflow option has been implemented in drfrag666's way for better performance.
  * TNTWEAPx (TWx) cheats now display the hint.
  * Changed the hint displayed on typing the TAx cheat.
 
