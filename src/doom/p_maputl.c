@@ -549,9 +549,14 @@ static void check_intercept(void)
 
 	if (offset >= num_intercepts)
 	{
+		int num_intercepts_old = num_intercepts;
+
 		num_intercepts = num_intercepts ? num_intercepts * 2 : MAXINTERCEPTS_ORIGINAL;
 		intercepts = I_Realloc(intercepts, sizeof(*intercepts) * num_intercepts);
 		intercept_p = intercepts + offset;
+
+		if (num_intercepts_old)
+			fprintf(stderr, "PIT_Add*Intercepts: Hit INTERCEPTS limit at %d, raised to %d.\n", num_intercepts_old, num_intercepts);
 	}
 }
 
@@ -620,6 +625,8 @@ PIT_AddLineIntercepts (line_t* ld)
     intercept_p->frac = frac;
     intercept_p->isaline = true;
     intercept_p->d.line = ld;
+    if (!crispy->evadinginterover) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled
+    {
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     // [crispy] intercepts overflow guard
     if (intercept_p - intercepts == MAXINTERCEPTS_ORIGINAL + 1)
@@ -628,16 +635,8 @@ PIT_AddLineIntercepts (line_t* ld)
 	    return false;
 	else
 	    // [crispy] print a warning
-	    //fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
-		
-		// [So Doom] Avoid INTERCEPTS overflow emulation if evasion is enabled
-		if (crispy->evadinginterover)
-		{
-			fprintf(stderr, "PIT_AddLineIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
-			return false;
-		}
-		else
-		fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
+	    fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
+    }
     }
     intercept_p++;
 
@@ -705,6 +704,8 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
     intercept_p->frac = frac;
     intercept_p->isaline = false;
     intercept_p->d.thing = thing;
+    if (!crispy->evadinginterover) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled
+    {
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     // [crispy] intercepts overflow guard
     if (intercept_p - intercepts == MAXINTERCEPTS_ORIGINAL + 1)
@@ -713,16 +714,8 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
 	    return false;
 	else
 	    // [crispy] print a warning
-	    //fprintf(stderr, "PIT_AddThingIntercepts: Triggered INTERCEPTS overflow!\n");
-		
-		// [So Doom] Avoid INTERCEPTS overflow emulation if evasion is enabled
-		if (crispy->evadinginterover)
-		{
-			fprintf(stderr, "PIT_AddLineIntercepts: Avoided INTERCEPTS overflow!\n");//by drfrag666
-			return false;
-		}
-		else
-		fprintf(stderr, "PIT_AddLineIntercepts: Triggered INTERCEPTS overflow!\n");
+	    fprintf(stderr, "PIT_AddThingIntercepts: Triggered INTERCEPTS overflow!\n");
+    }
     }
     intercept_p++;
 
