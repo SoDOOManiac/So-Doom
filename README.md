@@ -119,7 +119,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.6/so-doom-5.6.6.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.7/so-doom-5.6.7.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -154,6 +154,21 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.6.7
+
+So Doom 5.6.7 has been released on Nov 4, 2019.
+
+**So Doom-specific changes**
+
+ * TNTWEAPx (TWx) cheats now display the hint.
+ * Changed the hint displayed on typing the TAx cheat.
+
+**Changes pulled from Crispy Doom**
+
+ * Disallowing the vertical mouse movement now disables controlling the menus with the mouse, thanks to bryc for requesting this.
+ * TNTWEAP0 now removes the berserk strength, all weapons and ammo except for pistol and 50 bullets.
+ * Status bar face expression staying across level changes has been removed, thanks to JNechaevsky for pointing this out.
 
 ### So Doom 5.6.6
 
