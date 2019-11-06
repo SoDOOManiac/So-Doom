@@ -2088,11 +2088,12 @@ void ST_drawWidgets(boolean refresh)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
     // [crispy] draw the actual face widget background
+    // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
     if (st_crispyhud && screenblocks == CRISPY_HUD && netgame)
     {
-	// V_CopyRect(ST_FX+1, 2, st_backing_screen, SHORT(faceback->width)-2, ST_HEIGHT-2, 23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2);
+	// V_CopyRect(ST_FX+1, 2, st_backing_screen, SHORT(faceback->width)-2, ST_HEIGHT-2, 23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2); // [Crispy]
     dp_translucent = true;
-	V_DrawPatch(23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2, faceback);
+	V_DrawPatch(23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 1, faceback);
 	dp_translucent = false;
     }
 
@@ -2394,11 +2395,11 @@ void ST_createWidgets(void)
 		  ST_FRAGSWIDTH);
 
     // faces
-    if (screenblocks == CRISPY_HUD)
+    if (screenblocks == CRISPY_HUD) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD
     {
     STlib_initMultIcon(&w_faces,
 		       23 - SHORT(faceback->width)/2 + 2,
-		       ST_FACESY-ST_HEIGHT+1,
+		       ST_FACESY-ST_HEIGHT,
 		       faces,
 		       &st_faceindex,
 		       &st_statusbarface);
