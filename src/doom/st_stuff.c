@@ -296,6 +296,7 @@ static boolean		st_statusbaron;
 // [crispy] distinguish classic status bar with background and player face from Crispy HUD
 static boolean		st_crispyhud;
 static boolean		st_classicstatusbar;
+static boolean		st_statusbarface;
 
 // whether status bar chat is active
 static boolean		st_chat;
@@ -509,10 +510,10 @@ static inline int cht_CheckCheatSP (cheatseq_t *cht, char key)
 //
 void ST_Stop(void);
 
-void ST_refreshBackground(void)
+void ST_refreshBackground(boolean force)
 {
 
-    if (st_classicstatusbar)
+    if (st_classicstatusbar || force)
     {
         V_UseBuffer(st_backing_screen);
 
@@ -531,6 +532,7 @@ void ST_refreshBackground(void)
 
         V_RestoreBuffer();
 
+	if (!force)
 	V_CopyRect(ST_X, 0, st_backing_screen, ST_WIDTH, ST_HEIGHT, ST_X, ST_Y);
     }
 
@@ -2085,6 +2087,12 @@ void ST_drawWidgets(boolean refresh)
     for (i=0;i<6;i++)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
+    // [crispy] draw the actual face widget background
+    if (st_crispyhud && screenblocks == CRISPY_HUD)
+    {
+	V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1);
+    }
+
     STlib_updateMultIcon(&w_faces, refresh);
 
     for (i=0;i<3;i++)
@@ -2102,7 +2110,7 @@ void ST_doRefresh(void)
     st_firsttime = false;
 
     // draw status bar background to off-screen buff
-    ST_refreshBackground();
+    ST_refreshBackground(false);
 
     // and refresh all widgets
     ST_drawWidgets(true);
@@ -2125,6 +2133,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     // [crispy] distinguish classic status bar with background and player face from Crispy HUD
     st_crispyhud = screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay);
     st_classicstatusbar = st_statusbaron && !st_crispyhud;
+    st_statusbarface = st_classicstatusbar || (st_crispyhud && screenblocks == CRISPY_HUD);
 
     if (crispy->cleanscreenshot == 2)
         return;
@@ -2133,7 +2142,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     ST_doPaletteStuff();
 
     // [crispy] translucent HUD
-    if (st_crispyhud && screenblocks > CRISPY_HUD)
+    if (st_crispyhud && screenblocks > CRISPY_HUD + 1)
 	dp_translucent = true;
 
     // If just after ST_Start(), refresh all
@@ -2387,7 +2396,7 @@ void ST_createWidgets(void)
 		       ST_FACESY,
 		       faces,
 		       &st_faceindex,
-		       &st_classicstatusbar);
+		       &st_statusbarface);
 
     // armor percentage - should be colored later
     STlib_initPercent(&w_armor,
