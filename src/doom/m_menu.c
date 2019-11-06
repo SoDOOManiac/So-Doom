@@ -1267,9 +1267,9 @@ void M_MusicVol(int choice)
 //
 void M_DrawMainMenu(void)
 {
-    V_DrawPatchDirect(0, 0, &main_menu_background); // [So Doom] logo in the background
     V_DrawPatchDirect(94, 2,
                       W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
+    V_DrawPatchDirect(0, 0, &main_menu_background); // [So Doom] port logo above the menu logo that can be large like in Memento Mori    
 }
 
 

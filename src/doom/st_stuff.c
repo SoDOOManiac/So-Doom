@@ -2088,9 +2088,12 @@ void ST_drawWidgets(boolean refresh)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
     // [crispy] draw the actual face widget background
-    if (st_crispyhud && screenblocks == CRISPY_HUD)
+    if (st_crispyhud && screenblocks == CRISPY_HUD && netgame)
     {
-	V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1);
+	// V_CopyRect(ST_FX+1, 2, st_backing_screen, SHORT(faceback->width)-2, ST_HEIGHT-2, 23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2);
+    dp_translucent = true;
+	V_DrawPatch(23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2, faceback);
+	dp_translucent = false;
     }
 
     STlib_updateMultIcon(&w_faces, refresh);
@@ -2391,13 +2394,24 @@ void ST_createWidgets(void)
 		  ST_FRAGSWIDTH);
 
     // faces
+    if (screenblocks == CRISPY_HUD)
+    {
+    STlib_initMultIcon(&w_faces,
+		       23 - SHORT(faceback->width)/2 + 2,
+		       ST_FACESY-ST_HEIGHT+1,
+		       faces,
+		       &st_faceindex,
+		       &st_statusbarface);
+    }
+    else
+    {
     STlib_initMultIcon(&w_faces,
 		       ST_FACESX,
 		       ST_FACESY,
 		       faces,
 		       &st_faceindex,
 		       &st_statusbarface);
-
+    };
     // armor percentage - should be colored later
     STlib_initPercent(&w_armor,
 		      ST_ARMORX,
