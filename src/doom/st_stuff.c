@@ -340,6 +340,9 @@ static patch_t*		faces[ST_NUMFACES];
 // face background
 static patch_t*		faceback;
 
+// [So Doom] face background for So Doomy HUD, the STPB lumps with bottom border not trimmed
+static patch_t*		faceback_sd;
+
  // main bar right
 static patch_t*		armsbg;
 
@@ -528,8 +531,12 @@ void ST_refreshBackground(boolean force)
 	    V_DrawPatch(ST_ARMSBGX, 0, armsbg);
 
 	if (netgame)
+    {
+        if (screenblocks == CRISPY_HUD)
+        V_DrawPatch(ST_FX, 0, faceback_sd);
+        else
 	    V_DrawPatch(ST_FX, 0, faceback);
-
+    }
         V_RestoreBuffer();
 
 	if (!force)
@@ -2093,7 +2100,7 @@ void ST_drawWidgets(boolean refresh)
     {
 	// V_CopyRect(ST_FX+1, 2, st_backing_screen, SHORT(faceback->width)-2, ST_HEIGHT-2, 23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2); // [Crispy]
     dp_translucent = true;
-	V_DrawPatch(23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 1, faceback);
+	V_DrawPatch(23 - SHORT(faceback_sd->width)/2 + 2, ST_Y - ST_HEIGHT, faceback_sd);
 	dp_translucent = false;
     }
 
@@ -2209,9 +2216,16 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     }
 
     // face backgrounds for different color players
+    if (screenblocks == CRISPY_HUD)
+    {
+    DEH_snprintf(namebuf, 9, "STPB%d", consoleplayer);
+    callback(namebuf, &faceback_sd);
+    }
+    else
+    {
     DEH_snprintf(namebuf, 9, "STFB%d", consoleplayer);
     callback(namebuf, &faceback);
-
+    }
     // status bar background bits
     if (W_CheckNumForName("STBAR") >= 0)
     {
@@ -2398,7 +2412,7 @@ void ST_createWidgets(void)
     if (screenblocks == CRISPY_HUD) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD
     {
     STlib_initMultIcon(&w_faces,
-		       23 - SHORT(faceback->width)/2 + 2,
+		       23 - SHORT(faceback_sd->width)/2 + 2,
 		       ST_FACESY-ST_HEIGHT,
 		       faces,
 		       &st_faceindex,
@@ -2529,9 +2543,16 @@ void ST_Start (void)
     if (netgame && consoleplayer)
     {
 	char namebuf[8];
-
+    if (screenblocks == CRISPY_HUD)
+    {
+    DEH_snprintf(namebuf, 7, "STPB%d", consoleplayer);
+	faceback_sd = W_CacheLumpName(namebuf, PU_STATIC);
+    }
+    else
+    {
 	DEH_snprintf(namebuf, 7, "STFB%d", consoleplayer);
 	faceback = W_CacheLumpName(namebuf, PU_STATIC);
+    }
     }
 }
 
