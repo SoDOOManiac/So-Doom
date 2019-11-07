@@ -1724,6 +1724,17 @@ void ST_updateWidgets(void)
     // refresh weapon change
     //  }
 
+    if (screenblocks == CRISPY_HUD)
+    {
+    w_faces.x = 23 - SHORT(faceback_sd->width)/2 + 2;
+    w_faces.y = ST_FACESY-ST_HEIGHT;
+    }
+    else
+    {
+    w_faces.x = ST_FACESX;
+    w_faces.y = ST_FACESY;
+    }
+
     // update keycard multiple widgets
     for (i=0;i<3;i++)
     {
