@@ -2095,19 +2095,22 @@ void ST_drawWidgets(boolean refresh)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
     // [crispy] draw the actual face widget background
-    // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
     if (st_crispyhud && screenblocks == CRISPY_HUD)
     {
-	// V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1); // [Crispy]
+	V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1);
+    }
+    // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
+    if (st_crispyhud && screenblocks == CRISPY_HUD+1)
+    {
     if (netgame)
     {
     dp_translucent = true;
     V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y - ST_HEIGHT, faceback_sd);
     dp_translucent = false;
     }
-    //V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y-ST_HEIGHT, faces[st_faceindex]);
+    V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y-ST_HEIGHT, faces[st_faceindex]);
     }
-    else
+
     STlib_updateMultIcon(&w_faces, refresh);
 
     for (i=0;i<3;i++)
@@ -2148,7 +2151,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     // [crispy] distinguish classic status bar with background and player face from Crispy HUD
     st_crispyhud = screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay);
     st_classicstatusbar = st_statusbaron && !st_crispyhud;
-    st_statusbarface = st_classicstatusbar || (st_crispyhud && screenblocks == CRISPY_HUD);
+    st_statusbarface = st_classicstatusbar || (st_crispyhud && screenblocks == CRISPY_HUD); 
 
     if (crispy->cleanscreenshot == 2)
         return;
@@ -2157,7 +2160,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     ST_doPaletteStuff();
 
     // [crispy] translucent HUD
-    if (st_crispyhud && screenblocks > CRISPY_HUD + 1)
+    if (st_crispyhud && screenblocks > CRISPY_HUD + 2)
 	dp_translucent = true;
 
     // If just after ST_Start(), refresh all
@@ -2220,16 +2223,14 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     }
 
     // face backgrounds for different color players
-    if (screenblocks == CRISPY_HUD)
-    {
-    DEH_snprintf(namebuf, 9, "STPB%d", consoleplayer);
-    callback(namebuf, &faceback_sd);
-    }
-    else
-    {
+    // [So Doom] Use STPB instead of STFB for So Doomy HUD
+
     DEH_snprintf(namebuf, 9, "STFB%d", consoleplayer);
     callback(namebuf, &faceback);
-    }
+    
+    DEH_snprintf(namebuf, 9, "STPB%d", consoleplayer);
+    callback(namebuf, &faceback_sd);
+
     // status bar background bits
     if (W_CheckNumForName("STBAR") >= 0)
     {
@@ -2413,7 +2414,7 @@ void ST_createWidgets(void)
 		  ST_FRAGSWIDTH);
 
     // faces
-/*    if (screenblocks == CRISPY_HUD) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD, commented as it doesn't update properly
+/*    if (screenblocks == CRISPY_HUD+1) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD, commented as it doesn't update properly
     {
     STlib_initMultIcon(&w_faces,
 		       23 - SHORT(faceback_sd->width)/2,
@@ -2429,7 +2430,7 @@ void ST_createWidgets(void)
 		       ST_FACESY,
 		       faces,
 		       &st_faceindex,
-		       &st_classicstatusbar);
+		       &st_statusbarface);
     //};
     // armor percentage - should be colored later
     STlib_initPercent(&w_armor,
@@ -2547,7 +2548,7 @@ void ST_Start (void)
     if (netgame && consoleplayer)
     {
 	char namebuf[8];
-    if (screenblocks == CRISPY_HUD)
+    if (screenblocks == CRISPY_HUD+1)
     {
     DEH_snprintf(namebuf, 7, "STPB%d", consoleplayer);
 	faceback_sd = W_CacheLumpName(namebuf, PU_STATIC);
