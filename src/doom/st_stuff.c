@@ -1726,7 +1726,7 @@ void ST_updateWidgets(void)
 
     if (screenblocks == CRISPY_HUD)
     {
-    w_faces.x = 23 - SHORT(faceback_sd->width)/2 + 2;
+    w_faces.x = 23 - SHORT(faceback_sd->width)/2;
     w_faces.y = ST_FACESY-ST_HEIGHT;
     }
     else
@@ -2107,15 +2107,19 @@ void ST_drawWidgets(boolean refresh)
 
     // [crispy] draw the actual face widget background
     // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
-    if (st_crispyhud && screenblocks == CRISPY_HUD && netgame)
+    if (st_crispyhud && screenblocks == CRISPY_HUD)
     {
 	// V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1); // [Crispy]
+    if (netgame)
+    {
     dp_translucent = true;
-	V_DrawPatch(23 - SHORT(faceback_sd->width)/2 + 2, ST_Y - ST_HEIGHT, faceback_sd);
-	dp_translucent = false;
+    V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y - ST_HEIGHT, faceback_sd);
+    dp_translucent = false;
+    }
+    V_DrawPatch(w_faces.x, w_faces.y, faces[st_faceindex]);
     }
 
-    STlib_updateMultIcon(&w_faces, refresh);
+//    STlib_updateMultIcon(&w_faces, refresh);
 
     for (i=0;i<3;i++)
 	STlib_updateMultIcon(&w_keyboxes[i], refresh);
@@ -2420,24 +2424,24 @@ void ST_createWidgets(void)
 		  ST_FRAGSWIDTH);
 
     // faces
-    if (screenblocks == CRISPY_HUD) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD
+/*    if (screenblocks == CRISPY_HUD) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD, commented as it doesn't update properly
     {
     STlib_initMultIcon(&w_faces,
-		       23 - SHORT(faceback_sd->width)/2 + 2,
+		       23 - SHORT(faceback_sd->width)/2,
 		       ST_FACESY-ST_HEIGHT,
 		       faces,
 		       &st_faceindex,
 		       &st_statusbarface);
     }
     else
-    {
+*/  //{
     STlib_initMultIcon(&w_faces,
 		       ST_FACESX,
 		       ST_FACESY,
 		       faces,
 		       &st_faceindex,
 		       &st_statusbarface);
-    };
+    //};
     // armor percentage - should be colored later
     STlib_initPercent(&w_armor,
 		      ST_ARMORX,
