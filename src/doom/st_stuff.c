@@ -2429,7 +2429,7 @@ void ST_createWidgets(void)
 		       ST_FACESY,
 		       faces,
 		       &st_faceindex,
-		       &st_statusbarface);
+		       &st_classicstatusbar);
     //};
     // armor percentage - should be colored later
     STlib_initPercent(&w_armor,

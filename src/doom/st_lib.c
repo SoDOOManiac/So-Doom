@@ -239,8 +239,7 @@ STlib_updateMultIcon
 	    y = mi->y - SHORT(mi->p[mi->oldinum]->topoffset);
 	    w = SHORT(mi->p[mi->oldinum]->width);
 	    h = SHORT(mi->p[mi->oldinum]->height);
-        
-        
+
 	    if (y - ST_Y < 0)
 		I_Error("updateMultIcon: y - ST_Y < 0");
 
