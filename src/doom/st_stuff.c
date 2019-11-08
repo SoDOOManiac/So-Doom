@@ -1724,17 +1724,6 @@ void ST_updateWidgets(void)
     // refresh weapon change
     //  }
 
-    if (screenblocks == CRISPY_HUD)
-    {
-    w_faces.x = 23 - SHORT(faceback_sd->width)/2;
-    w_faces.y = ST_FACESY-ST_HEIGHT;
-    }
-    else
-    {
-    w_faces.x = ST_FACESX;
-    w_faces.y = ST_FACESY;
-    }
-
     // update keycard multiple widgets
     for (i=0;i<3;i++)
     {
@@ -2116,10 +2105,10 @@ void ST_drawWidgets(boolean refresh)
     V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y - ST_HEIGHT, faceback_sd);
     dp_translucent = false;
     }
-    V_DrawPatch(w_faces.x, w_faces.y, faces[st_faceindex]);
+    V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y-ST_HEIGHT, faces[st_faceindex]);
     }
-
-//    STlib_updateMultIcon(&w_faces, refresh);
+    else
+    STlib_updateMultIcon(&w_faces, refresh);
 
     for (i=0;i<3;i++)
 	STlib_updateMultIcon(&w_keyboxes[i], refresh);
