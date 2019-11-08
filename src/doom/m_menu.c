@@ -1987,7 +1987,7 @@ void M_SizeDisplay(int choice)
 	}
 	break;
       case 1:
-	if (screenSize < 8 + 3) // [crispy] Crispy HUD
+	if (screenSize < 8 + 4) // [So Doom] So Doomy and [crispy] Crispy HUDs
 	{
 	    screenblocks++;
 	    screenSize++;
