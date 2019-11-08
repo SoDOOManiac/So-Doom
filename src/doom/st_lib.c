@@ -239,12 +239,13 @@ STlib_updateMultIcon
 	    y = mi->y - SHORT(mi->p[mi->oldinum]->topoffset);
 	    w = SHORT(mi->p[mi->oldinum]->width);
 	    h = SHORT(mi->p[mi->oldinum]->height);
-
-	    if (y - ST_Y + ST_HEIGHT < 0)
-		I_Error("updateMultIcon: y - ST_Y + ST_HEIGHT < 0");
+        
+        
+	    if (y - ST_Y < 0)
+		I_Error("updateMultIcon: y - ST_Y < 0");
 
 	    if (screenblocks < CRISPY_HUD || (automapactive && !crispy->automapoverlay))
-	    V_CopyRect(x, y-ST_Y+ST_HEIGHT, st_backing_screen, w, h, x, y);
+	    V_CopyRect(x, y-ST_Y, st_backing_screen, w, h, x, y);
 	}
 	V_DrawPatch(mi->x, mi->y, mi->p[*mi->inum]);
 	mi->oldinum = *mi->inum;

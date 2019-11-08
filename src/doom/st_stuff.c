@@ -2109,7 +2109,7 @@ void ST_drawWidgets(boolean refresh)
     // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
     if (st_crispyhud && screenblocks == CRISPY_HUD && netgame)
     {
-	// V_CopyRect(ST_FX+1, 2, st_backing_screen, SHORT(faceback->width)-2, ST_HEIGHT-2, 23 - SHORT(faceback->width)/2 + 2, ST_Y - ST_HEIGHT + 2); // [Crispy]
+	// V_CopyRect(ST_FX, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX, ST_Y + 1); // [Crispy]
     dp_translucent = true;
 	V_DrawPatch(23 - SHORT(faceback_sd->width)/2 + 2, ST_Y - ST_HEIGHT, faceback_sd);
 	dp_translucent = false;
