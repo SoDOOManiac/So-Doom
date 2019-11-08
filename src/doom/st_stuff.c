@@ -2548,16 +2548,12 @@ void ST_Start (void)
     if (netgame && consoleplayer)
     {
 	char namebuf[8];
-    if (screenblocks == CRISPY_HUD+1)
-    {
+
     DEH_snprintf(namebuf, 7, "STPB%d", consoleplayer);
 	faceback_sd = W_CacheLumpName(namebuf, PU_STATIC);
-    }
-    else
-    {
+
 	DEH_snprintf(namebuf, 7, "STFB%d", consoleplayer);
 	faceback = W_CacheLumpName(namebuf, PU_STATIC);
-    }
     }
 }
 
