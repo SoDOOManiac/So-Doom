@@ -2550,7 +2550,7 @@ void ST_Start (void)
 	char namebuf[8];
 
     DEH_snprintf(namebuf, 7, "STPB%d", consoleplayer);
-	faceback_sd = W_CacheLumpName(namebuf, PU_STATIC);
+	faceback_sd = W_CacheLumpName(namebuf, PU_STATIC); // [So Doom] STPB instead of STFB for So Doomy HUD
 
 	DEH_snprintf(namebuf, 7, "STFB%d", consoleplayer);
 	faceback = W_CacheLumpName(namebuf, PU_STATIC);

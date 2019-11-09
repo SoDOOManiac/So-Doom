@@ -155,6 +155,20 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.6.8
+
+So Doom 5.6.8 is to be released on Nov 11, 2019.
+
+**So Doom-specific changes**
+
+ * 'So Doomy HUD' with the status bar face above the ammo widget and translucent background for netgames has been introduced. Thanks a lot to Fabian for all the hints!
+
+**Changes pulled from Crispy Doom**
+
+ * Updating the Archvile fire's `floorz` and `ceilingz` values has been reverted, as it turned out to be the culprit for a demo desync that fraggle discovered. Thanks for that!
+ * 'Intermediate Crispy HUD' without the status bar but with the face and its background in place has been introduced.
+ * Fuzz effect animation remaining static in one case has been fixed, this happened if the number of pixels to apply the fuzz effect to was an integer multiple of FUZZTABLE. Thanks to JNechaevsky for the suggestion!
+
 ### So Doom 5.6.7
 
 So Doom 5.6.7 has been released on Nov 4, 2019.
