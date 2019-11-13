@@ -119,7 +119,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.7/so-doom-5.6.7.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.8/so-doom-5.6.8-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -157,15 +157,19 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.6.8
 
-So Doom 5.6.8 is to be released on Nov 11, 2019.
+So Doom 5.6.8 is to be released on Nov 13, 2019.
 
 **So Doom-specific changes**
 
  * 'So Doomy HUD' with the status bar face above the ammo widget and translucent background for netgames has been introduced. Thanks a lot to Fabian for all the hints!
+ * Main menu port logo has been brought to the front of 'M_DOOM' picture, to avoid shading of the former when the latter is large like in Memento Mori.
 
 **Changes pulled from Crispy Doom**
 
- * Updating the Archvile fire's `floorz` and `ceilingz` values has been reverted, as it turned out to be the culprit for a demo desync that fraggle discovered. Thanks for that!
+ * `IDCLEV` is now allowed during demo playback and warps to the requested map (starting a new demo).
+ * The revenant sync bug (with homing or non-homing missiles) with New Game demos has hopefully been fixed.
+ * If a new game is started (current level is reloaded/next level is loaded on pressing the respective key) during demo recording, a new demo is started. Thanks to Looper from Doomworld forums for the feature request.
+ * No statdump output is generated now for ExM8, and updating the Archvile fire's `floorz` and `ceilingz` values has been reverted, which fixes demo desyncs that fraggle discovered. Thanks a lot!
  * 'Intermediate Crispy HUD' without the status bar but with the face and its background in place has been introduced.
  * Fuzz effect animation remaining static in one case has been fixed, this happened if the number of pixels to apply the fuzz effect to was an integer multiple of FUZZTABLE. Thanks to JNechaevsky for the suggestion!
 
