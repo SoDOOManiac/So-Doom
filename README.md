@@ -157,7 +157,7 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.6.8
 
-So Doom 5.6.8 is to be released on Nov 13, 2019.
+So Doom 5.6.8 has been released on Nov 13, 2019.
 
 **So Doom-specific changes**
 
