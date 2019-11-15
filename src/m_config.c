@@ -1832,6 +1832,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Variable player view bob.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_bobfactor),
+
+    //!
+    // @game doom
+    //
     // Apply brightmaps to select textures and sprites.
     //
 

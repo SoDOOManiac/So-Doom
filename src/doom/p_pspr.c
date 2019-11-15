@@ -108,6 +108,9 @@ P_SetPsprite
 	    // coordinate set
 	    psp->sx = state->misc1 << FRACBITS;
 	    psp->sy = state->misc2 << FRACBITS;
+	    // [crispy] variable weapon sprite bob
+	    psp->sx2 = psp->sx;
+	    psp->sy2 = psp->sy;
 	}
 	
 	// Call action routine.
@@ -185,6 +188,8 @@ void P_BringUpWeapon (player_t* player)
 
     player->pendingweapon = wp_nochange;
     player->psprites[ps_weapon].sy = WEAPONBOTTOM;
+    // [crispy] squat down weapon sprite
+    player->psprites[ps_weapon].dy = 0;
 
     P_SetPsprite (player, ps_weapon, newstate);
 }
@@ -998,6 +1003,51 @@ void P_MovePsprites (player_t* player)
     
     player->psprites[ps_flash].sx = player->psprites[ps_weapon].sx;
     player->psprites[ps_flash].sy = player->psprites[ps_weapon].sy;
+
+// [crispy] apply bobbing (or centering) to the player's weapon sprite
+
+	// [crispy] don't center vertically during lowering and raising states
+	if (psp->state->misc1 ||
+	    psp->state->action.acp3 == (actionf_p3)A_Lower ||
+	    psp->state->action.acp3 == (actionf_p3)A_Raise)
+	{
+		psp->sx2 = psp->sx;
+		psp->sy2 = psp->sy;
+	}
+	else
+	// [crispy] center the weapon sprite horizontally
+	if (player->attackdown && crispy->centerweapon == CENTERWEAPON_HOR)
+	{
+		psp->sx2 = FRACUNIT;
+	}
+	else
+	if (!player->attackdown || crispy->centerweapon == CENTERWEAPON_BOB)
+	{
+		angle_t angle = (128 * leveltime) & FINEMASK;
+		psp->sx2 = FRACUNIT + FixedMul(player->bob2, finecosine[angle]);
+		angle &= FINEANGLES / 2 - 1;
+		psp->sy2 = WEAPONTOP + FixedMul(player->bob2, finesine[angle]);
+	}
+
+	// [crispy] squat down weapon sprite a bit after hitting the ground
+	if (player->psp_dy_max)
+	{
+		psp->dy -= FRACUNIT;
+
+		if (psp->dy < player->psp_dy_max)
+		{
+			psp->dy = -psp->dy;
+		}
+
+		if (psp->dy == 0)
+		{
+			player->psp_dy_max = 0;
+		}
+	}
+
+	player->psprites[ps_flash].dy = psp->dy;
+	player->psprites[ps_flash].sx2 = psp->sx2;
+	player->psprites[ps_flash].sy2 = psp->sy2;
 }
 
 
