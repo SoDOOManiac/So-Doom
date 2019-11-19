@@ -1025,6 +1025,7 @@ void P_MovePsprites (player_t* player)
 		angle &= FINEANGLES / 2 - 1;
 		psp->sy2 = WEAPONTOP + FixedMul(player->bob2, finesine[angle]);
 	}
+	else
 	// [So Doom] center the weapon sprite horizontally only
     if (player->attackdown && crispy->centerweapon == CENTERWEAPON_HOR)
     {
