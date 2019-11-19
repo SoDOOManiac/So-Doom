@@ -10,7 +10,9 @@ if [ "$ANALYZE" = "true" ] ; then
 else
 	set -e
 	./autogen.sh --enable-werror
-	make
+	make -j4
 	make install DESTDIR=/tmp/whatever
 	make dist
+	PREFIX=`sed -n '/PROGRAM_PREFIX/p' ${PWD}/config.h | cut -d '"' -f 2`
+	make -j4 -C quickcheck check SOURCE_PORT=$PWD/src/${PREFIX}doom
 fi
