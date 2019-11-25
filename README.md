@@ -6,10 +6,10 @@
 [![License](https://img.shields.io/github/license/zodomaniac/crispy-doom.svg?style=flat&logo=gnu)](https://github.com/zodomaniac/so-doom/blob/master/COPYING.md)
 [![Release](https://img.shields.io/github/release/zodomaniac/crispy-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
 [![Release Date](https://img.shields.io/github/release-date/zodomaniac/crispy-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
-[![Downloads](https://img.shields.io/github/downloads/zodomaniac/crispy-doom/latest/total.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
-[![Commits](https://img.shields.io/github/commits-since/zodomaniac/crispy-doom/latest.svg?style=flat)](https://github.com/zodomaniac/so-doom/commits/master)
+[![Downloads](https://img.shields.io/github/downloads/zodomaniac/so-doom/latest/total.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
+[![Commits](https://img.shields.io/github/commits-since/zodomaniac/so-doom/latest.svg?style=flat)](https://github.com/zodomaniac/so-doom/commits/master)
 [![Last Commit](https://img.shields.io/github/last-commit/zodomaniac/crispy-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/commits/master)
-[![Travis Build Status](https://img.shields.io/travis/com/zodomaniac/crispy-doom.svg?style=flat&logo=travis)](https://travis-ci.com/fabiangreffrath/crispy-doom/)
+[![Travis Build Status](https://img.shields.io/travis/com/zodomaniac/crispy-doom.svg?style=flat&logo=travis)](https://travis-ci.com/zodomaniac/so-doom/)
 
 So Doom is a limit-removing enhanced-resolution Doom source port based on [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom).
 
