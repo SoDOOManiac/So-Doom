@@ -36,6 +36,7 @@ multiitem_t multiitem_bobfactor[NUM_BOBFACTORS] =
 {
     {BOBFACTOR_FULL, "full"},
     {BOBFACTOR_75, "75%"},
+    {BOBFACTOR_50, "50%"},
     {BOBFACTOR_OFF, "off"},
 };
 
