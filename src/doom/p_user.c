@@ -43,7 +43,7 @@
 #define MAXBOB	0x100000	
 
 // [crispy] variable player view bob
-static const fixed_t crispy_bobfactor[3] = {4, 3, 0};
+static const fixed_t crispy_bobfactor[4] = {4, 3, 2, 0};
 
 boolean		onground;
 
