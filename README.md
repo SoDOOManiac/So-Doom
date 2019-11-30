@@ -27,6 +27,8 @@ Its distinguishing features are:
 
  * Hot-swapping of Crispy Doom's Flipped Levels and Flipped Weapons features.
  * Option for INTERCEPTS overflow evasion in singleplayer, shadowed and disabled in netgames.
+ * Extra cheat codes: TWx to get specific weapon and TAx to get specific ammo.
+ * Extra options for some Crispy settings.
  
 So Doom inherits all the core features of its parent Crispy Doom:
  
@@ -119,7 +121,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.8/so-doom-5.6.8-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.9/so-doom-5.6.9-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -154,6 +156,25 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.6.9
+
+So Doom 5.6.9 has been released on Nov 30, 2019.
+
+**So Doom-specific changes**
+
+ * 50% weapon bobbing option removed from Crispy Doom has been brought back.
+ * 'Horizontal' weapon attack alignment option removed from Crispy Doom has been brought back.
+
+**Changes pulled from Crispy Doom**
+
+ * Shadowed menu and text drawing has been removed, as it is bugged in wipe screens.
+ * The par time for MAP33 is now determined correctly (inherited from Chocolate Doom).
+ * Subsequent calls to `A_BrainAwake()` to reset the braintargeton variable are now allowed. This fixes demo sync for maps with more than one brain, e.g. PL2.
+ * OSX: Freedoom single player IWADs have been added to launcher (inherited from Chocolate Doom).
+ * The smooth chainsaw idle animation has been brought back.
+ * Player viewheight in NOMOMENTUM mode has been fixed on Zodomaniac's report.
+ * Weapon bobbing has been reworked and made adjustable.
 
 ### So Doom 5.6.8
 
