@@ -1006,7 +1006,7 @@ void P_MovePsprites (player_t* player)
 
     // [crispy] apply bobbing (or centering) to the player's weapon sprite
     psp = &player->psprites[0];
-    if (crispy->bobfactor || crispy->centerweapon)
+    if (psp->state)
     {
 	// [crispy] don't center vertically during lowering and raising states
 	if (psp->state->misc1 ||
