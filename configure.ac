@@ -3,7 +3,7 @@ AC_INIT(So Doom, 5.6.9,
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"
-PACKAGE_COPYRIGHT="Copyright (C) 1993-2019"
+PACKAGE_COPYRIGHT="Copyright (C) 1993-2020"
 PACKAGE_LICENSE="GNU General Public License, version 2"
 PACKAGE_MAINTAINER="Zodomaniac"
 PACKAGE_URL="http://zodomaniac.github.io/so-doom"
