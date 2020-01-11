@@ -120,7 +120,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ## Download
 
-Binaries for Windows XP / Vista / 7 / 8.1 / 10 (both x86 and x64 editions) are available here: 
+Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
 https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.9/so-doom-5.6.9-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
@@ -156,6 +156,26 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.6.10
+
+So Doom 5.6.10 has been released on Jan YY, 2020 to bring the fixes that came with Crispy Doom 5.6.4 release.
+
+**Changes pulled from Crispy Doom**
+
+ * Toggling full screen using Enter on num. keyboard is now possible (inherited from Chocolate Doom).
+ * `leveltime` is now shown in the demo timer widget during recording instead of the accumulated demo time, thanks to Looper from Doomworld forums for the input.
+ * Windows binaries being 32-bit has been clarified, thanks to RetroDoomKid for the remark.
+ * Demo timer widget is now reset when restarting a demo during recording.
+ * `gamemap` is now set to `startmap` when restarting a demo during recording.
+ * Blood splats and projectile puffs are now drawn as small squares in the Automap.
+ * Missing prototype for `calloc` in `r_data.c` causing memory corruption on 64bit in Windows/MSVC builds has been fixed, thanks to zx64 for spotting this. 
+ * Crash when the flag for the berserk pack sprite patch memory zone is changed has been fixed, thanks to IsBebs for the bug report and Zodomaniac, JNechaevsky and turol for helping with the analysis.
+ * Zombie player crash on SELFDEAD has been fixed, thanks to tpoppins for the report and turol for the analysis.
+ * `"doomstat.h"` is now included instead of `<doomstat.h>` in `doom/r_swirl.c`, fixing compilation with MSVC2017, and packed attribute for structs when compiling with MSVC has been fixed. Thanks to drfrag666 for reporting and confirming the fix.
+ * Level/demo restart key description has been adjusted to become self-explanatory.
+ * Static demo file name suffix counter has been added. This avoids checks for an increasing number of file names being available by just remembering the latest given suffix number. Thanks to Looper for the suggestion.
+ * Demos are now restarted from the map they were started, thanks to Looper for the input.
 
 ### So Doom 5.6.9
 
