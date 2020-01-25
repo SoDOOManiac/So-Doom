@@ -521,6 +521,12 @@ void M_CrispyToggleSoundMono(int choice)
     S_UpdateStereoSeparation();
 }
 
+void M_CrispyToggleThingInterp(int choice)
+{
+    choice = 0;
+    crispy->thinginterp = !crispy->thinginterp;
+}
+
 void M_CrispyToggleTranslucency(int choice)
 {
     choice = 0;

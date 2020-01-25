@@ -545,8 +545,10 @@ void P_MobjThinker (mobj_t* mobj)
     {
         // Assume we can interpolate at the beginning
         // of the tic.
+        if (crispy->thinginterp)
         mobj->interp = true;
-
+        else
+        mobj->interp = false;
         // Store starting position for mobj interpolation.
         mobj->oldx = mobj->x;
         mobj->oldy = mobj->y;
