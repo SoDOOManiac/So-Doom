@@ -499,7 +499,7 @@ static menuitem_t Crispness1Menu[]=
     {1,"",	M_CrispyToggleColoredblood,'d'},
     {1,"",	M_CrispyToggleFlipcorpses,'r'},
     {1,"",	M_CrispyToggleThingInterp,'i'},
-    {-1,"",0,'\0'},
+//    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
