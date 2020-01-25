@@ -545,7 +545,7 @@ void P_MobjThinker (mobj_t* mobj)
     {
         // Assume we can interpolate at the beginning
         // of the tic.
-        if (crispy->thinginterp)
+        if (crispy->thinginterp) // (So Doom) Thing interpolation switch in SoDOOMy menu
         mobj->interp = true;
         else
         mobj->interp = false;

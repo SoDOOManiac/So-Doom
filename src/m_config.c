@@ -2113,7 +2113,7 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Enable translucency.
+    // Enable thing interpolation.
     //
 
     CONFIG_VARIABLE_INT(crispy_thinginterp),
@@ -2121,7 +2121,7 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Enable thing interpolation.
+    // Enable translucency.
     //
 
     CONFIG_VARIABLE_INT(crispy_translucency),
