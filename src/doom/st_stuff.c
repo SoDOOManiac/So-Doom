@@ -2117,10 +2117,10 @@ void ST_drawWidgets(boolean refresh)
     if (netgame)
     {
     dp_translucent = true;
-    V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y - ST_HEIGHT, faceback_sd);
+    V_DrawPatch(23 - SHORT(faceback_sd->width)/2-crispy->widescreen*DELTAWIDTH, ST_Y - ST_HEIGHT, faceback_sd);
     dp_translucent = false;
     }
-    V_DrawPatch(23 - SHORT(faceback_sd->width)/2, ST_Y-ST_HEIGHT, faces[st_faceindex]);
+    V_DrawPatch(23 - SHORT(faceback_sd->width)/2-crispy->widescreen*DELTAWIDTH, ST_Y-ST_HEIGHT, faces[st_faceindex]);
     }
 
     STlib_updateMultIcon(&w_faces, refresh);

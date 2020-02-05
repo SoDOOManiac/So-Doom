@@ -25,6 +25,13 @@
 
 #include "m_crispy.h"
 
+multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS] =
+{
+    {PIXELASPECTRATIO_OFF, "none"},
+    {PIXELASPECTRATIO_1_2, "1.2"},
+    {PIXELASPECTRATIO_1, "1"},
+};
+
 multiitem_t multiitem_bobfactor[NUM_BOBFACTORS] =
 {
     {BOBFACTOR_FULL, "full"},
@@ -147,6 +154,21 @@ extern void ST_createWidgets(void);
 extern void HU_Start(void);
 extern void M_SizeDisplay(int choice);
 
+static void M_CrispyTogglePixelAspectRatioHook (void)
+{
+    aspect_ratio_correct = (aspect_ratio_correct + 1) % NUM_PIXELASPECTRATIOS;
+
+    // [crispy] re-set logical rendering resolution
+
+    I_ReInitGraphics(REINIT_ASPECTRATIO);
+}
+
+void M_CrispyTogglePixelAspectRatio(int choice)
+{
+    choice = 0;
+
+    crispy->post_rendering_hook = M_CrispyTogglePixelAspectRatioHook;
+}
 
 void M_CrispyToggleAutomapstats(int choice)
 {
