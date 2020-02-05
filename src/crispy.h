@@ -82,6 +82,7 @@ typedef struct
 	int uncapped;
 	int vsync;
 	int weaponsquat;
+	int widescreen;
 
 	// [crispy] in-game switches and variables
 	int screenshotmsg;
@@ -116,14 +117,6 @@ enum
 	REINIT_RENDERER = 2,
 	REINIT_TEXTURES = 4,
 	REINIT_ASPECTRATIO = 8,
-};
-
-enum
-{
-    ASPECTRATIO_OFF,
-    ASPECTRATIO_4_3,
-    ASPECTRATIO_16_10,
-    NUM_ASPECTRATIOS,
 };
 
 enum
