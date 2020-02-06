@@ -121,7 +121,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.9/so-doom-5.6.9-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.6.10/so-doom-5.6.10-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -159,10 +159,19 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.6.10
 
-So Doom 5.6.10 has been released on Jan YY, 2020 to bring the fixes that came with Crispy Doom 5.6.4 release.
+So Doom 5.6.10 has been released on Feb 06, 2020 to bring the fixes that came with Crispy Doom 5.6.4 release and features implemented after it.
+
+**So Doom-specific changes**
+
+ * 'Pixel Aspect Ratio' Rendering menu item has been introduced. 
+ * 'Thing interpolation' (i.e. interpolation of monster animations for uncapped framerate) can be disabled now in Visual menu.
+ * (Regression) To tackle the issues with widescreen rendering, the logo in SoDOOMy menu background is now drawn as a 320x200 patch.
 
 **Changes pulled from Crispy Doom**
 
+ * Widescreen rendering has been implemented.
+ * Time in demo timer widget is printed in centiseconds instead of tics.
+ * `-lumpdump` command line parameter has been added that dumps raw content of a lump into a file.
  * Toggling full screen using Enter on num. keyboard is now possible (inherited from Chocolate Doom).
  * `leveltime` is now shown in the demo timer widget during recording instead of the accumulated demo time, thanks to Looper from Doomworld forums for the input.
  * Windows binaries being 32-bit has been clarified, thanks to RetroDoomKid for the remark.

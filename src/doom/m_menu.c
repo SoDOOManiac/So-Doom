@@ -1470,11 +1470,11 @@ static void M_DrawMouse(void)
 #include "m_background.h"
 static void M_DrawCrispnessBackground(void)
 {
-	const byte *const src = crispness_background;
-	pixel_t *dest;
-	int x, y;
+	//const byte *const src = crispness_background;
+	//pixel_t *dest;
+	//int x, y;
 
-	dest = I_VideoBuffer;
+	//dest = I_VideoBuffer;
 
     /*for (y = 0; y < SCREENHEIGHT; y++)  // [crispy] tiling 64x64 background crisps texture
 	{
@@ -1488,7 +1488,9 @@ static void M_DrawCrispnessBackground(void)
 		}
 	}*/
 
-	for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
+	V_DrawPatchDirect(0, 0, &crispness_background); 
+
+	/*for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
 	{
 		for (x = crispy->widescreen*DELTAWIDTH; x < SCREENWIDTH-crispy->widescreen*DELTAWIDTH; x++)
 		{
@@ -1498,7 +1500,7 @@ static void M_DrawCrispnessBackground(void)
 			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*DELTAWIDTH)]];
 #endif
 		}
-	}
+	}*/
 
 	inhelpscreens = true;
 }
