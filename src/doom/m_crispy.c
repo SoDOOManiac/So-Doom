@@ -160,7 +160,27 @@ static void M_CrispyTogglePixelAspectRatioHook (void)
 
     // [crispy] re-set logical rendering resolution
 
-    I_ReInitGraphics(REINIT_ASPECTRATIO);
+    //I_ReInitGraphics(REINIT_ASPECTRATIO);
+    // [crispy] re-initialize screenSize_min
+    M_SizeDisplay(-1);
+    // [crispy] re-initialize framebuffers, textures and renderer
+    I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+    // [crispy] re-calculate framebuffer coordinates
+    R_ExecuteSetViewSize();
+    // [crispy] re-draw bezel
+    R_FillBackScreen();
+    // [crispy] re-calculate disk icon coordinates
+    EnableLoadingDisk();
+    // [crispy] re-calculate automap coordinates
+    AM_ReInit();
+
+    if (gamestate == GS_LEVEL && gamemap > 0)
+    {
+	// [crispy] re-arrange status bar widgets
+	ST_createWidgets();
+	// [crispy] re-arrange heads-up widgets
+	HU_Start();
+    }
 }
 
 void M_CrispyTogglePixelAspectRatio(int choice)

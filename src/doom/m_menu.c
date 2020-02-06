@@ -1490,12 +1490,12 @@ static void M_DrawCrispnessBackground(void)
 
 	for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
 	{
-		for (x = 0; x < SCREENWIDTH; x++)
+		for (x = crispy->widescreen*DELTAWIDTH; x < SCREENWIDTH-crispy->widescreen*DELTAWIDTH; x++)
 		{
 #ifndef CRISPY_TRUECOLOR
-			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*SCREENWIDTH];
+			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*DELTAWIDTH)];
 #else
-			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*SCREENWIDTH]];
+			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*DELTAWIDTH)]];
 #endif
 		}
 	}
