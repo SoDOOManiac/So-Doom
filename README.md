@@ -164,13 +164,14 @@ So Doom 5.6.10 has been released on Feb 06, 2020 to bring the fixes that came wi
 **So Doom-specific changes**
 
  * 'Pixel Aspect Ratio' Rendering menu item has been introduced. 
- * 'Thing interpolation' (i.e. interpolation of monster animations for uncapped framerate) can be disabled now in Visual menu.
+ * 'Thing interpolation' (i.e. interpolation of monster animations for uncapped framerate) can be disabled now in Visual menu. This feature was requested by PolarDawn.
  * (Regression) To tackle the issues with widescreen rendering, the logo in SoDOOMy menu background is now drawn as a 320x200 patch.
 
 **Changes pulled from Crispy Doom**
 
  * Widescreen rendering has been implemented.
- * Time in demo timer widget is printed in centiseconds instead of tics.
+ * Time in demo timer widget is printed in centiseconds instead of tics. Thanks to Looper and ZeroMaster010 for the suggestion.
+ * Loading 16 bit RIFF wavs in .wads has been enabled, contributed by SmileTheory.
  * `-lumpdump` command line parameter has been added that dumps raw content of a lump into a file.
  * Toggling full screen using Enter on num. keyboard is now possible (inherited from Chocolate Doom).
  * `leveltime` is now shown in the demo timer widget during recording instead of the accumulated demo time, thanks to Looper from Doomworld forums for the input.
