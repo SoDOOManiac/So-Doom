@@ -1543,8 +1543,7 @@ void ST_updateFaceWidget(void)
     if (priority < 10)
     {
 	// dead
-	// [crispy] negative player health
-	if (plyr->health <= 0)
+	if (!plyr->health)
 	{
 	    priority = 9;
 	    painoffset = 0;
@@ -2027,7 +2026,7 @@ static inline void ST_DrawGibbedPlayerSprites (void)
 		                 ((plyr->mo->flags & MF_TRANSLATION) >> (MF_TRANSSHIFT - 8));
 	}
 
-	V_DrawPatch(73, 186, patch);
+	V_DrawPatch(ST_HEALTHX - 17, 186, patch);
 	dp_translation = NULL;
 }
 
@@ -2068,7 +2067,7 @@ void ST_drawWidgets(boolean refresh)
 		patch = W_CacheLumpNum(lump, PU_CACHE);
 
 		// [crispy] (23,179) is the center of the Ammo widget
-		V_DrawPatch(23 - SHORT(patch->width)/2 + SHORT(patch->leftoffset),
+		V_DrawPatch(ST_AMMOX - 21 - SHORT(patch->width)/2 + SHORT(patch->leftoffset),
 		            179 - SHORT(patch->height)/2 + SHORT(patch->topoffset),
 		            patch);
 
@@ -2092,6 +2091,8 @@ void ST_drawWidgets(boolean refresh)
     if (!gibbed)
     {
     dp_translation = ST_WidgetColor(hudcolor_health);
+    // [crispy] negative player health
+    w_health.n.num = crispy->neghealth ? &plyr->neghealth : &plyr->health;
     STlib_updatePercent(&w_health, refresh);
     }
     dp_translation = ST_WidgetColor(hudcolor_armor);
