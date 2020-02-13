@@ -74,7 +74,6 @@ typedef struct
 	int soundfix;
 	int soundfull;
 	int soundmono;
-	int thinginterp;
 	int translucency;
 #if CRISPY_TRUECOLOR
 	int truecolor;
@@ -117,6 +116,14 @@ enum
 	REINIT_RENDERER = 2,
 	REINIT_TEXTURES = 4,
 	REINIT_ASPECTRATIO = 8,
+};
+
+enum
+{
+    UNCAPPEDFRAMERATE_OFF,
+    UNCAPPEDFRAMERATE_FULL,
+    UNCAPPEDFRAMERATE_CAMERAMOVEMENT,
+    NUM_UNCAPPEDFRAMERATES,
 };
 
 enum

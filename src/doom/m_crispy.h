@@ -26,6 +26,7 @@ typedef struct
     char *name;
 } multiitem_t;
 
+extern multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES];
 extern multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS];
 extern multiitem_t multiitem_bobfactor[NUM_BOBFACTORS];
 extern multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS];
@@ -79,7 +80,6 @@ extern void M_CrispyToggleSmoothScaling(int choice);
 extern void M_CrispyToggleSndChannels(int choice);
 extern void M_CrispyToggleSoundfixes(int choice);
 extern void M_CrispyToggleSoundMono(int choice);
-extern void M_CrispyToggleThingInterp(int choice);
 extern void M_CrispyToggleTranslucency(int choice);
 extern void M_CrispyToggleUncapped(int choice);
 extern void M_CrispyToggleVsync(int choice);

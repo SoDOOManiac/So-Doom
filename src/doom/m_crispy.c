@@ -25,6 +25,13 @@
 
 #include "m_crispy.h"
 
+multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
+{
+    {UNCAPPEDFRAMERATE_OFF, "off"},
+    {UNCAPPEDFRAMERATE_FULL, "full"},
+    {UNCAPPEDFRAMERATE_CAMERAMOVEMENT, "camera movement"},
+};
+
 multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS] =
 {
     {PIXELASPECTRATIO_OFF, "none"},
@@ -544,12 +551,6 @@ void M_CrispyToggleSoundMono(int choice)
     S_UpdateStereoSeparation();
 }
 
-void M_CrispyToggleThingInterp(int choice)
-{
-    choice = 0;
-    crispy->thinginterp = !crispy->thinginterp;
-}
-
 void M_CrispyToggleTranslucency(int choice)
 {
     choice = 0;
@@ -560,7 +561,8 @@ void M_CrispyToggleUncapped(int choice)
 {
     choice = 0;
 
-    crispy->uncapped = !crispy->uncapped;
+    //crispy->uncapped = !crispy->uncapped;
+    crispy->uncapped = (crispy->uncapped + 1) % NUM_UNCAPPEDFRAMERATES; // [So Doom]
 }
 
 void M_CrispyToggleVsyncHook (void)

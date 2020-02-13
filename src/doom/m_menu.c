@@ -476,8 +476,7 @@ enum
     crispness_brightmaps,
     crispness_coloredblood,
     crispness_flipcorpses,
-    crispness_thinginterp,
-    //crispness_sep_visual_,
+    crispness_sep_visual_,
 
     crispness1_next,
     crispness1_prev,
@@ -501,8 +500,7 @@ static menuitem_t Crispness1Menu[]=
     {1,"",	M_CrispyToggleBrightmaps,'b'},
     {1,"",	M_CrispyToggleColoredblood,'d'},
     {1,"",	M_CrispyToggleFlipcorpses,'r'},
-    {1,"",	M_CrispyToggleThingInterp,'i'},
-//    {-1,"",0,'\0'},
+    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1556,7 +1554,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessItem(crispness_hires, "High Resolution Rendering", crispy->hires, true);
     M_DrawCrispnessItem(crispness_widescreen, "Widescreen Rendering", crispy->widescreen, true);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
-    M_DrawCrispnessItem(crispness_uncapped, "Uncapped Framerate", crispy->uncapped, true);
+    M_DrawCrispnessMultiItem(crispness_uncapped, "Uncapped Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessItem(crispness_vsync, "Enable VSync", crispy->vsync, !force_software_renderer);
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, true);
 
@@ -1567,7 +1565,6 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
     M_DrawCrispnessItem(crispness_coloredblood, "Colored Blood and Corpses", crispy->coloredblood, gameversion != exe_chex);
     M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
-    M_DrawCrispnessItem(crispness_thinginterp, "Thing Interpolation", crispy->thinginterp, true);
 
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
     M_DrawCrispnessGoto(crispness1_prev, "< Last Page");

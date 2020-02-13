@@ -545,10 +545,10 @@ void P_MobjThinker (mobj_t* mobj)
     {
         // Assume we can interpolate at the beginning
         // of the tic.
-        if (crispy->thinginterp) // (So Doom) Thing interpolation switch in SoDOOMy menu
+        if (crispy->uncapped==1) // (So Doom) fully interpolated game scene
         mobj->interp = true;
         else
-        mobj->interp = false;
+        mobj->interp = false; // (So Doom) non-interpolated (35 FPS) or interpolated camera movement only (uncapped FPS) game scene 
         // Store starting position for mobj interpolation.
         mobj->oldx = mobj->x;
         mobj->oldy = mobj->y;

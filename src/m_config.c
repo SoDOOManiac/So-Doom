@@ -2185,14 +2185,6 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Enable thing interpolation.
-    //
-
-    CONFIG_VARIABLE_INT(crispy_thinginterp),
-
-    //!
-    // @game doom
-    //
     // Enable translucency.
     //
 
