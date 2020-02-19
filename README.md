@@ -27,12 +27,15 @@ Its distinguishing features are:
 
  * Hot-swapping of Crispy Doom's Flipped Levels and Flipped Weapons features.
  * Option for INTERCEPTS overflow evasion in singleplayer, shadowed and disabled in netgames.
+ * In-game control of pixel aspect ratio correction (not having to edit the `so-doom.cfg` file manually).
+ * Possibility to interpolate camera movement only ('Camera movement' setting of 'Uncapped framerate' menu item), so that monsters don't 'slide'.
+ * Extra options for some Crispy settings (like weapon bobbing).
  * Extra cheat codes: TWx to get specific weapon and TAx to get specific ammo.
- * Extra options for some Crispy settings.
  
 So Doom inherits all the core features of its parent Crispy Doom:
  
  * Enhanced 640x400 display resolution, with the original 320x200 resolution still available in the "High Resolution Rendering: Off" mode.
+ * Widescreen rendering to use all the screen space of 16:9 monitors.
  * Uncapped rendering framerate with interpolation and optional vertical synchronization (VSync) with the screen refresh rate.
  * Intermediate gamma correction levels (0.5, 1.5, 2.5 and 3.5).
  * Removal of all static engine limits, or at least raising of the less crucial ones.
@@ -90,21 +93,22 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ### New command line parameters
 
- * `-dm3` specifies the Deathmatch 3.0 rules (weapons stay, items respawn) for netgames (since 4.1).
+ * `-dm3` specifies the Deathmatch 3.0 rules (weapons stay, items respawn) for netgames.
  * `-episode 1` launches Hell on Earth and `-episode 2` launches No Rest for the Living episode if the Doom 2 IWAD shipped with the Doom 3: BFG Edition is used.
- * `-warp 1a` warps to the secret level E1M10: Sewers of XBox Doom IWAD (since 2.3).
- * `-mergedump <file>` merges the PWAD file(s) given on the command line with the IWAD file and writes the resulting data into the `<file>` given as argument. May be considered as a replacement for the `DEUSF.EXE` tool (since 2.3).
- * `-blockmap` forces a (re-)building of the BLOCKMAP lumps for loaded maps (since 2.3).
- * `-playdemo demoname -warp N` plays back fast-forward up to the requested map (since 3.0).
- * `-loadgame N -record demoname` and `-loadgame N -playdemo demoname` allow to record and play demos starting from a savegame instead of the level start (since 4.0).
- * `-playdemo demoname1 -record demoname2` plays back fast-forward until the end of demoname1 and continues recording as demoname2 (new in 5.5).
- * `-fliplevels` loads mirrored versions of the maps (this was the default on April 1st up to version 5.0).
- * `-flipweapons` flips the player's weapons (new in 5.3).
+ * `-warp 1a` warps to the secret level E1M10: Sewers of XBox Doom IWAD.
+ * `-mergedump <file>` merges the PWAD file(s) given on the command line with the IWAD file and writes the resulting data into the `<file>` given as argument. May be considered as a replacement for the `DEUSF.EXE` tool.
+ * `-lumpdump` dumps raw content of a lump into a file (since 5.6.10).
+ * `-blockmap` forces a (re-)building of the BLOCKMAP lumps for loaded maps.
+ * `-playdemo demoname -warp N` plays back fast-forward up to the requested map.
+ * `-loadgame N -record demoname` and `-loadgame N -playdemo demoname` allow to record and play demos starting from a savegame instead of the level start.
+ * `-playdemo demoname1 -record demoname2` plays back fast-forward until the end of demoname1 and continues recording as demoname2.
+ * `-fliplevels` loads mirrored versions of the maps.
+ * `-flipweapons` flips the player's weapons.
 
 ### New cheat codes
 
- * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TNTWEAP9` to play the SSG in Doom 1.
- * `TA` followed by a number gives the specified type of ammo (1-berserk pack, 2-5 - ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
+ * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TNTWEAP9` to play the SSG in Doom 1.
+ * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
  * `NOTARGET` or `FHSHH` toggle deaf and blind monsters that do not act until attacked.
@@ -366,8 +370,8 @@ PrBoom+ is © 1999 id Software, Chi Hoang, Lee Killough, Jim Flynn, Rand Phares,
 Chocolate Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard; 
 Chocolate Hexen is © 1993-1996 Id Software, Inc., © 1993-2008 Raven Software, © 2008 Simon Howard;
 Strawberry Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard, © 2008-2010 GhostlyDeath; 
-Crispy Doom is © 2014-2019 Fabian Greffrath;
-additionally So Doom is © 2019 Vladislav Melnichuk;
+Crispy Doom is © 2014-2020 Fabian Greffrath;
+additionally So Doom is © 2019-2020 Vladislav Melnichuk;
 all of the above are released under the [GPL-2+](https://www.gnu.org/licenses/gpl-2.0.html).
 
 SDL 2.0, SDL_mixer 2.0 and SDL_net 2.0 are © 1997-2016 Sam Lantinga and are released under the [zlib license](http://www.gzip.org/zlib/zlib_license.html).
