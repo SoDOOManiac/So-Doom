@@ -1550,7 +1550,8 @@ void I_GetScreenDimensions (void)
 
 	if (crispy->widescreen)
 	{
-		SCREENWIDTH = w * ah / h;
+		if (aspect_ratio_correct) // [So Doom] for those who like horizontally stretched pixels occupying the whole display in case of a_r_c == 0
+			SCREENWIDTH = w * ah / h;
 		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
 		SCREENWIDTH = (SCREENWIDTH + 3) & (int)~3;
 		// [crispy] ... but never exceeds MAXWIDTH (array size!)
