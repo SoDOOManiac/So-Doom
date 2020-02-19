@@ -1536,14 +1536,7 @@ void I_GetScreenDimensions (void)
 
 	HIRESWIDTH = SCREENWIDTH;
 
-	// ah = (aspect_ratio_correct == 1) ? (6 * SCREENHEIGHT / 5) : SCREENHEIGHT; 
-
-    if (aspect_ratio_correct == 0) // [So Doom] enable all combinations of aspect ratio correction and widescreen
-    ah = (9 * SCREENHEIGHT / 10);
-    else if (aspect_ratio_correct == 1)
-    ah = (6 * SCREENHEIGHT / 5);
-    else
-    ah = SCREENHEIGHT;
+	ah = (aspect_ratio_correct == 1) ? (6 * SCREENHEIGHT / 5) : SCREENHEIGHT;
 
 	if (SDL_GetCurrentDisplayMode(video_display, &mode) == 0)
 	{
@@ -1617,21 +1610,14 @@ void I_InitGraphics(void)
     // [crispy] (re-)initialize resolution-agnostic patch drawing
     V_Init();
 
-/*    if (aspect_ratio_correct == 1)
+    if (aspect_ratio_correct == 1)
     {
         actualheight = 6 * SCREENHEIGHT / 5;
     }
     else
     {
         actualheight = SCREENHEIGHT;
-    }*/
-
-    if (aspect_ratio_correct == 0)           // [So Doom] enable all combinations of aspect ratio correction and widescreen
-    actualheight = (9 * SCREENHEIGHT / 10);
-    else if (aspect_ratio_correct == 1)
-    actualheight = (6 * SCREENHEIGHT / 5);
-    else
-    actualheight = SCREENHEIGHT;
+    }
 
     // Create the game window; this may switch graphic modes depending
     // on configuration.
@@ -1779,21 +1765,14 @@ void I_ReInitGraphics (int reinit)
 	// [crispy] re-set logical rendering resolution
 	if (reinit & REINIT_ASPECTRATIO)
 	{
-		/*if (aspect_ratio_correct == 1)
+		if (aspect_ratio_correct == 1)
 		{
 			actualheight = 6 * SCREENHEIGHT / 5;
 		}
 		else
 		{
 			actualheight = SCREENHEIGHT;
-		}*/
-
-		if (aspect_ratio_correct == 0)           // [So Doom] enable all combinations of aspect ratio correction and widescreen
-		actualheight = (9 * SCREENHEIGHT / 10);
-		else if (aspect_ratio_correct == 1)
-		actualheight = (6 * SCREENHEIGHT / 5);
-		else
-		actualheight = SCREENHEIGHT;
+		}
 
 		if (aspect_ratio_correct || integer_scaling)
 		{
