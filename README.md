@@ -35,7 +35,7 @@ Its distinguishing features are:
 So Doom inherits all the core features of its parent Crispy Doom:
  
  * Enhanced 640x400 display resolution, with the original 320x200 resolution still available in the "High Resolution Rendering: Off" mode.
- * Widescreen rendering to use all the screen space of monitors with aspect ratios from 16:9 to 24:9.
+ * Widescreen rendering for using all the available horizontal space of screens with aspect ratios up to 24:9.
  * Uncapped rendering framerate with interpolation and optional vertical synchronization (VSync) with the screen refresh rate.
  * Intermediate gamma correction levels (0.5, 1.5, 2.5 and 3.5).
  * Removal of all static engine limits, or at least raising of the less crucial ones.
@@ -107,7 +107,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ### New cheat codes
 
- * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TNTWEAP9` to play the SSG in Doom 1.
+ * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TW9` to play the SSG in Doom 1.
  * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
@@ -161,6 +161,21 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.7
+
+So Doom 5.7 has been released on February 26, 2020 to accompany Crispy Doom 5.7 and include some fixes for widescreen rendering that followed it.
+
+**So Doom-specific changes**
+
+ * The ugly 'So Noob' adaptation for widescreen monitors that did not support aspect ratios wider than 16:9 has been replaced with the proper one, supporting aspect ratios up to 24:9.
+
+**Changes pulled from Crispy Doom**
+
+ * Widescreen resizing of the framebuffer is not performed anymore in case of disabled aspect ratio correction, as Zodomaniac proved it made no sense.
+ * The obtrusive MAP/WAD automap text widget is not drawn anymore in widescreen mode, thanks to plumsinus.
+ * Horizontal coordinates of automap markers in widescreen mode have been fixed, thanks unerxai from Doomworld forums.
+ * Fix for GUS emulation in presence of midiproc.exe has been pulled from Chocolate Doom, whereto it was contributed by JNechaevsky.
+
 ### So Doom 5.6.11
 
 So Doom 5.6.11 has been released on February 13, 2020 to include the HUD fixes for widescreen rendering and fulfil some community requests.
@@ -187,7 +202,7 @@ So Doom 5.6.10 has been released on February 06, 2020 to bring the fixes that ca
 
 **Changes pulled from Crispy Doom**
 
- * Widescreen rendering has been implemented.
+ * Widescreen rendering has been implemented, thanks to JNechaevsky for spotting the bugs that had been surfacing in the progress of initial implementation.
  * Time in demo timer widget is printed in centiseconds instead of tics. Thanks to Looper and ZeroMaster010 for the suggestion.
  * Loading 16 bit RIFF wavs in .wads has been enabled, contributed by SmileTheory.
  * `-lumpdump` command line parameter has been added that dumps raw content of a lump into a file.
