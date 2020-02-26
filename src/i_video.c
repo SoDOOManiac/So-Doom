@@ -1548,10 +1548,15 @@ void I_GetScreenDimensions (void)
 		}
 	}
 
+	// [crispy] widescreen rendering makes no sense without aspect ratio correction
+	if (!aspect_ratio_correct)
+	{
+		crispy->widescreen = 0;
+	}
+	
 	if (crispy->widescreen)
 	{
-		if (aspect_ratio_correct) // [So Doom] for those who like horizontally stretched pixels occupying the whole display in case of a_r_c == 0
-			SCREENWIDTH = w * ah / h;
+		SCREENWIDTH = w * ah / h;
 		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
 		SCREENWIDTH = (SCREENWIDTH + 3) & (int)~3;
 		// [crispy] ... but never exceeds MAXWIDTH (array size!)
