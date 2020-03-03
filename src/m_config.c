@@ -2137,6 +2137,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Color (bright green) the revealed secret sector in the automap.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_secretcolor),
+
+    //!
+    // @game doom
+    //
     // Show a centered message and play a sound when a secret is found.
     //
 

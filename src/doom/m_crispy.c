@@ -499,6 +499,12 @@ void M_CrispyToggleRecoil(int choice)
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 }
 
+void M_CrispyToggleSecretcolor(int choice)
+{
+    choice = 0;
+    crispy->secretcolor = !crispy->secretcolor;
+}
+
 void M_CrispyToggleSecretmessage(int choice)
 {
     choice = 0;

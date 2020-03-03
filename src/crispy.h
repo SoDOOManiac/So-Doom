@@ -68,6 +68,7 @@ typedef struct
 	int pitch;
 	int playercoords;
 	int recoil;
+	int secretcolor;
 	int secretmessage;
 	int smoothlight;
 	int smoothscaling;

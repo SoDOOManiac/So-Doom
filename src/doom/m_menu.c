@@ -530,6 +530,7 @@ enum
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
+    crispness_secretcolor,
     crispness_sep_navigational_,
 
     crispness2_next,
@@ -551,6 +552,7 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
     {1,"",	M_CrispyToggleSecretmessage,'s'},
+    {1,"",	M_CrispyToggleSecretcolor,'r'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -1590,6 +1592,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);
+    M_DrawCrispnessItem(crispness_secretcolor, "Color Revealed Secrets", crispy->secretcolor, true);
 
     M_DrawCrispnessGoto(crispness2_next, "Next Page >");
     M_DrawCrispnessGoto(crispness2_prev, "< Prev Page");
