@@ -125,7 +125,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7/so-doom-5.7.0-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.1/so-doom-5.7.1-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -160,6 +160,24 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.7.1
+
+So Doom 5.7.1 has been released on March 05, 2020 to feature post-Crispy 5.7.1 bug fixes and Compact HUD, as well as resolve So Doom-specific issues.
+
+**So Doom-specific changes**
+
+ * Widescreen setting is now restored after cycling aspect ratio correction through 'none' due to the change in Crispy code.
+ * SoDOOMy menu item has been introduced for coloring revealed secrets in automap, inspired by the discussion with oprypin.
+
+**Changes pulled from Crispy Doom**
+
+ * Wrong alignment of HUD widgets when launching map from command line on Windows has been fixed, spotted by Zodomaniac.
+ * `crispy-doom` is now explicitly written to extended savegame header instead of `PACKAGE_TARNAME` to preserve savegame header compatibility across forks that might have different package names.
+ * 'Oof' sounds have been removed from Crispness menu as pistol firing sound played upon any (including futile) attempt to manipulate the Crispness menu item is much louder and oofs can barely be heard.
+ * "Wide" and "Compact" HUDs are now available for widescreen mode, where "wide" and "compact" refer to the alignment of status bar and HUD widgets.
+ * Respective Crispness menu item has been renamed to "Report Revealed Secrets". This should improve the discoverability of this feature, thanks to oprypin for the discussion. 
+ * Screen resolution is now not changed during a wipe as it was causing crashes reported and investigated by Zodomaniac and JNechaevsky.
 
 ### So Doom 5.7
 
