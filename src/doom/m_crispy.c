@@ -144,6 +144,13 @@ multiitem_t multiitem_sndchannels[4] =
     {32, "32"},
 };
 
+multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
+{
+    {WIDESCREEN_OFF, "off"},
+    {WIDESCREEN_WIDE, "on, wide HUD"},
+    {WIDESCREEN_COMPACT, "on, compact HUD"},
+};
+
 multiitem_t multiitem_widgets[NUM_WIDGETS] =
 {
     {WIDGETS_OFF, "never"},
@@ -227,7 +234,6 @@ void M_CrispyToggleColoredblood(int choice)
 
     if (gameversion == exe_chex)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -284,7 +290,6 @@ void M_CrispyToggleCrosshairtype(int choice)
 {
     if (!crispy->crosshair)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -313,7 +318,6 @@ void M_CrispyToggleDemoTimerDir(int choice)
 {
     if (!(crispy->demotimer & DEMOTIMER_PLAYBACK))
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -343,7 +347,6 @@ void M_CrispyToggleFlipcorpses(int choice)
 {
     if (gameversion == exe_chex)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -355,7 +358,6 @@ void M_CrispyToggleFreeaim(int choice)
 {
     if (!crispy->singleplayer)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -424,7 +426,6 @@ void M_CrispyToggleJumping(int choice)
 {
     if (!crispy->singleplayer)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -459,7 +460,6 @@ void M_CrispyToggleOverunder(int choice)
 {
     if (!crispy->singleplayer)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -488,7 +488,6 @@ void M_CrispyToggleRecoil(int choice)
 {
     if (!crispy->singleplayer)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -584,7 +583,6 @@ void M_CrispyToggleVsync(int choice)
 
     if (force_software_renderer)
     {
-	S_StartSound(NULL,sfx_oof);
 	return;
     }
 
@@ -599,20 +597,24 @@ void M_CrispyToggleWeaponSquat(int choice)
 
 static void M_CrispyToggleWidescreenHook (void)
 {
-    crispy->widescreen = !crispy->widescreen;
+    crispy->widescreen = (crispy->widescreen + 1) % NUM_WIDESCREEN;
 
-    // [crispy] re-initialize screenSize_min
-    M_SizeDisplay(-1);
-    // [crispy] re-initialize framebuffers, textures and renderer
-    I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
-    // [crispy] re-calculate framebuffer coordinates
-    R_ExecuteSetViewSize();
-    // [crispy] re-draw bezel
-    R_FillBackScreen();
-    // [crispy] re-calculate disk icon coordinates
-    EnableLoadingDisk();
-    // [crispy] re-calculate automap coordinates
-    AM_ReInit();
+    // [crispy] no need to re-init when switching from wide to compact
+    if (crispy->widescreen == 1 || crispy->widescreen == 0)
+    {
+	// [crispy] re-initialize screenSize_min
+	M_SizeDisplay(-1);
+	// [crispy] re-initialize framebuffers, textures and renderer
+	I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+	// [crispy] re-calculate framebuffer coordinates
+	R_ExecuteSetViewSize();
+	// [crispy] re-draw bezel
+	R_FillBackScreen();
+	// [crispy] re-calculate disk icon coordinates
+	EnableLoadingDisk();
+	// [crispy] re-calculate automap coordinates
+	AM_ReInit();
+    }
 
     if (gamestate == GS_LEVEL && gamemap > 0)
     {
