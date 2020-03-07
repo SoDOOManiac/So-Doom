@@ -125,7 +125,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.1/so-doom-5.7.1-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.2/so-doom-5.7.2-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -161,6 +161,19 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.7.2
+
+So Doom 5.7.2 has been released on March 07, 2020 to feature the additional Cockpit HUD as Compact HUD had been modified in Crispy and fix a bug in Uncapped Framerate setting.
+
+**So Doom-specific changes**
+
+ * Fixed uncapped framerate options broken after recent Crispy merge. 
+ * The previous centered implementation of Compact HUD has been brought back under the name Cockpit HUD.
+
+**Changes pulled from Crispy Doom**
+
+ * Compact HUD was reworked in Crispy to align widgets to screen edges.
+
 ### So Doom 5.7.1
 
 So Doom 5.7.1 has been released on March 05, 2020 to feature post-Crispy 5.7.1 bug fixes and Compact HUD, as well as resolve So Doom-specific issues.
@@ -189,7 +202,7 @@ So Doom 5.7 has been released on February 26, 2020 to accompany Crispy Doom 5.7 
 
 **Changes pulled from Crispy Doom**
 
- * Widescreen resizing of the framebuffer is not performed anymore in case of disabled aspect ratio correction, as Zodomaniac proved it made no sense.
+ * Widescreen rendering is now disabled in case of disabled aspect ratio correction, as Zodomaniac proved it made no sense.
  * The obtrusive MAP/WAD automap text widget is not drawn anymore in widescreen mode, thanks to plumsinus.
  * Horizontal coordinates of automap markers in widescreen mode have been fixed, thanks unerxai from Doomworld forums.
  * Fix for GUS emulation in presence of midiproc.exe has been pulled from Chocolate Doom, whereto it was contributed by JNechaevsky.
