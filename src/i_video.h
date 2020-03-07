@@ -36,6 +36,7 @@ extern int SCREENHEIGHT;
 extern int HIRESWIDTH; // [crispy] non-widescreen SCREENWIDTH
 extern int DELTAWIDTH; // [crispy] horizontal widescreen offset
 void I_GetScreenDimensions (void); // [crispy] re-calculate DELTAWIDTH
+#define HORIZDELTA2 (crispy->widescreen % 3 == 0 ? 0 : DELTAWIDTH) // for Cockpit HUD
 
 // Screen height used when aspect_ratio_correct=true.
 

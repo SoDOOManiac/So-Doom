@@ -149,6 +149,7 @@ multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
     {WIDESCREEN_OFF, "off"},
     {WIDESCREEN_WIDE, "on, wide HUD"},
     {WIDESCREEN_COMPACT, "on, compact HUD"},
+    {WIDESCREEN_COCKPIT, "on, cockpit HUD"},
 };
 
 multiitem_t multiitem_widgets[NUM_WIDGETS] =
