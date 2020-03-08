@@ -444,7 +444,7 @@ cheatseq_t	cheat_health[3] = // some cheats restoring health (hp = health poweru
 {
     CHEAT("hps", 0), // [So Doom] soulsphere
     CHEAT("hpm", 0), // [So Doom] megasphere
-    CHEAT("hp", 0),
+    CHEAT("hp", 0),  // [So Doom] health powerup hint
 };
 
 cheatseq_t cheat_choppers = CHEAT("idchoppers", 0);
@@ -948,10 +948,11 @@ ST_Responder (event_t* ev)
 	    plyr->powers[i] = 0;
 	  
 	  plyr->message = DEH_String(STSTR_BEHOLDX);
+	  S_StartSound(NULL, sfx_getpow); // [So Doom] play powerup pickup sound
 	}
       }
       // [crispy] idbehold0
-      if (cht_CheckCheatSP(&cheat_powerup[7], ev->data2) || cht_CheckCheatSP(&cheat_powerup2[7], ev->data2))
+      if ((cht_CheckCheatSP(&cheat_powerup[7], ev->data2)) || (cht_CheckCheatSP(&cheat_powerup2[7], ev->data2)))
       {
 	memset(plyr->powers, 0, sizeof(plyr->powers));
 	plyr->mo->flags &= ~MF_SHADOW; // [crispy] cancel invisibility
@@ -959,7 +960,7 @@ ST_Responder (event_t* ev)
       }
       
       // 'behold' power-up menu
-      if (cht_CheckCheat(&cheat_powerup[6], ev->data2) || cht_CheckCheat(&cheat_powerup2[6], ev->data2))
+      if ((cht_CheckCheat(&cheat_powerup[6], ev->data2)) || (cht_CheckCheat(&cheat_powerup2[6], ev->data2)))
       {
 	plyr->message = DEH_String(STSTR_BEHOLD);
       }
@@ -1074,35 +1075,7 @@ ST_Responder (event_t* ev)
 	M_snprintf(msg, sizeof(msg), "Get Psyched!");
 	plyr->message = msg;
       }
-      else if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
-      {
-	M_snprintf(msg, sizeof(msg), "Soulsphere: %ss%s, Megasphere: %sm%s",
-	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
-	  }
-	  else if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
-	  {
-	plyr->health += deh_soulsphere_health;
-	if (plyr->health > deh_max_soulsphere)
-	    plyr->health = deh_max_soulsphere;
-	plyr->mo->health = plyr->health;
-	plyr->message = DEH_String(GOTSUPER);
-	if (gameversion > exe_doom_1_2)
-	    S_StartSound(NULL, sfx_getpow);
-	  }
-	  else if (cht_CheckCheatSP(&cheat_health[1], ev->data2))
-	  {
-	if (gamemode != commercial)
-	    return false;
-	plyr->health = deh_megasphere_health;
-	plyr->mo->health = plyr->health;
-        // We always give armor type 2 for the megasphere; dehacked only 
-        // affects the MegaArmor.
-	plyr->armorpoints = 200;
-	plyr->armortype = 2;
-	plyr->message = DEH_String(GOTMSPHERE);
-	if (gameversion > exe_doom_1_2)
-	    S_StartSound(NULL, sfx_getpow);
-	  }
+
       // [crispy] implement Boom's "tntweap?" weapon cheats
 /*      else if (cht_CheckCheatSP(&cheat_weapon, ev->data2))
       {
@@ -1257,6 +1230,44 @@ ST_Responder (event_t* ev)
 	}
 	}
     }
+
+	// [So Doom] health powerup giving cheats
+
+	  if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
+	  {
+	plyr->health += deh_soulsphere_health;
+	if (plyr->health > deh_max_soulsphere)
+	    plyr->health = deh_max_soulsphere;
+	plyr->mo->health = plyr->health;
+	plyr->message = DEH_String(GOTSUPER);
+	if (gameversion > exe_doom_1_2)
+	    S_StartSound(NULL, sfx_getpow);
+	  }
+
+	  if (cht_CheckCheatSP(&cheat_health[1], ev->data2))
+	  {
+	if (gamemode != commercial)
+	    return false;
+	plyr->health = deh_megasphere_health;
+	plyr->mo->health = plyr->health;
+        // We always give armor type 2 for the megasphere; dehacked only 
+        // affects the MegaArmor.
+	plyr->armorpoints = 200;
+	plyr->armortype = 2;
+	plyr->message = DEH_String(GOTMSPHERE);
+	if (gameversion > exe_doom_1_2)
+	    S_StartSound(NULL, sfx_getpow);
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
+      {
+	if (gamemode == commercial)
+	M_snprintf(msg, sizeof(msg), "Soulsphere: %sS%s, Megasphere: %sM%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	else
+	M_snprintf(msg, sizeof(msg), "Soulsphere: %sS%s",
+	           crstr[CR_GOLD],crstr[CR_NONE]);
+	  }
 
     // [So Doom] re-write of "tntweap"/"tw" cheats to display the weapon selection hint
 
