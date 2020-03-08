@@ -428,6 +428,25 @@ cheatseq_t	cheat_powerup[8] = // [crispy] idbehold0
     CHEAT("idbehold0", 0), // [crispy] idbehold0
 };
 
+cheatseq_t	cheat_powerup2[8] = // [So Doom] gp = give power, equal to idbehold
+{
+    CHEAT("gpv", 0),
+    CHEAT("gps", 0),
+    CHEAT("gpi", 0),
+    CHEAT("gpr", 0),
+    CHEAT("gpa", 0),
+    CHEAT("gpl", 0),
+    CHEAT("gp", 0),
+    CHEAT("gp0", 0), // [So Doom] gp0
+};
+
+cheatseq_t	cheat_health[3] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
+{
+    CHEAT("hps", 0), // [So Doom] soulsphere
+    CHEAT("hpm", 0), // [So Doom] megasphere
+    CHEAT("hp", 0),
+};
+
 cheatseq_t cheat_choppers = CHEAT("idchoppers", 0);
 cheatseq_t cheat_clev = CHEAT("idclev", 2);
 cheatseq_t cheat_mypos = CHEAT("idmypos", 0);
@@ -454,7 +473,7 @@ cheatseq_t cheat_weapon [11] =
 
 cheatseq_t cheat_weapon2 [11] = // [So Doom] TNTWEAPx is too long IMO - Zodomaniac
 {
-    CHEAT("tw0", 0), // [crispy] cheat giving specific weapon
+    CHEAT("tw0", 0), // [So Doom] cheat giving specific weapon
     CHEAT("tw1", 0),
     CHEAT("tw2", 0),
     CHEAT("tw3", 0),
@@ -919,7 +938,7 @@ ST_Responder (event_t* ev)
       // 'behold?' power-up cheats
       for (i=0;i<6;i++)
       {
-	if (i < 4 ? cht_CheckCheatSP(&cheat_powerup[i], ev->data2) : cht_CheckCheat(&cheat_powerup[i], ev->data2))
+	if ((i < 4 ? cht_CheckCheatSP(&cheat_powerup[i], ev->data2) : cht_CheckCheat(&cheat_powerup[i], ev->data2)) || (i < 4 ? cht_CheckCheatSP(&cheat_powerup2[i], ev->data2) : cht_CheckCheat(&cheat_powerup2[i], ev->data2)))
 	{
 	  if (!plyr->powers[i])
 	    P_GivePower( plyr, i);
@@ -932,7 +951,7 @@ ST_Responder (event_t* ev)
 	}
       }
       // [crispy] idbehold0
-      if (cht_CheckCheatSP(&cheat_powerup[7], ev->data2))
+      if (cht_CheckCheatSP(&cheat_powerup[7], ev->data2) || cht_CheckCheatSP(&cheat_powerup2[7], ev->data2))
       {
 	memset(plyr->powers, 0, sizeof(plyr->powers));
 	plyr->mo->flags &= ~MF_SHADOW; // [crispy] cancel invisibility
@@ -940,7 +959,7 @@ ST_Responder (event_t* ev)
       }
       
       // 'behold' power-up menu
-      if (cht_CheckCheat(&cheat_powerup[6], ev->data2))
+      if (cht_CheckCheat(&cheat_powerup[6], ev->data2) || cht_CheckCheat(&cheat_powerup2[6], ev->data2))
       {
 	plyr->message = DEH_String(STSTR_BEHOLD);
       }
@@ -1055,6 +1074,35 @@ ST_Responder (event_t* ev)
 	M_snprintf(msg, sizeof(msg), "Get Psyched!");
 	plyr->message = msg;
       }
+      else if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
+      {
+	M_snprintf(msg, sizeof(msg), "Soulsphere: %ss%s, Megasphere: %sm%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	  }
+	  else if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
+	  {
+	plyr->health += deh_soulsphere_health;
+	if (plyr->health > deh_max_soulsphere)
+	    plyr->health = deh_max_soulsphere;
+	plyr->mo->health = plyr->health;
+	plyr->message = DEH_String(GOTSUPER);
+	if (gameversion > exe_doom_1_2)
+	    S_StartSound(NULL, sfx_getpow);
+	  }
+	  else if (cht_CheckCheatSP(&cheat_health[1], ev->data2))
+	  {
+	if (gamemode != commercial)
+	    return false;
+	plyr->health = deh_megasphere_health;
+	plyr->mo->health = plyr->health;
+        // We always give armor type 2 for the megasphere; dehacked only 
+        // affects the MegaArmor.
+	plyr->armorpoints = 200;
+	plyr->armortype = 2;
+	plyr->message = DEH_String(GOTMSPHERE);
+	if (gameversion > exe_doom_1_2)
+	    S_StartSound(NULL, sfx_getpow);
+	  }
       // [crispy] implement Boom's "tntweap?" weapon cheats
 /*      else if (cht_CheckCheatSP(&cheat_weapon, ev->data2))
       {
