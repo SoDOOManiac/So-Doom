@@ -1262,11 +1262,12 @@ ST_Responder (event_t* ev)
       if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
       {
 	if (gamemode == commercial)
-	M_snprintf(msg, sizeof(msg), "Soulsphere: %sS%s, Megasphere: %sM%s",
+	M_snprintf(msg, sizeof(msg), "Max health: %sS%s, Max health+armor: %sM%s",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	else
-	M_snprintf(msg, sizeof(msg), "Soulsphere: %sS%s",
+	M_snprintf(msg, sizeof(msg), "Max health: %sS%s",
 	           crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
 	  }
 
     // [So Doom] re-write of "tntweap"/"tw" cheats to display the weapon selection hint
