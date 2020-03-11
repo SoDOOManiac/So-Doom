@@ -1387,6 +1387,8 @@ void M_DrawOptions(void)
     V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
                                                PU_CACHE));
 	
+	V_DrawPatchDirect(200, 20, &main_menu_background); // [So Doom] draw logo to the right of the Options menu
+
 // [crispy] no patches are drawn in the Options menu anymore
 /*
     V_DrawPatchDirect(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
