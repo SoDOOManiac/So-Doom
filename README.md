@@ -118,7 +118,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `SHOWFPS` or `IDRATE` or `SFPS` toggle printing the FPS in the upper right corner.
  * `NOMOMENTUM` or `SNAIL` toggles a debug aid for pixel-perfect positioning on a map (not recommended to use in-game).
  * `GOOBERS` triggers an easter egg, i.e. an "homage to an old friend". ;-)
- * `IDBEHOLD0` or `HP0` disables all currently active power-ups.
+ * `IDBEHOLD0` or `TP0` disables all currently active power-ups.
  * `IDCLEV00` restarts the current level.
  * `IDMUS00` restarts the current music.
  * `VERSION` shows the engine version, build date and SDL version.
