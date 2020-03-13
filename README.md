@@ -107,25 +107,27 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ### New cheat codes
 
+ * `HP` gives health powerup (`HPS` for maximum health in all IWADs and `HPM` for maximum health and armor in Doom II IWADs).
+ * `TP` (toggle powerup) = `IDBEHOLD` toggles ability powerups.
  * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TW9` to play the SSG in Doom 1.
  * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
  * `NOTARGET` or `FHSHH` toggle deaf and blind monsters that do not act until attacked.
  * `TNTHOM` toggles the flashing [HOM](https://doomwiki.org/wiki/Hall_of_mirrors_effect) indicator (disabled by default).
- * `SHOWFPS` or `IDRATE` toggle printing the FPS in the upper right corner.
- * `NOMOMENTUM` toggles a debug aid for pixel-perfect positioning on a map (not recommended to use in-game).
+ * `SHOWFPS` or `IDRATE` or `SFPS` toggle printing the FPS in the upper right corner.
+ * `NOMOMENTUM` or `SNAIL` toggles a debug aid for pixel-perfect positioning on a map (not recommended to use in-game).
  * `GOOBERS` triggers an easter egg, i.e. an "homage to an old friend". ;-)
- * `IDBEHOLD0` disables all currently active power-ups (since 2.2).
- * `IDCLEV00` restarts the current level (since 2.0).
- * `IDMUS00` restarts the current music (new in 5.1).
- * `VERSION` shows the engine version, build date and SDL version (new in 5.1).
- * `SKILL` shows the current skill level (new in 5.5.2).
+ * `IDBEHOLD0` or `HP0` disables all currently active power-ups.
+ * `IDCLEV00` restarts the current level.
+ * `IDMUS00` restarts the current music.
+ * `VERSION` shows the engine version, build date and SDL version.
+ * `SKILL` shows the current skill level.
 
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.2/so-doom-5.7.2-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.3/so-doom-5.7.3-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -160,6 +162,21 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.7.3
+
+So Doom 5.7.3 has been released on March 13, 2020 to bring new cheat codes and pull bug fixes from Chocolate and Crispy Doom.
+
+**So Doom-specific changes**
+
+ * Minor wording unification for SoDoomy menu item: Color->Colorize revealed secrets (in the automap), same as Colorize HUD elements.
+ * Options menu is now also adorned with So Doom logo. 
+ * New cheat codes: `TP` (toggle powerup) = `IDBEHOLD`, `HP` for health powerup (`HPS` for maximum health in all IWADs and `HPM` for maximum health and armor in Doom II IWADs), `SFPS` = `SHOWFPS` and `SNAIL` = `NOMOMENTUM` have been introduced, powerup ones also play the respective sound when completely entered.
+
+**Changes pulled from Crispy Doom**
+
+ * Fix for segmentation fault when running on rgb565 screen has been pulled from Chocolate Doom, contributed by Wells Lu.
+ * Previous colorization of "percent" status bar widgets is now remembered. This applies to the health and armor widgets and forces them to update not only if their value changes, but also if their colorization changes, e.g. when entering the IDDQD cheat. Thanks to unerxai for the attention to the details!
 
 ### So Doom 5.7.2
 

@@ -428,16 +428,16 @@ cheatseq_t	cheat_powerup[8] = // [crispy] idbehold0
     CHEAT("idbehold0", 0), // [crispy] idbehold0
 };
 
-cheatseq_t	cheat_powerup2[8] = // [So Doom] gp = give power, equal to idbehold
+cheatseq_t	cheat_powerup2[8] = // [So Doom] tp = toggle powerup, equal to idbehold
 {
-    CHEAT("gpv", 0),
-    CHEAT("gps", 0),
-    CHEAT("gpi", 0),
-    CHEAT("gpr", 0),
-    CHEAT("gpa", 0),
-    CHEAT("gpl", 0),
-    CHEAT("gp", 0),
-    CHEAT("gp0", 0), // [So Doom] gp0
+    CHEAT("tpv", 0),
+    CHEAT("tps", 0),
+    CHEAT("tpi", 0),
+    CHEAT("tpr", 0),
+    CHEAT("tpa", 0),
+    CHEAT("tpl", 0),
+    CHEAT("tp", 0),
+    CHEAT("tp0", 0), // [So Doom] gp0
 };
 
 cheatseq_t	cheat_health[3] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
@@ -1175,7 +1175,7 @@ ST_Responder (event_t* ev)
 */
     // [So Doom] implement "ta" cheats giving specific ammo
 
-	else if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
+	if (cht_CheckCheatSP (&cheat_specificammo[6], ev->data2))
 	{
 	M_snprintf(msg, sizeof(msg), "Melee: %s1%s, 1-4 HUD ammo: %s2-5%s, leave all: %s0",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD]);
