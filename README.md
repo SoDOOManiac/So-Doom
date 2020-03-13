@@ -30,7 +30,7 @@ Its distinguishing features are:
  * In-game control of pixel aspect ratio correction (not having to edit the `so-doom.cfg` file manually).
  * Possibility to interpolate camera movement only ('Camera movement' setting of 'Uncapped framerate' menu item), so that monsters don't 'slide'.
  * Extra options for some Crispy settings (like weapon bobbing).
- * Extra cheat codes: TWx to get specific weapon and TAx to get specific ammo.
+ * Extra cheat codes.
  
 So Doom inherits all the core features of its parent Crispy Doom:
  
