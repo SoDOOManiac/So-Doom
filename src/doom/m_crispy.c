@@ -122,6 +122,14 @@ multiitem_t multiitem_jump[NUM_JUMPS] =
     {JUMP_HIGH, "high"},
 };
 
+multiitem_t multiitem_logo[NUM_LOGOS] = 
+{
+    {LOGO_OFF, "off"},
+    {LOGO_MAINMENU, "main menu"},
+    {LOGO_OPTIONS, "options menu"},
+    {LOGO_BOTH, "both menus"},
+};
+
 multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
 {
     {SECRETMESSAGE_OFF, "off"},
@@ -441,6 +449,12 @@ void M_CrispyToggleLeveltime(int choice)
 {
     choice = 0;
     crispy->leveltime = (crispy->leveltime + 1) % NUM_WIDGETS;
+}
+
+void M_CrispyToggleLogo(int choice)
+{
+    choice = 0;
+    crispy->logo = (crispy->logo + 1) % NUM_LOGOS;
 }
 
 void M_CrispyToggleMouseLook(int choice)

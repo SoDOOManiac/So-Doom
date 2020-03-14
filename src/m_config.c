@@ -2089,6 +2089,13 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // [So Doom] Show port logo in the menus.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_logo),
+    //!
+    // @game doom
+    //
     // Use the mouse to look up and down.
     //
 

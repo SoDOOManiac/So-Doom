@@ -470,13 +470,14 @@ enum
     //crispness_sep_rendering_,
 
     crispness_sep_visual,
+    crispness_logo,
     crispness_coloredhud,
     crispness_translucency,
     crispness_smoothlight,
     crispness_brightmaps,
     crispness_coloredblood,
     crispness_flipcorpses,
-    crispness_sep_visual_,
+    //crispness_sep_visual_,
 
     crispness1_next,
     crispness1_prev,
@@ -494,13 +495,14 @@ static menuitem_t Crispness1Menu[]=
     {1,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
     {-1,"",0,'\0'},
+    {1,"",  M_CrispyToggleLogo,'o'},
     {1,"",	M_CrispyToggleColoredhud,'c'},
     {1,"",	M_CrispyToggleTranslucency,'e'},
     {1,"",	M_CrispyToggleSmoothLighting,'l'},
     {1,"",	M_CrispyToggleBrightmaps,'b'},
     {1,"",	M_CrispyToggleColoredblood,'d'},
     {1,"",	M_CrispyToggleFlipcorpses,'r'},
-    {-1,"",0,'\0'},
+//    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1276,7 +1278,8 @@ void M_DrawMainMenu(void)
 {
     V_DrawPatchDirect(94, 2,
                       W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
-    V_DrawPatchDirect(0, 0, &main_menu_background); // [So Doom] port logo above the menu logo that can be large like in Memento Mori    
+    if (crispy->logo == LOGO_MAINMENU || crispy->logo == LOGO_BOTH)
+		V_DrawPatchDirect(0, 0, &main_menu_background); // [So Doom] port logo above the menu logo that can be large like in Memento Mori    
 }
 
 
@@ -1386,8 +1389,8 @@ void M_DrawOptions(void)
 
     V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
                                                PU_CACHE));
-	
-	V_DrawPatchDirect(200, 20, &main_menu_background); // [So Doom] draw logo to the right of the Options menu
+    if (crispy->logo == LOGO_OPTIONS || crispy->logo == LOGO_BOTH)
+    	V_DrawPatchDirect(200, 20, &main_menu_background); // [So Doom] draw logo to the right of the Options menu
 
 // [crispy] no patches are drawn in the Options menu anymore
 /*
@@ -1563,6 +1566,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, true);
 
     M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
+    M_DrawCrispnessMultiItem(crispness_logo, "Port logo in", multiitem_logo, crispy->logo, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);

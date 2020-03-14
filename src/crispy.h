@@ -62,6 +62,7 @@ typedef struct
 	int hires;
 	int jump;
 	int leveltime;
+	int logo;
 	int mouselook;
 	int neghealth;
 	int overunder;
@@ -211,6 +212,15 @@ enum
     JUMP_LOW,
     JUMP_HIGH,
     NUM_JUMPS
+};
+
+enum
+{
+    LOGO_OFF,
+    LOGO_MAINMENU,
+    LOGO_OPTIONS,
+    LOGO_BOTH,
+    NUM_LOGOS
 };
 
 enum
