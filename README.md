@@ -165,10 +165,11 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.7.3
 
-So Doom 5.7.3 has been released on March 13, 2020 to bring new cheat codes and pull bug fixes from Chocolate and Crispy Doom.
+So Doom 5.7.3 has been released on March 13, 2020 to bring new cheat codes and pull bug fixes from Chocolate and Crispy Doom, and re-released on March 14, 2020 to fulfil an improvement request.
 
 **So Doom-specific changes**
 
+ * Visual menu item for displaying So Doom logo in the main menu and Options menu has been implemented, requested by YeOldeFellerNoob from Doomworld forums.
  * Minor wording unification for SoDoomy menu item: Color->Colorize revealed secrets (in the automap), same as Colorize HUD elements.
  * Options menu is now also adorned with So Doom logo. 
  * New cheat codes: `TP` (toggle powerup) = `IDBEHOLD`, `HP` for health powerup (`HPS` for maximum health in all IWADs and `HPM` for maximum health and armor in Doom II IWADs), `SFPS` = `SHOWFPS` and `SNAIL` = `NOMOMENTUM` have been introduced, powerup ones also play the respective sound when completely entered.
