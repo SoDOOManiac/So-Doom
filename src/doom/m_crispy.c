@@ -125,9 +125,9 @@ multiitem_t multiitem_jump[NUM_JUMPS] =
 multiitem_t multiitem_logo[NUM_LOGOS] = 
 {
     {LOGO_OFF, "off"},
-    {LOGO_MAINMENU, "main menu"},
-    {LOGO_OPTIONS, "options menu"},
-    {LOGO_BOTH, "both menus"},
+    {LOGO_MAINMENU, "in main menu"},
+    {LOGO_OPTIONS, "in options menu"},
+    {LOGO_BOTH, "in both menus"},
 };
 
 multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
