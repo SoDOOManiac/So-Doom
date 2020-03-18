@@ -127,7 +127,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.3/so-doom-5.7.3-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.4/so-doom-5.7.4-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -162,6 +162,18 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.7.4
+
+So Doom 5.7.4 has been released on March 18, 2020 to merge Crispy Doom's SPECHITS limit removal and make reporting and colorizing revealed secrets independent.
+
+**So Doom-specific changes**
+
+ * 'Report Revealed Secrets' and 'Colorize Revealed Secrets' SoDOOMy menu items are now independent, e.g. one can have revealed secrets colorized in the automap without getting notified of them aloud.
+
+**Changes pulled from Crispy Doom**
+
+ * `SPECHITS` limit, the last persisting static limit, has been removed.
 
 ### So Doom 5.7.3
 
