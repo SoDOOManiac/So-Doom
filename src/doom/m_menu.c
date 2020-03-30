@@ -2013,6 +2013,11 @@ void M_SizeDisplay(int choice)
 	    screenblocks++;
 	    screenSize++;
 	}
+	else
+	{
+	    screenblocks = 11;
+	    screenSize = 8;
+	}
 	break;
     }
 	
