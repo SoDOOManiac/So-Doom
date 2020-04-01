@@ -269,7 +269,7 @@ boolean D_Display (void)
     }
 
     // see if the border needs to be updated to the screen
-    if (gamestate == GS_LEVEL && (!automapactive || crispy->automapoverlay) && scaledviewwidth != SCREENWIDTH)
+    if (gamestate == GS_LEVEL && (!automapactive || crispy->automapoverlay) && viewheight != SCREENHEIGHT)
     {
 	if (menuactive || menuactivestate || !viewactivestate)
 	    borderdrawcount = 3;
@@ -318,7 +318,7 @@ boolean D_Display (void)
 	    y = 4;
 	else
 	    y = (viewwindowy >> crispy->hires)+4;
-	V_DrawPatchDirect((viewwindowx >> crispy->hires) + ((scaledviewwidth >> crispy->hires) - 68) / 2 - DELTAWIDTH, y,
+	V_DrawPatchDirect((viewwindowx >> crispy->hires) + ((scaledviewwidth >> crispy->hires) - 68) / 2 - WIDESCREENDELTA, y,
                           W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE));
     }
 
@@ -562,7 +562,7 @@ void D_DoomLoop (void)
     I_GraphicsCheckCommandLine();
     I_SetGrabMouseCallback(D_GrabMouseCallback);
     I_InitGraphics();
-    // [crispy] re-init HUD widgets now just in case graphics were not initialized before
+    // [So Doom] re-init HUD widgets now just in case graphics were not initialized before
     if (crispy->widescreen && aspect_ratio_correct)
     {
 	extern void M_CrispyReinitHUDWidgets(void);

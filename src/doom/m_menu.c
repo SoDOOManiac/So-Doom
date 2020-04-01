@@ -87,7 +87,6 @@ int			screenblocks = 10; // [crispy] increased
 
 // temp for screenblocks (0-9)
 int			screenSize;
-int			screenSize_min;
 
 // -1 = no quicksave slot picked!
 int			quickSaveSlot;
@@ -215,7 +214,7 @@ static void M_MouseInvert(int choice); // [crispy] mouse sensitivity menu
 static void M_SfxVol(int choice);
 static void M_MusicVol(int choice);
 static void M_ChangeDetail(int choice);
-void M_SizeDisplay(int choice); // [crispy] un-static for R_ExecuteSetViewSize()
+void M_SizeDisplay(int choice); // [So Doom] un-static for R_ExecuteSetViewSize(), M_CrispyTogglePixelAspectRatioHook() and M_M_CrispyToggleWidescreenHook()
 static void M_Mouse(int choice); // [crispy] mouse sensitivity menu
 static void M_Sound(int choice);
 
@@ -1432,8 +1431,9 @@ void M_DrawOptions(void)
                 OptionsDef.y + LINEHEIGHT * messages + 8 - (M_StringHeight("OnOff")/2),
                 messages_setting);
 
-    M_DrawThermo(OptionsDef.x + screenSize_min * 8,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
-		 9 + 4 - screenSize_min,screenSize - screenSize_min); // [crispy] Crispy and [So Doom] So Doomy HUDs
+
+    M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
+		 9 + 4,screenSize); // [crispy] Crispy and [So Doom] So Doomy HUDs
 }
 
 // [crispy] mouse sensitivity menu
@@ -1497,12 +1497,12 @@ static void M_DrawCrispnessBackground(void)
 
 	/*for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
 	{
-		for (x = crispy->widescreen*DELTAWIDTH; x < SCREENWIDTH-crispy->widescreen*DELTAWIDTH; x++)
+		for (x = crispy->widescreen*WIDESCREENDELTA; x < SCREENWIDTH-crispy->widescreen*WIDESCREENDELTA; x++)
 		{
 #ifndef CRISPY_TRUECOLOR
-			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*DELTAWIDTH)];
+			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*WIDESCREENDELTA)];
 #else
-			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*DELTAWIDTH)]];
+			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*WIDESCREENDELTA)]];
 #endif
 		}
 	}*/
@@ -1995,13 +1995,10 @@ void M_ChangeDetail(int choice)
 
 void M_SizeDisplay(int choice)
 {
-    // [crispy] initialize screenSize_min
-    screenSize_min = crispy->widescreen ? 8 : 0;
-
     switch(choice)
     {
       case 0:
-	if (screenSize > screenSize_min)
+	if (screenSize > 0)
 	{
 	    screenblocks--;
 	    screenSize--;
@@ -2013,6 +2010,7 @@ void M_SizeDisplay(int choice)
 	    screenblocks++;
 	    screenSize++;
 	}
+	// [crispy] reset to fullscreen HUD
 	else
 	{
 	    screenblocks = 11;
@@ -2022,10 +2020,12 @@ void M_SizeDisplay(int choice)
     }
 	
 
-    // [crispy] initialize screenSize_min
-    if (choice == 0 || choice == 1)
-    {
     R_SetViewSize (screenblocks, detailLevel);
+
+    if (crispy->widescreen)
+    {
+	    extern void M_CrispyReinitHUDWidgets(void);
+        M_CrispyReinitHUDWidgets();
     }
 }
 
@@ -3341,7 +3341,6 @@ void M_Init (void)
     whichSkull = 0;
     skullAnimCounter = 10;
     screenSize = screenblocks - 3;
-    M_SizeDisplay(-1); // [crispy] initialize screenSize_min
     messageToPrint = 0;
     messageString = NULL;
     messageLastMenuActive = menuactive;

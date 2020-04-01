@@ -628,8 +628,6 @@ static void M_CrispyToggleWidescreenHook (void)
     // [crispy] no need to re-init when switching from wide to compact
     if (crispy->widescreen == 1 || crispy->widescreen == 0)
     {
-	// [crispy] re-initialize screenSize_min
-	M_SizeDisplay(-1);
 	// [crispy] re-initialize framebuffers, textures and renderer
 	I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
 	// [crispy] re-calculate framebuffer coordinates

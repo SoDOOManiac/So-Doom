@@ -582,12 +582,7 @@ void AM_LevelInit(void)
 
     f_x = f_y = 0;
     f_w = SCREENWIDTH;
-    f_h = SCREENHEIGHT;
-    // [crispy] automap without status bar in widescreen mode
-    if (!crispy->widescreen)
-    {
-        f_h -= (ST_HEIGHT << crispy->hires);
-    }
+    f_h = SCREENHEIGHT - (ST_HEIGHT << crispy->hires);
 
     AM_clearMarks();
 
@@ -605,12 +600,7 @@ void AM_LevelInit(void)
 void AM_ReInit (void)
 {
     f_w = SCREENWIDTH;
-    f_h = SCREENHEIGHT;
-    // [crispy] automap without status bar in widescreen mode
-    if (!crispy->widescreen)
-    {
-        f_h -= (ST_HEIGHT << crispy->hires);
-    }
+    f_h = SCREENHEIGHT - (ST_HEIGHT << crispy->hires);
 
     AM_findMinMaxBoundaries();
 
@@ -1768,7 +1758,7 @@ void AM_drawMarks(void)
 	    {
 		AM_rotatePoint(&pt);
 	    }
-	    fx = (flipscreenwidth[CXMTOF(pt.x)] >> crispy->hires) - 1 - DELTAWIDTH;
+	    fx = (flipscreenwidth[CXMTOF(pt.x)] >> crispy->hires) - 1 - WIDESCREENDELTA;
 	    fy = (CYMTOF(pt.y) >> crispy->hires) - 2;
 	    if (fx >= f_x && fx <= (f_w >> crispy->hires) - w && fy >= f_y && fy <= (f_h >> crispy->hires) - h)
 		V_DrawPatch(fx, fy, marknums[i]);
