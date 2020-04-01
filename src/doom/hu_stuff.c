@@ -615,7 +615,7 @@ void HU_Start(void)
 
     // [crispy] re-calculate WIDESCREENDELTA
     I_GetScreenDimensions();
-    hu_widescreendelta = WIDESCREENDELTA;
+    hu_widescreendelta = HUD_WIDESCREENDELTA;
 
     // create the message widget
     HUlib_initSText(&w_message,
@@ -938,7 +938,7 @@ void HU_Ticker(void)
     char str[32], *s;
 
     // [crispy] re-calculate widget coordinates on demand
-    if (hu_widescreendelta != WIDESCREENDELTA)
+    if (hu_widescreendelta != HUD_WIDESCREENDELTA)
     {
         HU_Start();
     }
