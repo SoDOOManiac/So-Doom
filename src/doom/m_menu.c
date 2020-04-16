@@ -3335,6 +3335,10 @@ void M_Init (void)
     itemOn = currentMenu->lastOn;
     whichSkull = 0;
     skullAnimCounter = 10;
+    if (screenblocks > 15)
+    {
+        screenblocks = 11; // [So Doom] if configs are shared with Crispy Doom, So Doom won't support screenblocks > 15, in this case loop over to full screen and no HUD
+    }
     screenSize = screenblocks - 3;
     messageToPrint = 0;
     messageString = NULL;
