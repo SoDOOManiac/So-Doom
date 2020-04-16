@@ -556,7 +556,7 @@ static void check_intercept(void)
 		intercept_p = intercepts + offset;
 
 		if (num_intercepts_old)
-			fprintf(stderr, "PIT_Add*Intercepts: Hit INTERCEPTS limit at %d, raised to %d.\n", num_intercepts_old, num_intercepts);
+			fprintf(stderr, "PIT_Add*Intercepts: Hit INTERCEPTS limit at %d, raised to %ud.\n", num_intercepts_old, num_intercepts);
 	}
 }
 
