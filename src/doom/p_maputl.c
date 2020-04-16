@@ -549,14 +549,14 @@ static void check_intercept(void)
 
 	if (offset >= num_intercepts)
 	{
-		int num_intercepts_old = num_intercepts;
+		size_t num_intercepts_old = num_intercepts;
 
 		num_intercepts = num_intercepts ? num_intercepts * 2 : MAXINTERCEPTS_ORIGINAL;
 		intercepts = I_Realloc(intercepts, sizeof(*intercepts) * num_intercepts);
 		intercept_p = intercepts + offset;
 
 		if (num_intercepts_old)
-			fprintf(stderr, "PIT_Add*Intercepts: Hit INTERCEPTS limit at %d, raised to %ud.\n", num_intercepts_old, num_intercepts);
+			fprintf(stderr, "PIT_Add*Intercepts: Hit INTERCEPTS limit at %lu, raised to %lu.\n", num_intercepts_old, num_intercepts);
 	}
 }
 
