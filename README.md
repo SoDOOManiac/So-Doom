@@ -127,7 +127,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.7.5/so-doom-5.7.5-win32.zip
+https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.8.0/so-doom-5.8.0-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
@@ -162,6 +162,16 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 5.8.0
+
+So Doom 5.8.0 has been released on April 17, 2020 to merge improvements and bug fixes from Crispy Doom.
+
+**Changes pulled from Crispy Doom**
+
+ * Compilation with Code::Blocks and TDM-GCC 5.1 (missing includes) has been fixed by drfrag666.
+ * SKY3 texture is now used for MAP04-MAP08 in NRftL, thanks to JNechaevsky for contributing the fix.
+ * When calculating weapon bobbing, the check is now performed for attack key/button being held down (thanks to unRyker for helping to choose the criterion) instead of checking for for player being not in attacking state. This fixes wrong weapon alignment in some cases.
 
 ### So Doom 5.7.5
 
