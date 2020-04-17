@@ -2718,7 +2718,7 @@ void ST_DrawDemoTimer (const int time)
 
 	n = M_snprintf(buffer, sizeof(buffer), "%02i %05.02f", mins, secs);
 
-	x = (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA;
+	x = (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - 2*WIDESCREENDELTA + HUD_WIDESCREENDELTA; // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
 
 	// [crispy] draw the Demo Timer widget with gray numbers
 	dp_translation = cr[CR_GRAY];
