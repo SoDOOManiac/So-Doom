@@ -835,7 +835,7 @@ void HU_Drawer(void)
     }
 
     // [crispy] translucent messages for translucent HUD
-    if (screenblocks > CRISPY_HUD + 2 && (!automapactive || crispy->automapoverlay))
+    if (screenblocks > CRISPY_HUD + 2 && (!automapactive || crispy->automapoverlay)) // [So Doom] in So Doom there are 3 variations of non-translucent status bar-less HUD
 	dp_translucent = true;
 
     if (secret_on && !menuactive)
@@ -892,7 +892,6 @@ void HU_Drawer(void)
 
     dp_translation = NULL;
 
-    if (dp_translucent)
 	dp_translucent = false;
 
     // [crispy] demo timer widget
