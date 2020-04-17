@@ -892,7 +892,7 @@ void HU_Drawer(void)
 
     dp_translation = NULL;
 
-	dp_translucent = false;
+    dp_translucent = false;
 
     // [crispy] demo timer widget
     if (demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK))
