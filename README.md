@@ -165,10 +165,15 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ### So Doom 5.8.0
 
-So Doom 5.8.0 has been released on April 17, 2020 to merge improvements and bug fixes from Crispy Doom.
+So Doom 5.8.0 has been released on April 18, 2020 to merge improvements and bug fixes from Crispy Doom and fix demo timer position in Cockpit HUD.
+
+**So Doom-specific changes**
+
+ * In case of widescreen rendering with Cockpit HUD the demo timer is now drawn within the narrow screen as well as other widgets.
 
 **Changes pulled from Crispy Doom**
 
+ * NERVE.WAD support for Vanilla DOOM 2 has been introduced, requested by hkight.
  * Compilation with Code::Blocks and TDM-GCC 5.1 (missing includes) has been fixed by drfrag666.
  * SKY3 texture is now used for MAP04-MAP08 in NRftL, thanks to JNechaevsky for contributing the fix.
  * When calculating weapon bobbing, the check is now performed for attack key/button being held down (thanks to unRyker for helping to choose the criterion) instead of checking for for player being not in attacking state. This fixes wrong weapon alignment in some cases.
