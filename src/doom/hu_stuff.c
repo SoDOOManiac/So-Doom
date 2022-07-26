@@ -70,7 +70,7 @@
 #define HU_INPUTWIDTH	64
 #define HU_INPUTHEIGHT	1
 
-#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + WIDESCREENDELTA) // JNechaevsky replaced 7 with 8 to allow for multi-thousand FPS in the widget
+#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA) // JNechaevsky replaced 7 with 8 to allow for multi-thousand FPS in the widget
 
 
 char *chat_macros[10];
