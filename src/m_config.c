@@ -1728,6 +1728,14 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_KEY(key_arti_torch),
 
     //!
+    // @game heretic
+    //
+    // Key to use "morph ovum" artifact.
+    //
+
+    CONFIG_VARIABLE_KEY(key_arti_morph),
+
+    //!
     // @game hexen
     //
     // Key to use one of each artifact.
@@ -1924,6 +1932,14 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_bobfactor),
+
+    //!
+    // @game doom
+    //
+    // "Use" button timer.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_btusetimer),
 
     //!
     // @game doom
@@ -2184,6 +2200,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Smooth Lines on Automap.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_smoothmap),
+
+    //!
+    // @game doom
+    //
     // Smooth Scaling.
     //
 
@@ -2429,7 +2453,7 @@ static int ParseIntParameter(const char *strparm)
     int parm;
 
     if (strparm[0] == '0' && strparm[1] == 'x')
-        sscanf(strparm+2, "%x", &parm);
+        sscanf(strparm+2, "%x", (unsigned int *) &parm);
     else
         sscanf(strparm, "%i", &parm);
 

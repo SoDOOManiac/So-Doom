@@ -69,13 +69,13 @@ extern boolean inhelpscreens; // [crispy]
 #define BACKGROUND	BLACK
 #define YOURCOLORS	WHITE
 #define YOURRANGE	0
-#define WALLCOLORS	(crispy->extautomap ? 23 : REDS) // [crispy] red-brown
+#define WALLCOLORS	(crispy->extautomap ? REDS+4 : REDS) // [crispy] slightly darker red
 #define WALLRANGE	REDRANGE
 #define TSWALLCOLORS	GRAYS
 #define TSWALLRANGE	GRAYSRANGE
-#define FDWALLCOLORS	(crispy->extautomap ? 55 : BROWNS) // [crispy] lt brown
+#define FDWALLCOLORS	(crispy->extautomap ? BROWNS+6 : BROWNS) // [crispy] darker brown
 #define FDWALLRANGE	BROWNRANGE
-#define CDWALLCOLORS	(crispy->extautomap ? 215 : YELLOWS) // [crispy] orange
+#define CDWALLCOLORS	(crispy->extautomap ? 163 : YELLOWS) // [crispy] golden yellow
 #define CDWALLRANGE	YELLOWRANGE
 #define THINGCOLORS	GREENS
 #define THINGRANGE	GREENRANGE
@@ -241,7 +241,7 @@ static int 	lightlev; 		// used for funky strobing effect
 //static pixel_t*	fb; 			// pseudo-frame buffer
 static int 	amclock;
 
-static mpoint_t m_paninc; // how far the window pans each tic (map coords)
+static mpoint_t m_paninc, m_paninc2; // how far the window pans each tic (map coords)
 static fixed_t 	mtof_zoommul; // how far the window zooms in each tic (map coords)
 static fixed_t 	ftom_zoommul; // how far the window zooms in each tic (fb coords)
 
@@ -294,6 +294,17 @@ static int followplayer = 1; // specifies whether to follow the player around
 cheatseq_t cheat_amap = CHEAT("iddt", 0);
 
 static boolean stopped = true;
+
+// [crispy] Antialiased lines from Heretic with more colors
+#define NUMSHADES 8
+#define NUMSHADES_BITS 3 // log2(NUMSHADES)
+static byte color_shades[NUMSHADES * 256];
+
+// Forward declare for AM_LevelInit
+static void AM_drawFline_Vanilla(fline_t* fl, int color);
+static void AM_drawFline_Smooth(fline_t* fl, int color);
+// Indirect through this to avoid having to test crispy->smoothmap for every line
+void (*AM_drawFline)(fline_t*, int) = AM_drawFline_Vanilla;
 
 // [crispy] automap rotate mode needs these early on
 void AM_rotate (int64_t *x, int64_t *y, angle_t a);
@@ -441,14 +452,15 @@ void AM_changeWindowLoc(void)
 {
     int64_t incx, incy;
 
-    if (m_paninc.x || m_paninc.y)
+    if (m_paninc.x || m_paninc.y || m_paninc2.x || m_paninc2.y)
     {
 	followplayer = 0;
 	f_oldloc.x = INT_MAX;
     }
 
-    incx = m_paninc.x;
-    incy = m_paninc.y;
+    // [crispy] accumulate automap panning by keyboard and mouse
+    incx = m_paninc.x + m_paninc2.x;
+    incy = m_paninc.y + m_paninc2.y;
     if (crispy->automaprotate)
     {
 	AM_rotate(&incx, &incy, -mapangle);
@@ -470,11 +482,7 @@ void AM_changeWindowLoc(void)
     m_y2 = m_y + m_h;
 
     // [crispy] reset after moving with the mouse
-    if (f_oldloc.y == INT_MAX)
-    {
-	m_paninc.x = 0;
-	m_paninc.y = 0;
-    }
+    m_paninc2.x = m_paninc2.y = 0;
 }
 
 
@@ -493,7 +501,7 @@ void AM_initVariables(void)
     amclock = 0;
     lightlev = 0;
 
-    m_paninc.x = m_paninc.y = 0;
+    m_paninc.x = m_paninc.y = m_paninc2.x = m_paninc2.y = 0;
     ftom_zoommul = FRACUNIT;
     mtof_zoommul = FRACUNIT;
 
@@ -579,11 +587,16 @@ void AM_LevelInit(boolean reinit)
 {
     fixed_t a, b;
     static int f_h_old;
+    // [crispy] Only need to precalculate color lookup tables once
+    static int precalc_once;
+
     leveljuststarted = 0;
 
     f_x = f_y = 0;
     f_w = SCREENWIDTH;
     f_h = SCREENHEIGHT - (ST_HEIGHT << crispy->hires);
+
+    AM_drawFline = crispy->smoothmap ? AM_drawFline_Smooth : AM_drawFline_Vanilla;
 
     if (!reinit)
     AM_clearMarks();
@@ -607,6 +620,26 @@ void AM_LevelInit(boolean reinit)
     scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 
     f_h_old = f_h;
+
+    // [crispy] Precalculate color lookup tables for antialised line drawing using COLORMAP
+    if (!precalc_once)
+    {
+        precalc_once = 1;
+        for (int color = 0; color < 256; ++color)
+        {
+#define REINDEX(I) (color + I * 256)
+            // Pick a range of shades for a steep gradient to keep lines thin
+            int shade_index[NUMSHADES] =
+            {
+                REINDEX(0), REINDEX(1), REINDEX(2), REINDEX(3), REINDEX(7), REINDEX(15), REINDEX(23), REINDEX(31),
+            };
+#undef REINDEX
+            for (int shade = 0; shade < NUMSHADES; ++shade)
+            {
+                color_shades[color * NUMSHADES + shade] = colormaps[shade_index[shade]];
+            }
+        }
+    }
 }
 
 
@@ -640,13 +673,14 @@ void AM_Start (void)
 	lastlevel = gamemap;
 	lastepisode = gameepisode;
     }
-    // [crispy] reset IDDT cheat when re-starting map during demo recording
-    else if (demorecording)
-    {
-        cheating = 0;
-    }
     AM_initVariables();
     AM_loadPics();
+}
+
+// [crispy] reset IDDT cheat when re-starting map during demo recording
+void AM_ResetIDDTcheat (void)
+{
+	cheating = 0;
 }
 
 //
@@ -734,9 +768,8 @@ AM_Responder
 	if (!followplayer && (ev->data2 || ev->data3))
 	{
 		// [crispy] mouse sensitivity for strafe
-		m_paninc.x = FTOM(ev->data2*(mouseSensitivity_x2+5)/80);
-		m_paninc.y = FTOM(ev->data3*(mouseSensitivity_x2+5)/80);
-		f_oldloc.y = INT_MAX;
+		m_paninc2.x = FTOM(ev->data2*(mouseSensitivity_x2+5)/80);
+		m_paninc2.y = FTOM(ev->data3*(mouseSensitivity_x2+5)/80);
 		rc = true;
 	}
     }
@@ -976,7 +1009,7 @@ void AM_Ticker (void)
 	AM_changeWindowScale();
 
     // Change x,y location
-    if (m_paninc.x || m_paninc.y)
+    if (m_paninc.x || m_paninc.y || m_paninc2.x || m_paninc2.y)
 	AM_changeWindowLoc();
 
     // Update light level
@@ -990,7 +1023,7 @@ void AM_Ticker (void)
 	// [crispy] keep the map static in overlay mode
 	// if not following the player
 	if (!(!followplayer && crispy->automapoverlay))
-	mapangle = ANG90 - viewangle;
+	mapangle = ANG90 - plr->mo->angle;
     }
 }
 
@@ -1147,8 +1180,8 @@ AM_clipMline
 //
 // Classic Bresenham w/ whatever optimizations needed for speed
 //
-void
-AM_drawFline
+static void
+AM_drawFline_Vanilla
 ( fline_t*	fl,
   int		color )
 {
@@ -1225,6 +1258,139 @@ AM_drawFline
     }
 }
 
+// [crispy] Adapted from Heretic's DrawWuLine
+static void AM_drawFline_Smooth(fline_t* fl, int color)
+{
+    int X0 = fl->a.x, Y0 = fl->a.y, X1 = fl->b.x, Y1 = fl->b.y;
+    byte* BaseColor = &color_shades[color * NUMSHADES];
+
+    unsigned short IntensityShift, ErrorAdj, ErrorAcc;
+    unsigned short ErrorAccTemp, Weighting, WeightingComplementMask;
+    short DeltaX, DeltaY, Temp, XDir;
+
+    /* Make sure the line runs top to bottom */
+    if (Y0 > Y1)
+    {
+        Temp = Y0;
+        Y0 = Y1;
+        Y1 = Temp;
+        Temp = X0;
+        X0 = X1;
+        X1 = Temp;
+    }
+    /* Draw the initial pixel, which is always exactly intersected by
+       the line and so needs no weighting */
+    PUTDOT(X0, Y0, BaseColor[0]);
+
+    if ((DeltaX = X1 - X0) >= 0)
+    {
+        XDir = 1;
+    }
+    else
+    {
+        XDir = -1;
+        DeltaX = -DeltaX;       /* make DeltaX positive */
+    }
+    /* Special-case horizontal, vertical, and diagonal lines, which
+       require no weighting because they go right through the center of
+       every pixel */
+    if ((DeltaY = Y1 - Y0) == 0)
+    {
+        /* Horizontal line */
+        while (DeltaX-- != 0)
+        {
+            X0 += XDir;
+            PUTDOT(X0, Y0, BaseColor[0]);
+        }
+        return;
+    }
+    if (DeltaX == 0)
+    {
+        /* Vertical line */
+        do
+        {
+            Y0++;
+            PUTDOT(X0, Y0, BaseColor[0]);
+        }
+        while (--DeltaY != 0);
+        return;
+    }
+    //diagonal line.
+    if (DeltaX == DeltaY)
+    {
+        do
+        {
+            X0 += XDir;
+            Y0++;
+            PUTDOT(X0, Y0, BaseColor[0]);
+        }
+        while (--DeltaY != 0);
+        return;
+    }
+    /* Line is not horizontal, diagonal, or vertical */
+    ErrorAcc = 0;               /* initialize the line error accumulator to 0 */
+    /* # of bits by which to shift ErrorAcc to get intensity level */
+    IntensityShift = 16 - NUMSHADES_BITS;
+    /* Mask used to flip all bits in an intensity weighting, producing the
+       result (1 - intensity weighting) */
+    WeightingComplementMask = NUMSHADES - 1;
+    /* Is this an X-major or Y-major line? */
+    if (DeltaY > DeltaX)
+    {
+        /* Y-major line; calculate 16-bit fixed-point fractional part of a
+           pixel that X advances each time Y advances 1 pixel, truncating the
+           result so that we won't overrun the endpoint along the X axis */
+        ErrorAdj = ((unsigned int) DeltaX << 16) / (unsigned int) DeltaY;
+        /* Draw all pixels other than the first and last */
+        while (--DeltaY)
+        {
+            ErrorAccTemp = ErrorAcc;    /* remember currrent accumulated error */
+            ErrorAcc += ErrorAdj;       /* calculate error for next pixel */
+            if (ErrorAcc <= ErrorAccTemp)
+            {
+                /* The error accumulator turned over, so advance the X coord */
+                X0 += XDir;
+            }
+            Y0++;               /* Y-major, so always advance Y */
+            /* The IntensityBits most significant bits of ErrorAcc give us the
+               intensity weighting for this pixel, and the complement of the
+               weighting for the paired pixel */
+            Weighting = ErrorAcc >> IntensityShift;
+            PUTDOT(X0, Y0, BaseColor[Weighting]);
+            PUTDOT(X0 + XDir, Y0, BaseColor[(Weighting ^ WeightingComplementMask)]);
+        }
+        /* Draw the final pixel, which is always exactly intersected by the line
+           and so needs no weighting */
+        PUTDOT(X1, Y1, BaseColor[0]);
+        return;
+    }
+    /* It's an X-major line; calculate 16-bit fixed-point fractional part of a
+       pixel that Y advances each time X advances 1 pixel, truncating the
+       result to avoid overrunning the endpoint along the X axis */
+    ErrorAdj = ((unsigned int) DeltaY << 16) / (unsigned int) DeltaX;
+    /* Draw all pixels other than the first and last */
+    while (--DeltaX)
+    {
+        ErrorAccTemp = ErrorAcc;        /* remember currrent accumulated error */
+        ErrorAcc += ErrorAdj;   /* calculate error for next pixel */
+        if (ErrorAcc <= ErrorAccTemp)
+        {
+            /* The error accumulator turned over, so advance the Y coord */
+            Y0++;
+        }
+        X0 += XDir;             /* X-major, so always advance X */
+        /* The IntensityBits most significant bits of ErrorAcc give us the
+           intensity weighting for this pixel, and the complement of the
+           weighting for the paired pixel */
+        Weighting = ErrorAcc >> IntensityShift;
+        PUTDOT(X0, Y0, BaseColor[Weighting]);
+        PUTDOT(X0, Y0 + 1, BaseColor[(Weighting ^ WeightingComplementMask)]);
+
+    }
+    /* Draw the final pixel, which is always exactly intersected by the line
+       and so needs no weighting */
+    PUTDOT(X1, Y1, BaseColor[0]);
+}
 
 //
 // Clip lines, draw visible part sof lines.
@@ -1376,6 +1542,7 @@ void AM_drawWalls(void)
 	    {
 		// [crispy] draw keyed doors in their respective colors
 		// (no Boom multiple keys)
+		// make keyed doors flash for easier visibility
 		keycolor_t amd;
 		if (!(lines[i].flags & ML_SECRET) &&
 		    (amd = AM_DoorColor(lines[i].special)) > no_key)
@@ -1383,13 +1550,13 @@ void AM_drawWalls(void)
 		    switch (amd)
 		    {
 			case blue_key:
-			    AM_drawMline(&l, BLUES);
+			    AM_drawMline(&l, ((leveltime & 16) ? BLUES : GRIDCOLORS));
 			    continue;
 			case yellow_key:
-			    AM_drawMline(&l, YELLOWS);
+			    AM_drawMline(&l, ((leveltime & 16) ? (YELLOWS-2) : GRIDCOLORS));
 			    continue;
 			case red_key:
-			    AM_drawMline(&l, REDS);
+			    AM_drawMline(&l, ((leveltime & 16) ? (REDS-2) : GRIDCOLORS));
 			    continue;
 			default:
 			    // [crispy] it should be impossible to reach here
@@ -1731,7 +1898,7 @@ AM_drawThings
 	  {
 	    AM_drawLineCharacter
 		(thintriangle_guy, arrlen(thintriangle_guy),
-		 16<<FRACBITS, t->angle, colors+lightlev, t->x, t->y);
+		 16<<FRACBITS, t->angle, colors+lightlev, pt.x, pt.y);
 	  }
 	    t = t->snext;
 	}

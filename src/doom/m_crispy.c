@@ -334,6 +334,12 @@ void M_CrispyToggleDemoTimerDir(int choice)
     crispy->demotimerdir = !crispy->demotimerdir;
 }
 
+void M_CrispyToggleDemoUseTimer(int choice)
+{
+    choice = 0;
+    crispy->btusetimer = !crispy->btusetimer;
+}
+
 void M_CrispyToggleEvadingInterOver(int choice)
 {
     choice = 0;
@@ -549,6 +555,15 @@ void M_CrispyToggleSmoothLighting(int choice)
 
     crispy->post_rendering_hook = M_CrispyToggleSmoothLightingHook;
 }
+
+void M_CrispyToggleSmoothMap(int choice)
+{
+    choice = 0;
+    crispy->smoothmap = !crispy->smoothmap;
+    // Update function pointer used to draw lines
+    AM_LevelInit(true);
+}
+
 
 void M_CrispyToggleSndChannels(int choice)
 {

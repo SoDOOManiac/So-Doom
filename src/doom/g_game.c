@@ -136,7 +136,7 @@ int             totalleveltimes;        // [crispy] CPhipps - total time for all
 int             demostarttic;           // [crispy] fix revenant internal demo bug
  
 char           *demoname;
-char           *orig_demoname; // [crispy] the name originally chosen for the demo, i.e. without "-00000"
+const char     *orig_demoname; // [crispy] the name originally chosen for the demo, i.e. without "-00000"
 boolean         demorecording; 
 boolean         longtics;               // cph's doom 1.91 longtics hack
 boolean         lowres_turn;            // low resolution turning for longtics
@@ -242,6 +242,9 @@ int		bodyqueslot;
  
 int             vanilla_savegame_limit = 1;
 int             vanilla_demo_limit = 1;
+
+// [crispy] store last cmd to track joins
+static ticcmd_t* last_cmd = NULL;
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -826,6 +829,14 @@ void G_DoLoadLevel (void)
         }
         else if (gamemap < 21)
         {
+            // [crispy] BLACKTWR (MAP25) and TEETH (MAP31 and MAP32)
+            if ((gameepisode == 3 || gamemission == pack_master) && gamemap >= 19)
+                skytexturename = "SKY3";
+            else
+            // [crispy] BLOODSEA and MEPHISTO (both MAP07)
+            if ((gameepisode == 3 || gamemission == pack_master) && (gamemap == 14 || gamemap == 15))
+                skytexturename = "SKY1";
+            else
             skytexturename = "SKY2";
         }
         else
@@ -857,6 +868,29 @@ void G_DoLoadLevel (void)
 		 
     // [crispy] update the "singleplayer" variable
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
+
+    // [crispy] pistol start
+    if (crispy->pistolstart)
+    {
+        if (crispy->singleplayer)
+        {
+            G_PlayerReborn(0);
+        }
+        else if ((demoplayback || netdemo) && !singledemo)
+        {
+            // no-op - silently ignore pistolstart when playing demo from the
+            // demo reel
+        }
+        else
+        {
+            const char message[] = "The -pistolstart option is not suppported"
+                                   " for demos and\n"
+                                   " network play.";
+            if (!demo_p) demorecording = false;
+            I_Error(message);
+        }
+    }
+
     P_SetupLevel (gameepisode, gamemap, 0, gameskill);    
     displayplayer = consoleplayer;		// view the guy you are playing    
     gameaction = ga_nothing; 
@@ -1326,7 +1360,8 @@ void G_PlayerFinishLevel (int player)
     p->centering =
     p->jumpTics =
     p->recoilpitch = p->oldrecoilpitch =
-    p->psp_dy_max = 0;
+    p->psp_dy_max =
+    p->btuse = p->btuse_tics = 0;
 } 
  
 
@@ -1637,10 +1672,100 @@ void G_SecretExitLevel (void)
     G_ClearSavename();
     gameaction = ga_completed; 
 } 
+
+// [crispy] format time for level statistics
+#define TIMESTRSIZE 16
+static void G_FormatLevelStatTime(char *str, int tics)
+{
+    int exitHours, exitMinutes;
+    float exitTime, exitSeconds;
+
+    exitTime = (float) tics / 35;
+    exitHours = exitTime / 3600;
+    exitTime -= exitHours * 3600;
+    exitMinutes = exitTime / 60;
+    exitTime -= exitMinutes * 60;
+    exitSeconds = exitTime;
+
+    if (exitHours)
+    {
+        M_snprintf(str, TIMESTRSIZE, "%d:%02d:%05.2f",
+                    exitHours, exitMinutes, exitSeconds);
+    }
+    else
+    {
+        M_snprintf(str, TIMESTRSIZE, "%01d:%05.2f", exitMinutes, exitSeconds);
+    }
+}
+
+// [crispy] Write level statistics upon exit
+static void G_WriteLevelStat(void)
+{
+    static FILE *fstream = NULL;
+
+    int i, playerKills = 0, playerItems = 0, playerSecrets = 0;
+
+    char levelString[8];
+    char levelTimeString[TIMESTRSIZE];
+    char totalTimeString[TIMESTRSIZE];
+    char *decimal;
+
+    if (fstream == NULL)
+    {
+        fstream = fopen("levelstat.txt", "w");
+
+        if (fstream == NULL)
+        {
+            fprintf(stderr, "G_WriteLevelStat: Unable to open levelstat.txt for writing!\n");
+            return;
+        }
+    }
+    
+    if (gamemode == commercial)
+    {
+        M_snprintf(levelString, sizeof(levelString), "MAP%02d", gamemap);
+    }
+    else
+    {
+        M_snprintf(levelString, sizeof(levelString), "E%dM%d",
+                    gameepisode, gamemap);
+    }
+
+    G_FormatLevelStatTime(levelTimeString, leveltime);
+    G_FormatLevelStatTime(totalTimeString, totalleveltimes + leveltime);
+
+    // Total time ignores centiseconds
+    decimal = strchr(totalTimeString, '.');
+    if (decimal != NULL)
+    {
+        *decimal = '\0';
+    }
+
+    for (i = 0; i < MAXPLAYERS; i++)
+    {
+        if (playeringame[i])
+        {
+            playerKills += players[i].killcount;
+            playerItems += players[i].itemcount;
+            playerSecrets += players[i].secretcount;
+        }
+    }
+
+    fprintf(fstream, "%s%s - %s (%s)  K: %d/%d  I: %d/%d  S: %d/%d\n",
+            levelString, (secretexit ? "s" : ""),
+            levelTimeString, totalTimeString, playerKills, totalkills, 
+            playerItems, totalitems, playerSecrets, totalsecret);
+}
  
 void G_DoCompleted (void) 
 { 
     int             i; 
+
+    // [crispy] Write level statistics upon exit
+    if (M_ParmExists("-levelstat"))
+    {
+        G_WriteLevelStat();
+    }
 	 
     gameaction = ga_nothing; 
  
@@ -1657,11 +1782,14 @@ void G_DoCompleted (void)
 
         if (gameversion == exe_chex)
         {
+            // [crispy] display tally screen after Chex Quest E1M5
+            /*
             if (gamemap == 5)
             {
                 gameaction = ga_victory;
                 return;
             }
+            */
         }
         else
         {
@@ -1929,7 +2057,7 @@ void G_WorldDone (void)
     }
     // [crispy] display tally screen after ExM8
     else
-    if ( gamemap == 8 )
+    if ( gamemap == 8 || (gameversion == exe_chex && gamemap == 5) )
     {
 	gameaction = ga_victory;
     }
@@ -2201,6 +2329,10 @@ G_DeferedInitNew
     // [crispy] if a new game is started during demo recording, start a new demo
     if (demorecording)
     {
+	// [crispy] reset IDDT cheat when re-starting map during demo recording
+	void AM_ResetIDDTcheat (void);
+	AM_ResetIDDTcheat();
+
 	G_CheckDemoStatus();
 	Z_Free(demoname);
 
@@ -2278,6 +2410,16 @@ G_InitNew
 
     if (skill > sk_nightmare)
 	skill = sk_nightmare;
+
+  // [crispy] if NRFTL is not available, "episode 2" may mean The Master Levels ("episode 3")
+  if (gamemode == commercial)
+  {
+    if (episode < 1)
+      episode = 1;
+    else
+    if (episode == 2 && !crispy->havenerve)
+      episode = crispy->havemaster ? 3 : 1;
+  }
 
   // [crispy] only fix episode/map if it doesn't exist
   if (P_GetNumForMap(episode, map, false) < 0)
@@ -2438,6 +2580,8 @@ void G_ReadDemoTiccmd (ticcmd_t* cmd)
 { 
     if (*demo_p == DEMOMARKER) 
     {
+	last_cmd = cmd; // [crispy] remember last cmd to track joins
+
 	// end of demo data stream 
 	G_CheckDemoStatus (); 
 	return; 
@@ -2460,6 +2604,8 @@ void G_ReadDemoTiccmd (ticcmd_t* cmd)
 	// [crispy] discard the newly allocated demo buffer
 	Z_Free(demobuffer);
 	demobuffer = actualbuffer;
+
+	last_cmd = cmd; // [crispy] remember last cmd to track joins
 
 	// [crispy] continue recording
 	G_CheckDemoStatus();
@@ -2578,7 +2724,7 @@ void G_WriteDemoTiccmd (ticcmd_t* cmd)
 //
 // G_RecordDemo
 //
-void G_RecordDemo (char *name)
+void G_RecordDemo (const char *name)
 {
     size_t demoname_size;
     int i;
@@ -2931,7 +3077,11 @@ void G_TimeDemo (char* name)
 boolean G_CheckDemoStatus (void) 
 { 
     int             endtime; 
-	 
+
+    // [crispy] catch the last cmd to track joins
+    ticcmd_t* cmd = last_cmd;
+    last_cmd = NULL;
+
     if (timingdemo) 
     { 
         float fps;
@@ -2980,6 +3130,12 @@ boolean G_CheckDemoStatus (void)
             if (gamestate == GS_LEVEL)
             {
                 S_Start();
+            }
+
+            // [crispy] record demo join
+            if (cmd != NULL)
+            {
+                cmd->buttons |= BT_JOIN;
             }
 
             return true;

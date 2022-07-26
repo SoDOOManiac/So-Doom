@@ -31,6 +31,7 @@
 #include "r_local.h"
 #include "s_sound.h"
 #include "v_video.h"
+#include "v_trans.h" // [crispy] dp_translation
 
 // Macros
 
@@ -330,6 +331,60 @@ static Menu_t *Menus[] = {
     &SaveMenu,
     &CrispnessMenu
 };
+
+// [crispy] reload current level / go to next level
+// adapted from prboom-plus/src/e6y.c:369-449
+static int G_ReloadLevel(void)
+{
+  int result = false;
+
+  if (gamestate == GS_LEVEL)
+  {
+    // [crispy] restart demos from the map they were started
+    if (demorecording)
+    {
+      gamemap = startmap;
+    }
+    G_DeferedInitNew(gameskill, gameepisode, gamemap);
+    result = true;
+  }
+
+  return result;
+}
+
+static int G_GotoNextLevel(void)
+{
+  byte heretic_next[6][9] = {
+
+    {12, 13, 14, 15, 16, 19, 18, 21, 17},
+    {22, 23, 24, 29, 26, 27, 28, 31, 25},
+    {32, 33, 34, 39, 36, 37, 38, 41, 35},
+    {42, 43, 44, 49, 46, 47, 48, 51, 45},
+    {52, 53, 59, 55, 56, 57, 58, 61, 54},
+    {62, 63, 11, 11, 11, 11, 11, 11, 11}, // E6M4-E6M9 shouldn't be accessible
+  };
+
+  int changed = false;
+
+  if (gamemode == shareware)
+    heretic_next[0][7] = 11;
+
+  if (gamemode == registered)
+    heretic_next[2][7] = 11;
+
+  if (gamestate == GS_LEVEL)
+  {
+    int epsd, map;
+
+    epsd = heretic_next[gameepisode-1][gamemap-1] / 10;
+    map = heretic_next[gameepisode-1][gamemap-1] % 10;
+
+    G_DeferedInitNew(gameskill, epsd, map);
+    changed = true;
+  }
+
+  return changed;
+}
 
 //---------------------------------------------------------------------------
 //
@@ -1529,6 +1584,18 @@ boolean MN_Responder(event_t * event)
             I_SetPalette((byte *) W_CacheLumpName("PLAYPAL", PU_CACHE));
             return true;
         }
+        // [crispy] those two can be considered as shortcuts for the ENGAGE cheat
+        // and should be treated as such, i.e. add "if (!netgame)"
+        else if (!netgame && key != 0 && key == key_menu_reloadlevel)
+        {
+	    if (G_ReloadLevel())
+		return true;
+        }
+        else if (!netgame && key != 0 && key == key_menu_nextlevel)
+        {
+	    if (G_GotoNextLevel())
+		return true;
+        }
 
     }
 
@@ -1674,9 +1741,10 @@ boolean MN_Responder(event_t * event)
         {
             if (slotptr)
             {
-                *textBuffer-- = 0;
-                *textBuffer = ASCII_CURSOR;
+                *textBuffer = 0;
                 slotptr--;
+                textBuffer = &SlotText[currentSlot][slotptr];
+                *textBuffer = ASCII_CURSOR;
             }
             return (true);
         }
@@ -1861,17 +1929,54 @@ static void DrawSlider(Menu_t * menu, int item, int width, int slot)
 //
 //---------------------------------------------------------------------------
 
+static void M_DrawCrispnessBackground(void)
+{
+    byte *src, *dest;
+    int x, y;
+
+    if (gamemode == shareware)
+    {
+        src = W_CacheLumpName(DEH_String("FLOOR04"), PU_CACHE);
+    }
+    else
+    {
+        src = W_CacheLumpName(DEH_String("FLAT513"), PU_CACHE);
+    }
+    dest = I_VideoBuffer;
+
+    for (y = 0; y < SCREENHEIGHT; y++)
+    {
+        for (x = 0; x < SCREENWIDTH / 64; x++)
+        {
+            memcpy(dest, src + ((y & 63) << 6), 64);
+            dest += 64;
+        }
+        if (SCREENWIDTH & 63)
+        {
+            memcpy(dest, src + ((y & 63) << 6), SCREENWIDTH & 63);
+            dest += (SCREENWIDTH & 63);
+        }
+    }
+
+    SB_state = -1;
+}
+
 static void DrawCrispnessMenu(void)
 {
     static const char *title;
+
+    // Background
+    M_DrawCrispnessBackground();
 
     // Title
     title = DEH_String("CRISPNESS");
     MN_DrTextB(title, 160 - MN_TextBWidth(title) / 2, 6);
 
     // Subheaders
+    dp_translation = cr[CR_GOLD];
     MN_DrTextA("RENDERING", 63, 30);
     MN_DrTextA("NAVIGATIONAL", 63, 90);
+    dp_translation = cr[CR_GREY];
 
     // Hires rendering
     MN_DrTextA(crispy->hires ? "ON" : "OFF", 254, 40);
@@ -1902,4 +2007,6 @@ static void DrawCrispnessMenu(void)
     MN_DrTextA(crispy->secretmessage == SECRETMESSAGE_OFF ? "OFF" :
         crispy->secretmessage == SECRETMESSAGE_ON ? "ON" :
         "COUNT", 250, 130);
+
+    dp_translation = NULL;
 }

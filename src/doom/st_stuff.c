@@ -565,6 +565,18 @@ void ST_refreshBackground(boolean force)
 				*dest++ = src[((y&63)<<6) + (x&63)];
 			}
 		}
+
+		// [crispy] preserve bezel bottom edge
+		if (scaledviewwidth == SCREENWIDTH)
+		{
+			patch_t *const patch = W_CacheLumpName(DEH_String("brdr_b"), PU_CACHE);
+
+			for (x = 0; x < WIDESCREENDELTA; x += 8)
+			{
+				V_DrawPatch(x - WIDESCREENDELTA, 0, patch);
+				V_DrawPatch(ORIGWIDTH + WIDESCREENDELTA - x - 8, 0, patch);
+			}
+		}
 	}
 
 	V_DrawPatch(ST_X, 0, sbar);
@@ -588,7 +600,7 @@ void ST_refreshBackground(boolean force)
 
 	// [crispy] copy entire SCREENWIDTH, to preserve the pattern
 	// to the left and right of the status bar in widescren mode
-	if (!force)
+	if (st_classicstatusbar)
 	V_CopyRect(ST_X, 0, st_backing_screen, SCREENWIDTH >> crispy->hires, ST_HEIGHT, ST_X, ST_Y);
     }
 
@@ -1450,6 +1462,9 @@ ST_Responder (event_t* ev)
       
       if (gamemode == commercial)
       {
+	if (gamemission == pack_master)
+	    epsd = 3;
+	else
 	if (gamemission == pack_nerve)
 	    epsd = 2;
 	else
@@ -1898,11 +1913,6 @@ static int st_widescreendelta;
 
 void ST_Ticker (void)
 {
-    if (st_widescreendelta != ST_WIDESCREENDELTA)
-    {
-        void ST_createWidgets (void);
-        ST_createWidgets();
-    }
 
     st_clock++;
     st_randomnumber = M_Random();
@@ -2262,6 +2272,13 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     st_crispyhud = screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay);
     st_classicstatusbar = st_statusbaron && !st_crispyhud;
     st_statusbarface = st_classicstatusbar || (st_crispyhud && screenblocks == CRISPY_HUD); 
+
+    // [crispy] re-calculate widget coordinates on demand
+    if (st_widescreendelta != ST_WIDESCREENDELTA)
+    {
+        void ST_createWidgets (void);
+        ST_createWidgets();
+    }
 
     if (crispy->cleanscreenshot == 2)
         return;

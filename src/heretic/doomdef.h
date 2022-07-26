@@ -563,6 +563,9 @@ extern int prevmap;
 extern int totalkills, totalitems, totalsecret; // for intermission
 extern int levelstarttic;       // gametic at level start
 extern int leveltime;           // tics in game play for par
+extern int totalleveltimes; // [crispy] total time for all completed levels
+
+extern boolean finalintermission; // [crispy] track intermission at end of episode
 
 extern ticcmd_t *netcmds;
 
@@ -699,7 +702,7 @@ uint32_t SV_ReadLong(void);
 extern char *savegamedir;
 
 void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
-                  char *name);
+                  const char *name);
 // only called by startup code
 
 void G_PlayDemo(char *name);

@@ -1008,7 +1008,7 @@ static boolean IsMusicLump(int lumpnum)
 // Dump an example config file containing checksums for all MIDI music
 // found in the WAD directory.
 
-static void DumpSubstituteConfig(char *filename)
+static void DumpSubstituteConfig(const char *filename)
 {
     sha1_context_t context;
     sha1_digest_t digest;
@@ -1134,7 +1134,7 @@ static boolean I_MP_InitMusic(void)
     {
         fprintf(stderr, "Unable to set up sound.\n");
     }
-    else if (Mix_OpenAudio(snd_samplerate, AUDIO_S16SYS, 2, 1024) < 0)
+    else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
     {
         fprintf(stderr, "Error initializing SDL_mixer: %s\n",
                 Mix_GetError());

@@ -308,7 +308,7 @@ void V_DrawPatchFullScreen(patch_t *patch, boolean flipped)
     const short width = SHORT(patch->width);
     const short height = SHORT(patch->height);
 
-    dx = (NONWIDEWIDTH << FRACBITS) / width;
+    dx = (NONWIDEWIDTH << FRACBITS) / ORIGWIDTH;
     dxi = (width << FRACBITS) / NONWIDEWIDTH;
     dy = (SCREENHEIGHT << FRACBITS) / height;
     dyi = (height << FRACBITS) / SCREENHEIGHT;

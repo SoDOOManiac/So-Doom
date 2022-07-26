@@ -1249,6 +1249,7 @@ extern state_t	states[NUMSTATES];
 extern const char *sprnames[];
 
 typedef enum {
+    MT_NULL = -1, // [crispy] null/invalid mobj (zero is reserved for MT_PLAYER)
     MT_PLAYER,
     MT_POSSESSED,
     MT_SHOTGUY,
@@ -1448,6 +1449,16 @@ typedef struct
     int	raisestate;
     // [crispy] height of the spawnstate's first sprite in pixels
     int	actualheight;
+    // [crispy] mobj to drop after death
+    mobjtype_t droppeditem;
+    // [crispy] distance to switch from missile to melee attack (generaliz. for Revenant)
+    int meleethreshold;
+    // [crispy] maximum distance range to start shooting (generaliz. for Arch Vile)
+    int maxattackrange;
+    // [crispy] minimum likelihood of a missile attack (generaliz. for Cyberdemon)
+    int minmissilechance;
+    // [crispy] multiplier for likelihood of a missile attack (generaliz. for various)
+    int missilechancemult;
 
 } mobjinfo_t;
 

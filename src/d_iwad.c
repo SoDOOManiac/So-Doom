@@ -622,7 +622,7 @@ static void AddXdgDirs(void)
 
     if (env == NULL)
     {
-        char *homedir = getenv("HOME");
+        const char *homedir = getenv("HOME");
         if (homedir == NULL)
         {
             homedir = "/";
@@ -657,6 +657,7 @@ static void AddXdgDirs(void)
     // source ports is /usr/share/games/doom - we support this through the
     // XDG_DATA_DIRS mechanism, through which it can be overridden.
     AddIWADPath(env, "/games/doom");
+    AddIWADPath(env, "/doom");
 
     // The convention set by RBDOOM-3-BFG is to install Doom 3: BFG
     // Edition into this directory, under which includes the Doom
@@ -840,7 +841,7 @@ char *D_TryFindWADByName(const char *filename)
 char *D_FindIWAD(int mask, GameMission_t *mission)
 {
     char *result;
-    char *iwadfile;
+    const char *iwadfile;
     int iwadparm;
     int i;
 
@@ -927,7 +928,7 @@ const iwad_t **D_FindAllIWADs(int mask)
 // Get the IWAD name used for savegames.
 //
 
-const char *D_SaveGameIWADName(GameMission_t gamemission)
+const char *D_SaveGameIWADName(GameMission_t gamemission, GameVariant_t gamevariant)
 {
     size_t i;
 
@@ -937,6 +938,22 @@ const char *D_SaveGameIWADName(GameMission_t gamemission)
     // Note that we match on gamemission rather than on IWAD name.
     // This ensures that doom1.wad and doom.wad saves are stored
     // in the same place.
+
+    if (gamevariant == freedoom)
+    {
+        if (gamemission == doom)
+        {
+            return "freedoom1.wad";
+        }
+        else if (gamemission == doom2)
+        {
+            return "freedoom2.wad";
+        }
+    }
+    else if (gamevariant == freedm && gamemission == doom2)
+    {
+        return "freedm.wad";
+    }
 
     for (i=0; i<arrlen(iwads); ++i)
     {

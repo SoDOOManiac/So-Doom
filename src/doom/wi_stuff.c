@@ -804,7 +804,7 @@ static boolean		snl_pointeron = false;
 void WI_initShowNextLoc(void)
 {
     // [crispy] display tally screen after ExM8
-    if ((gamemode != commercial) && (gamemap == 8))
+    if ((gamemode != commercial && gamemap == 8) || (gameversion == exe_chex && gamemap == 5))
     {
 	G_WorldDone();
 	return;
@@ -1606,7 +1606,7 @@ void WI_drawStats(void)
     }
 
     // [crispy] exit early from the tally screen after ExM8
-    if (sp_state == 10 && gamemode != commercial && gamemap == 8)
+    if (sp_state == 10 && ((gamemode != commercial && gamemap == 8) || (gameversion == exe_chex && gamemap == 5)))
     {
 	acceleratestage = 1;
     }
@@ -1709,25 +1709,20 @@ static void WI_loadUnloadData(load_callback_t callback)
     char name[9];
     anim_t *a;
 
-    if (nervewadfile && gamemission == pack_nerve)
-    {
-	for (i=0 ; i<9 ; i++)
-	{
-	    DEH_snprintf(name, 9, "NWILV%2.2d", i);
-            callback(name, &lnames[i]);
-	}
-	for ( ; i<NUMCMAPS ; i++)
-	{
-	    DEH_snprintf(name, 9, "CWILV%2.2d", i);
-            callback(name, &lnames[i]);
-	}
-    }
-    else
     if (gamemode == commercial)
     {
 	for (i=0 ; i<NUMCMAPS ; i++)
 	{
 	    DEH_snprintf(name, 9, "CWILV%2.2d", i);
+	    // [crispy] NRFTL / The Master Levels
+	    if (crispy->havenerve && wbs->epsd == 1 && i < 9) // [crispy] gamemission == pack_nerve
+	    {
+		name[0] = 'N';
+	    }
+	    if (crispy->havemaster && crispy->havemaster != (char *)-1 && wbs->epsd == 2 && i < 21) // [crispy] gamemission == pack_master
+	    {
+		name[0] = 'M';
+	    }
             callback(name, &lnames[i]);
 	}
     }
@@ -1860,7 +1855,14 @@ static void WI_loadUnloadData(load_callback_t callback)
 
     if (gamemode == commercial)
     {
+        if (crispy->havenerve && wbs->epsd == 1 && W_CheckNumForName(DEH_String("NERVEINT")) != -1) // [crispy] gamemission == pack_nerve
+        {
+            M_StringCopy(name, DEH_String("NERVEINT"), sizeof(name));
+        }
+        else
+        {
         M_StringCopy(name, DEH_String("INTERPIC"), sizeof(name));
+        }
     }
     else if (gameversion >= exe_ultimate && wbs->epsd == 3)
     {

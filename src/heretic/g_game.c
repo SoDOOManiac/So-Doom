@@ -106,6 +106,9 @@ int consoleplayer;              // player taking events and displaying
 int displayplayer;              // view being displayed
 int levelstarttic;              // gametic at level start
 int totalkills, totalitems, totalsecret;        // for intermission
+int totalleveltimes; // [crispy] total time for all completed levels
+
+boolean finalintermission; // [crispy] track intermission at end of episode
 
 int mouseSensitivity;
 
@@ -412,18 +415,18 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
             cmd->angleturn += angleturn[tspeed];
     }
 
-    if (gamekeydown[key_up])
+    if (gamekeydown[key_up] || gamekeydown[key_alt_up]) // [crispy] add key_alt_*
         forward += forwardmove[speed];
-    if (gamekeydown[key_down])
+    if (gamekeydown[key_down] || gamekeydown[key_alt_down]) // [crispy] add key_alt_*
         forward -= forwardmove[speed];
     if (joyymove < 0)
         forward += forwardmove[speed];
     if (joyymove > 0)
         forward -= forwardmove[speed];
-    if (gamekeydown[key_straferight] || mousebuttons[mousebstraferight]
+    if (gamekeydown[key_straferight] || gamekeydown[key_alt_straferight] || mousebuttons[mousebstraferight] // [crispy] add key_alt_*
      || joybuttons[joybstraferight] || joystrafemove > 0)
         side += sidemove[speed];
-    if (gamekeydown[key_strafeleft] || mousebuttons[mousebstrafeleft]
+    if (gamekeydown[key_strafeleft] || gamekeydown[key_alt_strafeleft] || mousebuttons[mousebstrafeleft] // [crispy] add key_alt_*
      || joybuttons[joybstrafeleft] || joystrafemove < 0)
         side -= sidemove[speed];
 
@@ -534,6 +537,11 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     {
         gamekeydown[key_arti_torch] = false;
         cmd->arti = arti_torch;
+    }
+    else if (gamekeydown[key_arti_morph] && !cmd->arti)
+    {
+        gamekeydown[key_arti_morph] = false;
+        cmd->arti = arti_egg;
     }
 
 //
@@ -761,6 +769,30 @@ void G_DoLoadLevel(void)
         if (playeringame[i] && players[i].playerstate == PST_DEAD)
             players[i].playerstate = PST_REBORN;
         memset(players[i].frags, 0, sizeof(players[i].frags));
+    }
+
+    // [crispy] update the "singleplayer" variable
+    CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
+
+    // [crispy] wand start
+    if (crispy->pistolstart)
+    {
+        if (crispy->singleplayer)
+        {
+            G_PlayerReborn(0);
+        }
+        else if (demoplayback && !singledemo)
+        {
+            // no-op - silently ignore pistolstart when playing demo from
+            // the demo reel
+        }
+        else
+        {
+            const char message[] = "The -wandstart option is not supported"
+                                   " for demos and\n"
+                                   " network play.";
+            I_Error(message);
+        }
     }
 
     P_SetupLevel(gameepisode, gamemap, 0, gameskill);
@@ -1276,6 +1308,7 @@ void G_PlayerFinishLevel(int player)
         p->chickenTics = 0;
     }
     p->messageTics = 0;
+    p->centerMessageTics = 0;
     p->lookdir = 0;
     p->mo->flags &= ~MF_SHADOW; // Remove invisibility
     p->extralight = 0;          // Remove weapon flashes
@@ -1504,10 +1537,89 @@ void G_SecretExitLevel(void)
     gameaction = ga_completed;
 }
 
+// [crispy] format time for level statistics
+#define TIMESTRSIZE 16
+static void G_FormatLevelStatTime(char *str, int tics)
+{
+    int exitHours, exitMinutes;
+    float exitTime, exitSeconds;
+
+    exitTime = (float) tics / 35;
+    exitHours = exitTime / 3600;
+    exitTime -= exitHours * 3600;
+    exitMinutes = exitTime / 60;
+    exitTime -= exitMinutes * 60;
+    exitSeconds = exitTime;
+
+    if (exitHours)
+    {
+        M_snprintf(str, TIMESTRSIZE, "%d:%02d:%05.2f",
+                    exitHours, exitMinutes, exitSeconds);
+    }
+    else
+    {
+        M_snprintf(str, TIMESTRSIZE, "%01d:%05.2f", exitMinutes, exitSeconds);
+    }
+}
+
+// [crispy] Write level statistics upon exit
+static void G_WriteLevelStat(void)
+{
+    static FILE *fstream = NULL;
+
+    int i, playerKills = 0, playerItems = 0, playerSecrets = 0;
+
+    char levelTimeString[TIMESTRSIZE];
+    char totalTimeString[TIMESTRSIZE];
+    char *decimal;
+
+    if (fstream == NULL)
+    {
+        fstream = fopen("levelstat.txt", "w");
+
+        if (fstream == NULL)
+        {
+            fprintf(stderr, "G_WriteLevelStat: Unable to open levelstat.txt for writing!\n");
+            return;
+        }
+    }
+
+    G_FormatLevelStatTime(levelTimeString, leveltime);
+    G_FormatLevelStatTime(totalTimeString, totalleveltimes + leveltime);
+
+    // Total time ignores centiseconds
+    decimal = strchr(totalTimeString, '.');
+    if (decimal != NULL)
+    {
+        *decimal = '\0';
+    }
+
+    for (i = 0; i < MAXPLAYERS; i++)
+    {
+        if (playeringame[i])
+        {
+            playerKills += players[i].killcount;
+            playerItems += players[i].itemcount;
+            playerSecrets += players[i].secretcount;
+        }
+    }
+
+    fprintf(fstream, "E%dM%d%s - %s (%s)  K: %d/%d  I: %d/%d  S: %d/%d\n",
+            gameepisode, gamemap, (secretexit ? "s" : ""),
+            levelTimeString, totalTimeString, playerKills, totalkills, 
+            playerItems, totalitems, playerSecrets, totalsecret);
+}
+
 void G_DoCompleted(void)
 {
     int i;
     static int afterSecret[5] = { 7, 5, 5, 5, 4 };
+
+    // [crispy] Write level statistics upon exit
+    if (M_ParmExists("-levelstat"))
+    {
+        G_WriteLevelStat();
+    }
 
     gameaction = ga_nothing;
 
@@ -1534,13 +1646,17 @@ void G_DoCompleted(void)
     }
     else if (gamemap == 8)
     {
-        gameaction = ga_victory;
-        return;
+        // [crispy] track intermission at end of episode
+        finalintermission = true;
     }
     else
     {
         gamemap++;
     }
+
+    // [crispy] total time for all completed levels (only count seconds)
+    totalleveltimes += (leveltime - leveltime % TICRATE);
+
     gamestate = GS_INTERMISSION;
     IN_Start();
 }
@@ -1554,6 +1670,12 @@ void G_DoCompleted(void)
 void G_WorldDone(void)
 {
     gameaction = ga_worlddone;
+
+    // [crispy] track intermission at end of episode
+    if (finalintermission)
+    {
+        gameaction = ga_victory;
+    }
 }
 
 //============================================================================
@@ -1738,6 +1860,12 @@ void G_InitNew(skill_t skill, int episode, int map)
     viewactive = true;
     BorderNeedRefresh = true;
 
+    // [crispy] total time for all completed levels
+    totalleveltimes = 0;
+
+    // [crispy] track intermission at end of episode
+    finalintermission = false;
+
     // Set the sky map
     if (episode > 5)
     {
@@ -1897,7 +2025,7 @@ void G_WriteDemoTiccmd(ticcmd_t * cmd)
 */
 
 void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
-                  char *name)
+                  const char *name)
 {
     int i;
     int maxsize;
@@ -1918,10 +2046,11 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     //!
     // @category demo
     //
-    // Smooth out low resolution turning when recording a demo.
+    // Don't smooth out low resolution turning when recording a demo.
     //
 
-    shortticfix = M_ParmExists("-shortticfix");
+    shortticfix = (!M_ParmExists("-noshortticfix"));
+    //[crispy] make shortticfix the default
 
     G_InitNew(skill, episode, map);
     usergame = false;
