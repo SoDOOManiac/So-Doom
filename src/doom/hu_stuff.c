@@ -70,12 +70,7 @@
 #define HU_INPUTWIDTH	64
 #define HU_INPUTHEIGHT	1
 
-<<<<<<< HEAD
-
-#define HU_COORDX	((ORIGWIDTH - 7 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
-=======
-#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + WIDESCREENDELTA)
->>>>>>> 36efce43afbaafba3835c49ab37431f92b837906
+#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + WIDESCREENDELTA) // JNechaevsky replaced 7 with 8 to allow for multi-thousand FPS in the widget
 
 
 char *chat_macros[10];
@@ -939,15 +934,6 @@ void HU_Ticker(void)
     char c;
     char str[32], *s;
 
-<<<<<<< HEAD
-    // [crispy] re-calculate widget coordinates on demand
-    if (hu_widescreendelta != HUD_WIDESCREENDELTA)
-    {
-        HU_Start();
-    }
-
-=======
->>>>>>> 36efce43afbaafba3835c49ab37431f92b837906
     // tick down message counter if message is up
     if (message_counter && !--message_counter)
     {
