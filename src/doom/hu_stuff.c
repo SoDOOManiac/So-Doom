@@ -70,8 +70,8 @@
 #define HU_INPUTWIDTH	64
 #define HU_INPUTHEIGHT	1
 
-#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA) // JNechaevsky replaced 7 with 8 to allow for multi-thousand FPS in the widget
-
+#define HU_COORDX	((ORIGWIDTH - 7 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
+#define HU_FPS_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA) // JNechaevsky suggested replacing 7 with 8 to allow for multi-thousand FPS in the widget
 
 char *chat_macros[10];
 
@@ -665,7 +665,7 @@ void HU_Start(void)
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_fps,
-		       HU_COORDX, HU_MSGY,
+		       HU_FPS_COORDX, HU_MSGY,
 		       hu_font,
 		       HU_FONTSTART);
 
@@ -825,7 +825,7 @@ void HU_Drawer(void)
     }
 
     // [crispy] re-calculate widget coordinates on demand
-    if (hu_widescreendelta != WIDESCREENDELTA)
+    if (hu_widescreendelta != HUD_WIDESCREENDELTA)
     {
         HU_Start();
     }
