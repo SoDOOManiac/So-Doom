@@ -501,7 +501,7 @@ enum
 
     crispness_sep_navigational,
     crispness_extautomap,
-    //crispness_smoothmap,
+    crispness_smoothmap,
     crispness_automapstats,
     crispness_leveltime,
     crispness_playercoords,
@@ -524,7 +524,7 @@ static menuitem_t Crispness2Menu[]=
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleExtAutomap,'e'},
-    //{1,"",	M_CrispyToggleSmoothMap,'m'},
+    {1,"",	M_CrispyToggleSmoothMap,'m'},
     {1,"",	M_CrispyToggleAutomapstats,'s'},
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
@@ -617,7 +617,7 @@ enum
     crispness_demotimer,
     crispness_demotimerdir,
     crispness_demobar,
-    //crispness_demousetimer,
+    crispness_demousetimer,
     crispness_sep_demos_,
 
     crispness4_next,
@@ -641,7 +641,7 @@ static menuitem_t Crispness4Menu[]=
     {1,"",	M_CrispyToggleDemoTimer,'t'},
     {1,"",	M_CrispyToggleDemoTimerDir,'d'},
     {1,"",	M_CrispyToggleDemoBar,'w'},
-    //{1,"",	M_CrispyToggleDemoUseTimer,'u'},
+    {1,"",	M_CrispyToggleDemoUseTimer,'u'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -1573,7 +1573,7 @@ static void M_DrawCrispness2(void)
 
     M_DrawCrispnessSeparator(crispness_sep_navigational, "Navigational");
     M_DrawCrispnessItem(crispness_extautomap, "Extended Automap colors", crispy->extautomap, true);
-    //M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
+    M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
     M_DrawCrispnessMultiItem(crispness_automapstats, "Show Level Stats", multiitem_widgets, crispy->automapstats, true);
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
@@ -1637,7 +1637,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_demotimer, "Show Demo Timer", multiitem_demotimer, crispy->demotimer, true);
     M_DrawCrispnessMultiItem(crispness_demotimerdir, "Playback Timer Direction", multiitem_demotimerdir, crispy->demotimerdir + 1, crispy->demotimer & DEMOTIMER_PLAYBACK);
     M_DrawCrispnessItem(crispness_demobar, "Show Demo Progress Bar", crispy->demobar, true);
-    //M_DrawCrispnessItem(crispness_demousetimer, "\"Use\" Button Timer", crispy->btusetimer, true);
+    M_DrawCrispnessItem(crispness_demousetimer, "\"Use\" Button Timer", crispy->btusetimer, true);
 
     M_DrawCrispnessGoto(crispness4_next, "First Page >");
     M_DrawCrispnessGoto(crispness4_prev, "< Prev Page");
