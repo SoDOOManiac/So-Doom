@@ -34,7 +34,7 @@ multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
 
 multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS] =
 {
-    {PIXELASPECTRATIO_OFF, "none"},
+    {PIXELASPECTRATIO_OFF, "stretched"},
     {PIXELASPECTRATIO_1_2, "1.2"},
     {PIXELASPECTRATIO_1, "1"},
 };
