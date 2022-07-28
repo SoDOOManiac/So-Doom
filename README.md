@@ -1,15 +1,15 @@
 # So Doom
-[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/zodomaniac/so-doom)
+[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/SoDOOManiac/so-doom)
 
-[![Top Language](https://img.shields.io/github/languages/top/zodomaniac/so-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom)
-[![Code Size](https://img.shields.io/github/languages/code-size/zodomaniac/so-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom)
-[![License](https://img.shields.io/github/license/zodomaniac/so-doom.svg?style=flat&logo=gnu)](https://github.com/zodomaniac/so-doom/blob/master/COPYING.md)
-[![Release](https://img.shields.io/github/release/zodomaniac/so-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
-[![Release Date](https://img.shields.io/github/release-date/zodomaniac/so-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
-[![Downloads](https://img.shields.io/github/downloads/zodomaniac/so-doom/latest/total.svg?style=flat)](https://github.com/zodomaniac/so-doom/releases)
-[![Commits](https://img.shields.io/github/commits-since/zodomaniac/so-doom/latest.svg?style=flat)](https://github.com/zodomaniac/so-doom/commits/master)
-[![Last Commit](https://img.shields.io/github/last-commit/zodomaniac/so-doom.svg?style=flat)](https://github.com/zodomaniac/so-doom/commits/master)
-[![Travis Build Status](https://img.shields.io/travis/com/zodomaniac/so-doom.svg?style=flat&logo=travis)](https://travis-ci.com/zodomaniac/so-doom/)
+[![Top Language](https://img.shields.io/github/languages/top/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
+[![Code Size](https://img.shields.io/github/languages/code-size/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
+[![License](https://img.shields.io/github/license/SoDOOManiac/so-doom.svg?style=flat&logo=gnu)](https://github.com/SoDOOManiac/so-doom/blob/master/COPYING.md)
+[![Release](https://img.shields.io/github/release/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/releases)
+[![Release Date](https://img.shields.io/github/release-date/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/releases)
+[![Downloads](https://img.shields.io/github/downloads/SoDOOManiac/so-doom/latest/total.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/releases)
+[![Commits](https://img.shields.io/github/commits-since/SoDOOManiac/so-doom/latest.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
+[![Last Commit](https://img.shields.io/github/last-commit/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
+[![Travis Build Status](https://img.shields.io/travis/com/SoDOOManiac/so-doom.svg?style=flat&logo=travis)](https://travis-ci.com/SoDOOManiac/so-doom/)
 
 So Doom is a limit-removing enhanced-resolution Doom source port based on [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom).
 
@@ -128,27 +128,18 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-<<<<<<< HEAD
-https://github.com/Zodomaniac/So-Doom/releases/download/so-doom-5.8.0/so-doom-5.8.0-win32.zip
-=======
-https://github.com/fabiangreffrath/crispy-doom/releases/download/crispy-doom-5.9.2/crispy-doom-5.9.2-win32.zip
-
-To install on Ubuntu ("Eoan Ermine" 19.10 and later)/Debian ("Buster" 10 and later) based systems:
-```bash
-sudo apt-get install crispy-doom
-```
->>>>>>> 36efce43afbaafba3835c49ab37431f92b837906
+https://github.com/SoDOOManiac/So-Doom/releases/download/so-doom-5.8.0/so-doom-5.8.0-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
 ### Sources
 
-So Doom source code is available at GitHub: https://github.com/zodomaniac/so-doom.
-It can be [downloaded in either ZIP or TAR.GZ format](https://github.com/zodomaniac/so-doom/releases) 
+So Doom source code is available at GitHub: https://github.com/SoDOOManiac/so-doom.
+It can be [downloaded in either ZIP or TAR.GZ format](https://github.com/SoDOOManiac/so-doom/releases) 
 or cloned via
 
 ```
- git clone https://github.com/zodomaniac/so-doom.git
+ git clone https://github.com/SoDOOManiac/so-doom.git
 ```
 
 Brief instructions to set up a build system on Windows can be found [in the Crispy Doom Wiki](https://github.com/fabiangreffrath/crispy-doom/wiki/Building-on-Windows). A much more detailed guide is provided [in the Chocolate Doom Wiki](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Windows), but applies to So Doom as well for most parts.
@@ -173,7 +164,68 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
-<<<<<<< HEAD
+### So Doom 5.9.2
+
+So Doom 5.9.2 has been released on July 28, 2022 to apply the fix for the critical security issue from Chocolate Doom, merge other Crispy Doom features and improvements and put all the widgets within the narrow screen size in Cockpit HUD.
+
+#### So Doom-specific changes
+ 
+ * Pixel aspect ratio option value determined purely by screen size is now called 'stretched'.
+ * All the HUD widgets (kills/items/secret etc.) are now within the narrow screen size in Cockpit HUD.
+ * Updated the SDL2 library to 2.0.22, and SDL2_mixer and SDL2_net to latest versions.
+
+#### Changes pulled from Crispy Doom
+
+**New features and improvements**
+
+ * MASTERLEVELS.wad is now automatically loaded alongside DOOM2.wad just like NERVE.wad was for the BFG Edition DOOM2.wad IWAD before. However, this will now work for any DOOM2.wad IWAD as well (thanks @buvk for reporting a bug in the initial implementation).
+ * Support has been added for automatically loading all the 20 separate Master Levels PWADs and arranging them as if they came from the single MASTERLEVELS.wad PWAD.
+ * Alternative text entries have been added to the skill menu. Thus, the entries are still there and rendered consistently even if the Nightmare! skill graphics lump is missing when playing with a v1.2 or earlier IWAD (thanks @zx64).
+ * The unconditional "fixing" of reversed stereo channels in OPL music playback has been reverted. People got so much used to the flipped channels that the correct channel order has been regarded as a bug (thanks @drivetheory).
+ * Two separate finale texts for the Master Levels have been introduced, depending on whether you have found and finished the secret MAP21 or not. The actual texts have been taken from @MadDeCoDeR's Classic-RBDOOM-3-BFG project with some minor wording fixes applied (thanks @icecreamoverlord).
+ * Optional Automap lines smoothing has been added with a toggle in the Crispness menu (by @zx64).
+ * Doors locked with a key now flash on the Automap, if extended map colours are enabled (by @kitchen-ace).
+ * Extended map colours have been adjusted to be closer to Vanilla's (by @kitchen-ace).
+ * A "use" button timer has been added and can be enabled in the "Demos" Crispness menu section, apparently useful for practicing speed-running (thanks Looper).
+ * A check for segs referencing non-existent linedefs has been ported over from PrBoom+ (thanks @tpoppins).
+ * Demo joins are now tracked (by @kraflab).
+ * Support for the "Dropped Item" DEHACKED field has been added, which allows to specify the Thing Id to be spawned after the Thing dies. It's a generalization of the same behavior that is hardcoded for MT_WOLFSS, MT_POSSESSED, MT_SHOTGUY and MT_CHAINGUY in Vanilla Doom (by @Ferk).
+ * More generalizations de-hardcoding some Vanilla Doom behavior have been added (by @Ferk).
+ * The following DEHACKED fields for Things have been added:
+ - Melee threshold: Distance to switch from missile to melee attack.
+ - Max target range: Maximum distance to start shooting (0 for unlimited).
+ - Min missile chance: Minimum chance for firing a missile.
+ - Missile chance multiplier: This de-hardcodes the double missile chance that vanilla Cyberdemon, Spider Mastermind, Revent and Lost Souls have. The value is FRACUNIT based (65536 = normal firing chance), also note that the lower the value, the higher the chance.
+ * A -levelstat option has been added (by @kraflab).
+ * Support for the "new" Nerve PWAD has been improved: If the Nerve PWAD is explicitly loaded and contains a TITLEPIC lump, use it - else use the INTERPIC lump. Consequently, if the Nerve PWAD gets auto-loaded and contains TITLEPIC and an INTERPIC lumps, rename them (thanks @buvk).
+ * Graphic patch lumps in widescreen format are now properly centered - but still squashed to Vanilla aspect ratio (thanks @buvk).
+ * A -pistolstart command line option has been added (by @mikeday0, thanks @Asais10).
+ * The tally screen is now shown after finishing Chex Quest E1M5 (thanks kokrean).
+ * Apparently random crashes have been fixed that occured when the (truncated) file name of a loaded demo happens to match the name of an already available lump. Now this lump name collision is detected and the offending demo lump renamed to DEMO1, which is most certainly always the name of a demo lump (thanks galileo31dos01 and plums).
+
+**Bug fixes**
+
+ * HUD texts are now printed up to the right screen edge again (thanks Grizzly).
+ * The DSSECRET fallback sound is now checked for availability. This fixes a crash when playing with a v1.2 or earlier IWAD (thanks @zx64).
+ * The HUD widget coordinate re-calculation has been moved from thinker to drawer functions. This should fix the racing condition that caused the wide status bar widget alignment being drawn to the automap status bar with the brick border (thanks @kitchen-ace).
+ * The IDCLEV cheat has been fixed for the Master Levels (thanks @buvk).
+ * Thing coordinates in the rotated automap have been fixed when the "extended automap colors" feature is disabled (thanks @icecreamoverlord).
+ * A segmentation fault has been fixed when changing episodes during the intermission screen (thanks @icecreamoverlord).
+ * The "go to next level" cheat key for the Master Levels has been fixed.
+ * Endianness issues when loading extended nodes have been fixed (thanks Michael Bäuerle).
+ * The IDDT cheat is now reset when restarting a map during demo recording, but not each time the Automap is opened (thanks galileo31dos01).
+ * Missing server-side num_players validation (CVE-2020-14983) and missing client-side ticdup validation have been fixed (found by Michał Dardas from LogicalTrust, fixes inherited from Chocolate Doom).
+ * Automap panning by keyboard and mouse is now accumulated (thanks @kitchen-ace).
+ * Invalid texture/flat animation sequences are now skipped instead of erroring out (thanks @kitchen-ace).
+ * The Automap shaking for one frame after changing the view angle has been fixed (thanks @JNechaevsky).
+ * The top-right HU widgets have been moved one char to the left to allow for display of multi-thousand FPS (thanks @JNechaevsky).
+ * Building without Python has been fixed again (inherited from Chocolate Doom, by @vilhelmgray, thanks Michael Bäuerle).
+ * An old bug has been fixed which was caused by SDL2_Mixer opening a different number of audio channels than requested (inherited from Chocolate Doom, thanks Edward850).
+ * Auto-loading of the Sigil PWAD has been fixed on file systems with case-sensitive file names (thanks @kitchen-ace and @kbterkelsen).
+ * The Sigil PWAD is now only pre-loaded if the gameversion is The Ultimate Doom. This fixes a glitched texture file when Chex Quest is loaded as the IWAD (by @kitchen-ace, thanks Mr.Unsmiley)
+ * Check if the map name graphics lumps are actually from the Masterlevels PWAD before renaming them. This fixes an issue with unofficial Masterlevels compilations which do not contain these lumps (thanks @Dark-Jaguar).
+ * A string buffer size calculation bug has been fixed in the -levelstat implementation (thanks Eric Claus).
+
 ### So Doom 5.8.0
 
 So Doom 5.8.0 has been released on April 18, 2020 to merge improvements and bug fixes from Crispy Doom and fix demo timer position in Cockpit HUD.
@@ -198,74 +250,6 @@ So Doom 5.7.5 has been released on April 02, 2020 to merge the newly-introduced 
  * Status bar and reduced screen sizes are now available in widescreen mode, requested by sovietmewtwo, TeamSoldierNub2 along with many Doomworld members and debugged with the help from cnrm and Zodomaniac.
  * Once the last screen size has been exceeded you loop over to the empty HUD.
  * When calculating weapon bobbing, the check is now performed for player being not in attacking state instead of checking for `A_WeaponReady()` because weapon states could have been modified by DeHackEd. This fixes jerky weapon bobbing reported by kitchen-ace for some weapons in mods like Vanilla Smooth Weapons and DOOM 4 Vanilla.
-=======
-### Crispy Doom 5.9.2
-
-Crispy Doom 5.9.2 is released on September 22, 2020 to fix some more bugs and add some minor improvements.
-
-**New Features and Improvements**
-
- * Support for the "new" Nerve PWAD has been improved: If the Nerve PWAD is explicitly loaded and contains a TITLEPIC lump, use it - else use the INTERPIC lump. Consequently, if the Nerve PWAD gets auto-loaded and contains TITLEPIC and an INTERPIC lumps, rename them (thanks @buvk).
- * Graphic patch lumps in widescreen format are now properly centered - but still squashed to Vanilla aspect ratio (thanks @buvk).
- * A `-pistolstart` command line option has been added (by @mikeday0, thanks @Asais10).
- * The tally screen is now shown after finishing Chex Quest E1M5 (thanks kokrean).
- * Apparently random crashes have been fixed that occured when the (truncated) file name of a loaded demo happens to match the name of an already available lump. Now this lump name collision is detected and the offending demo lump renamed to DEMO1, which is most certainly always the name of a demo lump (thanks galileo31dos01 and plums).
-
-**Bug Fixes**
-
- * The Sigil PWAD is now only pre-loaded if the gameversion is The Ultimate Doom. This fixes a glitched texture file when Chex Quest is loaded as the IWAD (by @kitchen-ace, thanks Mr.Unsmiley)
- * Check if the map name graphics lumps are actually from the Masterlevels PWAD before renaming them. This fixes an issue with unofficial Masterlevels compilations which do not contain these lumps (thanks @Dark-Jaguar).
- * A string buffer size calculation bug has been fixed in the `-levelstat` implementation (thanks Eric Claus).
-
-**Crispy Heretic**
-
- * A `-wandstart` command line option has been added (by @mikeday0, thanks @Asais10).
-
-Crispy Doom 5.9.2 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`f7007449`](https://github.com/chocolate-doom/chocolate-doom/commit/f700744969ac867649aa581ae19447a4c172179e).
-
-### Crispy Doom 5.9.1
-
-Crispy Doom 5.9.1 is released on September 04, 2020 to fix some minor bugs.
-
-**Bug Fixes**
-
- * Building without Python has been fixed again (inherited from Chocolate Doom, by @vilhelmgray, thanks Michael Bäuerle).
- * An old bug has been fixed which was caused by SDL2_Mixer opening a different number of audio channels than requested (inherited from Chocolate Doom, thanks Edward850).
- * Auto-loading of the Sigil PWAD has been fixed on file systems with case-sensitive file names (thanks @kitchen-ace and @kbterkelsen).
-
-**Crispy Heretic**
-
- * Final intermissions screens are now shown after each episode (by @kraflab).
-
-Crispy Doom 5.9.1 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`f7007449`](https://github.com/chocolate-doom/chocolate-doom/commit/f700744969ac867649aa581ae19447a4c172179e).
-
-### Crispy Doom 5.9.0
-
-Crispy Doom 5.9.0 is released on August 21, 2020 and introduces auto-loading of both official Doom 2 expansions for any supported Doom 2 IWAD, additional DEHACKED fields to de-hardcode some Vanilla behavior and many other improvements and bug fixes.
-
-**New Features and Improvements**
-
- * NERVE.wad is now automatically loaded even with the Vanilla DOOM2.wad IWAD (thanks @hkight).
- * MASTERLEVELS.wad is now automatically loaded alongside DOOM2.wad just like NERVE.wad was for the BFG Edition DOOM2.wad IWAD before. However, this will now work for *any* DOOM2.wad IWAD as well (thanks @buvk for reporting a bug in the initial implementation).
- * Support has been added for automatically loading all the 20 separate Master Levels PWADs and arranging them as if they came from the single MASTERLEVELS.wad PWAD.
- * Alternative text entries have been added to the skill menu. Thus, the entries are still there and rendered consistently even if the Nightmare! skill graphics lump is missing when playing with a v1.2 or earlier IWAD (thanks @zx64).
- * The unconditional "fixing" of reversed stereo channels in OPL music playback has been reverted. People got so much used to the flipped channels that the correct channel order has been regarded as a bug (thanks @drivetheory).
- * Two separate finale texts for the Master Levels have been introduced, depending on whether you have found and finished the secret MAP21 or not. The actual texts have been taken from @MadDeCoDeR's Classic-RBDOOM-3-BFG project with some minor wording fixes applied (thanks @icecreamoverlord).
- * Optional Automap lines smoothing has been added with a toggle in the Crispness menu (by @zx64).
- * Doors locked with a key now flash on the Automap, if extended map colours are enabled (by @kitchen-ace).
- * Extended map colours have been adjusted to be closer to Vanilla's (by @kitchen-ace).
- * A "use" button timer has been added and can be enabled in the "Demos" Crispness menu section, apparently useful for practicing speed-running (thanks Looper).
- * A check for segs referencing non-existent linedefs has been ported over from PrBoom+ (thanks @tpoppins).
- * Demo joins are now tracked (by @kraflab).
- * Support for the "Dropped Item" DEHACKED field has been added, which allows to specify the Thing Id to be spawned after the Thing dies. It's a generalization of the same behavior that is hardcoded for MT_WOLFSS, MT_POSSESSED, MT_SHOTGUY and MT_CHAINGUY in Vanilla Doom (by @Ferk).
- * More generalizations de-hardcoding some Vanilla Doom behavior have been added (by @Ferk).
-   * The following DEHACKED fields for Things have been added:
-     * Melee threshold: Distance to switch from missile to melee attack.
-     * Max target range: Maximum distance to start shooting (0 for unlimited).
-     * Min missile chance: Minimum chance for firing a missile.
-     * Missile chance multiplier: This de-hardcodes the double missile chance that vanilla Cyberdemon, Spider Mastermind, Revent and Lost Souls have. The value is FRACUNIT based (65536 = normal firing chance), also note that the lower the value, the higher the chance.
- * A `-levelstat` option has been added (by @kraflab).
->>>>>>> 36efce43afbaafba3835c49ab37431f92b837906
 
 ### So Doom 5.7.4
 
@@ -571,9 +555,9 @@ So Doom's version number is increased whenever a new Crispy Doom (pre-)release g
 
 ## Contact
 
-The canonical homepage for So Doom is https://github.com/zodomaniac/so-doom
+The canonical homepage for So Doom is https://github.com/SoDOOManiac/so-doom
 
-So Doom is maintained by [Vladislav Melnichuk](mailto:zodomaniac@gmXremovethisXail.com). 
+So Doom is maintained by [Vladislav Melnichuk](mailto:SoDOOManiac@gmXremovethisXail.com). 
 
 Please report any bugs, glitches or crashes that you encounter to the GitHub [Issue Tracker](https://github.com/fabiangreffrath/crispy-doom/issues).
 
@@ -609,4 +593,4 @@ Secret Rabbit Code (libsamplerate) is © 2002-2011 Erik de Castro Lopo and is re
 Libpng is © 1998-2014 Glenn Randers-Pehrson, © 1996-1997 Andreas Dilger, © 1995-1996 Guy Eric Schalnat, Group 42, Inc. and is released under the [libpng license](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt).
 Zlib is © 1995-2013 Jean-loup Gailly and Mark Adler and is released under the [zlib license](http://www.zlib.net/zlib_license.html).
 
-The Crispy Doom icon (as shown at the top of this page) is composed of the [Chocolate Doom icon](https://www.chocolate-doom.org/wiki/images/7/77/Chocolate-logo.png) and a [photo](https://en.wikipedia.org/wiki/File:Potato-Chips.jpg) of potato crisps (Utz-brand, grandma's kettle-cooked style) by [Evan-Amos](https://commons.wikimedia.org/wiki/User:Evan-Amos) who kindly released it into the [public domain](https://en.wikipedia.org/wiki/Public_domain). The current high-resolution version of this icon has been contributed by JNechaevsky (formerly by Zodomaniac).
+The Crispy Doom icon (as shown at the top of this page) is composed of the [Chocolate Doom icon](https://www.chocolate-doom.org/wiki/images/7/77/Chocolate-logo.png) and a [photo](https://en.wikipedia.org/wiki/File:Potato-Chips.jpg) of potato crisps (Utz-brand, grandma's kettle-cooked style) by [Evan-Amos](https://commons.wikimedia.org/wiki/User:Evan-Amos) who kindly released it into the [public domain](https://en.wikipedia.org/wiki/Public_domain). The current high-resolution version of this icon has been contributed by JNechaevsky (formerly by SoDOOManiac).
