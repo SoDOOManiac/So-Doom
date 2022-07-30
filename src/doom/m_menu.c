@@ -1367,11 +1367,6 @@ void M_DrawOptions(void)
     else
     if (OptionsDef.lumps_missing > 0)
     {
-    M_WriteText(OptionsDef.x + M_StringWidth("Graphic Detail: "),
-                OptionsDef.y + LINEHEIGHT * detail + 8 - (M_StringHeight("HighLow")/2),
-                detailLevel ? "Low" : "High");
-    }
-
     M_snprintf(detail_setting, sizeof(detail_setting), "Graphic Detail: %s%s%s", // [So Doom] colorized option setting like in Crispness menu
             !detailLevel ? crstr[CR_GREEN]:crstr[CR_RED],
             !detailLevel ? "High" : "Low",
@@ -1380,6 +1375,7 @@ void M_DrawOptions(void)
     M_WriteText(OptionsDef.x,
                 OptionsDef.y + LINEHEIGHT * detail + 8 - (M_StringHeight("HighLow")/2),
                 detail_setting);
+    }
 
     if (OptionsDef.lumps_missing == -1)
     {
@@ -1390,17 +1386,6 @@ void M_DrawOptions(void)
     else
     if (OptionsDef.lumps_missing > 0)
     {
-    M_WriteText(OptionsDef.x + M_StringWidth("Messages: "),
-                OptionsDef.y + LINEHEIGHT * messages + 8 - (M_StringHeight("OnOff")/2),
-                showMessages ? "On" : "Off");
-    }
-
-// [crispy] mouse sensitivity menu
-/*
-    M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (mousesens + 1),
-		 10, mouseSensitivity);
-*/
-
     M_snprintf(messages_setting, sizeof(messages_setting), "Messages: %s%s%s", // [So Doom] colorized option setting like in Crispness menu
             showMessages ? crstr[CR_GREEN]:crstr[CR_RED],
             showMessages ? "ON" : "OFF",
@@ -1409,7 +1394,13 @@ void M_DrawOptions(void)
     M_WriteText(OptionsDef.x,
                 OptionsDef.y + LINEHEIGHT * messages + 8 - (M_StringHeight("OnOff")/2),
                 messages_setting);
+    }
 
+// [crispy] mouse sensitivity menu
+/*
+    M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (mousesens + 1),
+		 10, mouseSensitivity);
+*/
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
 		 9 + 4,screenSize); // [crispy] Crispy and [So Doom] So Doomy HUDs
