@@ -214,7 +214,7 @@ static void M_MouseInvert(int choice); // [crispy] mouse sensitivity menu
 static void M_SfxVol(int choice);
 static void M_MusicVol(int choice);
 static void M_ChangeDetail(int choice);
-void M_SizeDisplay(int choice); // [So Doom] un-static for R_ExecuteSetViewSize(), M_CrispyTogglePixelAspectRatioHook() and M_M_CrispyToggleWidescreenHook()
+void M_SizeDisplay(int choice); // [So Doom] un-static for R_ExecuteSetViewSize(), M_CrispyTogglePixelAspectRatioHook() and M_CrispyToggleWidescreenHook()
 static void M_Mouse(int choice); // [crispy] mouse sensitivity menu
 static void M_Sound(int choice);
 
@@ -503,11 +503,12 @@ enum
     crispness_extautomap,
     crispness_smoothmap,
     crispness_automapstats,
+	crispness_smarttotals,
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
     crispness_secretcolor,
-    crispness_sep_navigational_,
+    //crispness_sep_navigational_,
 
     crispness2_next,
     crispness2_prev,
@@ -520,17 +521,18 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispyToggleFullsounds,'f'},
     {1,"",	M_CrispyToggleSoundfixes,'x'},
     {1,"",	M_CrispyToggleSndChannels,'c'},
-    {1,"",	M_CrispyToggleSoundMono,'m'},
+    {1,"",	M_CrispyToggleSoundMono,'o'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleExtAutomap,'e'},
     {1,"",	M_CrispyToggleSmoothMap,'m'},
     {1,"",	M_CrispyToggleAutomapstats,'s'},
+	{1,"",	M_CrispyToggleSmartTotals,'t'},
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
     {1,"",	M_CrispyToggleSecretmessage,'s'},
     {1,"",	M_CrispyToggleSecretcolor,'r'},
-    {-1,"",0,'\0'},
+//    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1566,6 +1568,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessItem(crispness_extautomap, "Extended Automap colors", crispy->extautomap, true);
     M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
     M_DrawCrispnessMultiItem(crispness_automapstats, "Show Level Stats", multiitem_widgets, crispy->automapstats, true);
+	M_DrawCrispnessItem(crispness_smarttotals, "Smart Totals", crispy->smarttotals, true);
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);

@@ -72,6 +72,7 @@ typedef struct
 	int recoil;
 	int secretcolor;
 	int secretmessage;
+	int smarttotals;
 	int smoothlight;
 	int smoothmap;
 	int smoothscaling;

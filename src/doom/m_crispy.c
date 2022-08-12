@@ -531,6 +531,12 @@ void M_CrispyToggleSecretmessage(int choice)
     crispy->secretmessage = (crispy->secretmessage + 1) % NUM_SECRETMESSAGE;
 }
 
+void M_CrispyToggleSmartTotals(int choice)
+{
+    choice = 0;
+    crispy->smarttotals = !crispy->smarttotals;
+}
+
 void M_CrispyToggleSmoothScaling(int choice)
 {
     choice = 0;

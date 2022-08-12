@@ -90,6 +90,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_recoil",          &crispy->recoil);
         M_BindIntVariable("crispy_secretcolor",     &crispy->secretcolor);
         M_BindIntVariable("crispy_secretmessage",   &crispy->secretmessage);
+		M_BindIntVariable("crispy_smarttotals",     &crispy->smarttotals);
         M_BindIntVariable("crispy_smoothlight",     &crispy->smoothlight);
         M_BindIntVariable("crispy_smoothmap",       &crispy->smoothmap);
         M_BindIntVariable("crispy_smoothscaling",   &crispy->smoothscaling);

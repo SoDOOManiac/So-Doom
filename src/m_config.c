@@ -2189,6 +2189,15 @@ static default_t extra_defaults_list[] =
 
     CONFIG_VARIABLE_INT(crispy_secretmessage),
 
+
+    //!
+    // @game doom
+    //
+    // Smart totals similar to PrBoom+: count resurrected/respawned/IoS-spawned monsters and lost souls or not.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_smarttotals),
+
     //!
     // @game doom
     //

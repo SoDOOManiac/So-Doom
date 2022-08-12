@@ -1745,7 +1745,7 @@ static void G_WriteLevelStat(void)
     {
         if (playeringame[i])
         {
-            playerKills += players[i].killcount;
+			playerKills += players[i].killcount;
             playerItems += players[i].itemcount;
             playerSecrets += players[i].secretcount;
         }
@@ -1753,8 +1753,8 @@ static void G_WriteLevelStat(void)
 
     fprintf(fstream, "%s%s - %s (%s)  K: %d/%d  I: %d/%d  S: %d/%d\n",
             levelString, (secretexit ? "s" : ""),
-            levelTimeString, totalTimeString, playerKills, totalkills, 
-            playerItems, totalitems, playerSecrets, totalsecret);
+            levelTimeString, totalTimeString, playerKills, totalkills,
+			playerItems, totalitems, playerSecrets, totalsecret);
 }
  
 void G_DoCompleted (void) 
