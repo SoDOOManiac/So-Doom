@@ -164,6 +164,11 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.9.2 hotfix
+
+So Doom 5.9.2 hotfix has been applied on July 31, 2022 to fix text lines of graphic detail and messages on/off drawn despite graphic menu patches present
+e.g. in REKKRSL.wad with [REKBONUS.wad](https://ta9le.mnk.systems/files/REKBONUS.zip).
+
 ### So Doom 5.9.2
 
 So Doom 5.9.2 has been released on July 28, 2022 to apply the fix for the critical security issue from Chocolate Doom, merge other Crispy Doom features and improvements and put all the widgets within the narrow screen size in Cockpit HUD.
