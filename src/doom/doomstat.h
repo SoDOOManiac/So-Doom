@@ -170,7 +170,8 @@ extern  int	displayplayer;
 extern  int	totalkills;
 extern	int	totalitems;
 extern	int	totalsecret;
-extern	int	extrakills; // [crispy] count resurrected and spawned monsters
+extern	int	extraspawns; // [crispy] count resurrected and (re)spawned monsters
+extern	int extrakills; // [So Doom] count kills of resurrected and (re)spawned monsters
 
 // Timer, for scores.
 extern  int	levelstarttic;	// gametic at level start

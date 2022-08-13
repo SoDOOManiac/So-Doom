@@ -502,8 +502,11 @@ P_NightmareRespawn (mobj_t* mobj)
     mo->spawnpoint = mobj->spawnpoint;	
     mo->angle = ANG45 * (mthing->angle/45);
 
+	// [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the Nightmare-respawned monster is killed
+	mo->flags |= MF_EXTRASPAWNED;
+
     // [crispy] count respawned monsters
-    extrakills++;
+    extraspawns++;
 
     if (mthing->options & MTF_AMBUSH)
 	mo->flags |= MF_AMBUSH;

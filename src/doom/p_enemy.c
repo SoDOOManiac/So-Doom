@@ -1244,8 +1244,11 @@ void A_VileChase (mobj_t* actor)
 		    corpsehit->health = info->spawnhealth;
 		    corpsehit->target = NULL;
 
+			// [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the resurrected monster is killed
+			corpsehit->flags |= MF_EXTRASPAWNED;
+
 		    // [crispy] count resurrected monsters
-		    extrakills++;
+		    extraspawns++;
 
 		    // [crispy] resurrected pools of gore ("ghost monsters") are translucent
 		    if (corpsehit->height == 0 && corpsehit->radius == 0)
@@ -1558,7 +1561,7 @@ A_PainShootSkull
 	newmobj->flags |= MF_NOBLOOD;
 
     // [crispy] count spawned Lost Souls
-    extrakills++;
+    // extraspawns++;
 
     newmobj->target = actor->target;
     A_SkullAttack (newmobj);
@@ -2096,8 +2099,11 @@ void A_SpawnFly (mobj_t* mo)
 
     newmobj	= P_SpawnMobj (targ->x, targ->y, targ->z, type);
 
+	// [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the IoS-spawned monster is killed
+	newmobj->flags |= MF_EXTRASPAWNED;
+
     // [crispy] count spawned monsters
-    extrakills++;
+    extraspawns++;
 
     if (P_LookForPlayers (newmobj, true) )
 	P_SetMobjState (newmobj, newmobj->info->seestate);

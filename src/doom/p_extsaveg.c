@@ -93,6 +93,28 @@ static void P_ReadExtraKills (const char *key)
 	}
 }
 
+// extraspawns
+
+static void P_WriteExtraSpawns (const char *key)
+{
+	if (extraspawns)
+	{
+		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, extraspawns);
+		fputs(line, save_stream);
+	}
+}
+
+static void P_ReadExtraSpawns (const char *key)
+{
+	int value;
+
+	if (sscanf(line, "%s %d", string, &value) == 2 &&
+	    !strncmp(string, key, MAX_STRING_LEN))
+	{
+		extraspawns = value;
+	}
+}
+
 // totalleveltimes
 
 static void P_WriteTotalLevelTimes (const char *key)
@@ -445,6 +467,7 @@ static const extsavegdata_t extsavegdata[] =
 	{"crispy-doom", P_WritePackageTarname, NULL, 0},
 	{"wadfilename", P_WriteWadFileName, P_ReadWadFileName, 0},
 	{"extrakills", P_WriteExtraKills, P_ReadExtraKills, 1},
+	{"extraspawns", P_WriteExtraSpawns, P_ReadExtraSpawns, 1},
 	{"totalleveltimes", P_WriteTotalLevelTimes, P_ReadTotalLevelTimes, 1},
 	{"fireflicker", P_WriteFireFlicker, P_ReadFireFlicker, 1},
 	{"soundtarget", P_WriteSoundTarget, P_ReadSoundTarget, 1},
