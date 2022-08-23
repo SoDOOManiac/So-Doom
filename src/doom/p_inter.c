@@ -728,7 +728,12 @@ P_KillMobj
     {
 	// count for intermission
 	if (target->flags & MF_COUNTKILL)
-	    source->player->killcount++;	
+	{
+	    source->player->killcount++;
+		// [So Doom] count deaths of resurrected/Nightmare-respawned/Icon of Sin-spawned monsters
+		if (target->flags & MF_EXTRASPAWNED)
+			source->player->extrakills++;
+	}
 
 	if (target->player)
 	    source->player->frags[target->player-players]++;
@@ -739,10 +744,10 @@ P_KillMobj
 	// even those caused by other monsters
 	players[0].killcount++;
 	// [So Doom] count deaths of resurrected/Nightmare-respawned/Icon of Sin-spawned monsters
-	if (target->flags & MF_EXTRASPAWNED)
-		extrakills++; 
+    if (target->flags & MF_EXTRASPAWNED)
+	    players[0].extrakills++;
     }
-    
+
     if (target->player)
     {
 	// count environment kills against you

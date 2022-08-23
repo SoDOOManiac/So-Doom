@@ -1032,7 +1032,7 @@ void HU_Ticker(void)
 	// [crispy] count spawned monsters
 	if (crispy->smarttotals || extraspawns == 0)
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
-	            plr->killcount-extrakills, totalkills);
+	            plr->killcount-plr->extrakills, totalkills);
 	else
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d+%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount, totalkills, extraspawns);

@@ -133,6 +133,10 @@ typedef struct player_s
     int			itemcount;
     int			secretcount;
 
+    // (So Doom) For smart totals in automap like PrBoom+
+
+	int			extrakills;
+
     // Hint messages.
     const char		*message;
     
