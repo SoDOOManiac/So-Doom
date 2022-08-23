@@ -73,23 +73,83 @@ static void P_ReadWadFileName (const char *key)
 
 // extrakills
 
-static void P_WriteExtraKills (const char *key)
+static void P_WriteExtraKills0 (const char *key)
 {
-	if (extrakills)
+	if (players[0].extrakills)
 	{
-		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, extrakills);
+		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, players[0].extrakills);
 		fputs(line, save_stream);
 	}
 }
 
-static void P_ReadExtraKills (const char *key)
+static void P_ReadExtraKills0 (const char *key)
 {
 	int value;
 
 	if (sscanf(line, "%s %d", string, &value) == 2 &&
 	    !strncmp(string, key, MAX_STRING_LEN))
 	{
-		extrakills = value;
+		players[0].extrakills = value;
+	}
+}
+
+static void P_WriteExtraKills1 (const char *key)
+{
+	if (players[1].extrakills)
+	{
+		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, players[1].extrakills);
+		fputs(line, save_stream);
+	}
+}
+
+static void P_ReadExtraKills1 (const char *key)
+{
+	int value;
+
+	if (sscanf(line, "%s %d", string, &value) == 2 &&
+	    !strncmp(string, key, MAX_STRING_LEN))
+	{
+		players[1].extrakills = value;
+	}
+}
+
+static void P_WriteExtraKills2 (const char *key)
+{
+	if (players[2].extrakills)
+	{
+		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, players[2].extrakills);
+		fputs(line, save_stream);
+	}
+}
+
+static void P_ReadExtraKills2 (const char *key)
+{
+	int value;
+
+	if (sscanf(line, "%s %d", string, &value) == 2 &&
+	    !strncmp(string, key, MAX_STRING_LEN))
+	{
+		players[2].extrakills = value;
+	}
+}
+
+static void P_WriteExtraKills3 (const char *key)
+{
+	if (players[3].extrakills)
+	{
+		M_snprintf(line, MAX_LINE_LEN, "%s %d\n", key, players[3].extrakills);
+		fputs(line, save_stream);
+	}
+}
+
+static void P_ReadExtraKills3 (const char *key)
+{
+	int value;
+
+	if (sscanf(line, "%s %d", string, &value) == 2 &&
+	    !strncmp(string, key, MAX_STRING_LEN))
+	{
+		players[3].extrakills = value;
 	}
 }
 
@@ -466,7 +526,10 @@ static const extsavegdata_t extsavegdata[] =
 	// [crispy] @FORKS: please change this if you are going to introduce incompatible changes!
 	{"crispy-doom", P_WritePackageTarname, NULL, 0},
 	{"wadfilename", P_WriteWadFileName, P_ReadWadFileName, 0},
-	{"extrakills", P_WriteExtraKills, P_ReadExtraKills, 1},
+	{"extrakills0", P_WriteExtraKills0, P_ReadExtraKills0, 1},
+	{"extrakills1", P_WriteExtraKills1, P_ReadExtraKills1, 1},
+	{"extrakills2", P_WriteExtraKills2, P_ReadExtraKills2, 1},
+	{"extrakills3", P_WriteExtraKills3, P_ReadExtraKills3, 1},
 	{"extraspawns", P_WriteExtraSpawns, P_ReadExtraSpawns, 1},
 	{"totalleveltimes", P_WriteTotalLevelTimes, P_ReadTotalLevelTimes, 1},
 	{"fireflicker", P_WriteFireFlicker, P_ReadFireFlicker, 1},

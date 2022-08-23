@@ -1099,13 +1099,14 @@ P_SetupLevel
     mapformat_t	crispy_mapformat;
 	
     totalkills = totalitems = totalsecret = wminfo.maxfrags = 0;
-    // [crispy] count spawned monsters
-	extrakills = 0;
-    extraspawns = 0;
+    
+    extraspawns = 0; // [crispy] count extra spawned monsters
+
     wminfo.partime = 180;
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
-	players[i].killcount = players[i].secretcount 
+	players[i].killcount = players[i].secretcount
+	    = players[i].extrakills // [So Doom] count killed extra monsters
 	    = players[i].itemcount = 0;
     }
 

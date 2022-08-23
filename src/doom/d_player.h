@@ -135,7 +135,7 @@ typedef struct player_s
 
     // (So Doom) For smart totals in automap like PrBoom+
 
-	int			extrakills;
+    int			extrakills;
 
     // Hint messages.
     const char		*message;

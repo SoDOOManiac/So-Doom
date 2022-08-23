@@ -1244,8 +1244,8 @@ void A_VileChase (mobj_t* actor)
 		    corpsehit->health = info->spawnhealth;
 		    corpsehit->target = NULL;
 
-			// [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the resurrected monster is killed
-			corpsehit->flags |= MF_EXTRASPAWNED;
+		    // [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the resurrected monster is killed
+		    corpsehit->flags |= MF_EXTRASPAWNED;
 
 		    // [crispy] count resurrected monsters
 		    extraspawns++;
@@ -1555,13 +1555,10 @@ A_PainShootSkull
 	P_DamageMobj (newmobj,actor,actor,10000);	
 	return;
     }
-		
+
     // [crispy] Lost Souls bleed Puffs
     if (crispy->coloredblood)
-	newmobj->flags |= MF_NOBLOOD;
-
-    // [crispy] count spawned Lost Souls
-    // extraspawns++;
+	    newmobj->flags |= MF_NOBLOOD;
 
     newmobj->target = actor->target;
     A_SkullAttack (newmobj);
@@ -2099,8 +2096,8 @@ void A_SpawnFly (mobj_t* mo)
 
     newmobj	= P_SpawnMobj (targ->x, targ->y, targ->z, type);
 
-	// [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the IoS-spawned monster is killed
-	newmobj->flags |= MF_EXTRASPAWNED;
+    // [So Doom] set the MF_EXTRASPAWNED (0x10000000) flag to increment the extrakills counter when the IoS-spawned monster is killed
+    newmobj->flags |= MF_EXTRASPAWNED;
 
     // [crispy] count spawned monsters
     extraspawns++;

@@ -131,7 +131,6 @@ int             consoleplayer;          // player taking events and displaying
 int             displayplayer;          // view being displayed 
 int             levelstarttic;          // gametic at level start 
 int             totalkills, totalitems, totalsecret;    // for intermission
-int				extrakills;				// [So Doom] count deaths of spawned monsters 
 int             extraspawns;             // [crispy] count spawned monsters
 int             totalleveltimes;        // [crispy] CPhipps - total time for all completed levels
 int             demostarttic;           // [crispy] fix revenant internal demo bug
@@ -1746,7 +1745,7 @@ static void G_WriteLevelStat(void)
     {
         if (playeringame[i])
         {
-			playerKills += players[i].killcount;
+            playerKills += players[i].killcount;
             playerItems += players[i].itemcount;
             playerSecrets += players[i].secretcount;
         }
@@ -1755,7 +1754,7 @@ static void G_WriteLevelStat(void)
     fprintf(fstream, "%s%s - %s (%s)  K: %d/%d  I: %d/%d  S: %d/%d\n",
             levelString, (secretexit ? "s" : ""),
             levelTimeString, totalTimeString, playerKills, totalkills,
-			playerItems, totalitems, playerSecrets, totalsecret);
+            playerItems, totalitems, playerSecrets, totalsecret);
 }
  
 void G_DoCompleted (void) 

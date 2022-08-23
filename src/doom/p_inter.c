@@ -731,8 +731,8 @@ P_KillMobj
 	{
 	    source->player->killcount++;
 		// [So Doom] count deaths of resurrected/Nightmare-respawned/Icon of Sin-spawned monsters
-		if (target->flags & MF_EXTRASPAWNED)
-			source->player->extrakills++;
+	    if (target->flags & MF_EXTRASPAWNED)
+		    source->player->extrakills++;
 	}
 
 	if (target->player)
@@ -740,12 +740,12 @@ P_KillMobj
     }
     else if (!netgame && (target->flags & MF_COUNTKILL) )
     {
-	// count all monster deaths,
-	// even those caused by other monsters
-	players[0].killcount++;
-	// [So Doom] count deaths of resurrected/Nightmare-respawned/Icon of Sin-spawned monsters
-    if (target->flags & MF_EXTRASPAWNED)
-	    players[0].extrakills++;
+	    // count all monster deaths,
+	    // even those caused by other monsters
+	    players[0].killcount++;
+	    // [So Doom] count deaths of resurrected/Nightmare-respawned/Icon of Sin-spawned monsters
+		if (target->flags & MF_EXTRASPAWNED)
+			players[0].extrakills++;
     }
 
     if (target->player)
