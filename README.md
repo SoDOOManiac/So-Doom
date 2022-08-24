@@ -172,7 +172,6 @@ So Doom 5.10.0 has been released on Aug 24, 2022.
 
  * "Smart Totals" setting subtracting the extra spawned/respawned/resurrected monsters and their kills from the automap level stats has been implemented, requested by Heck Yeah at Doomworld forums.
 
-
 #### Changes pulled from Crispy Doom
 
 **New features and improvements**

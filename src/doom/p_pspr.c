@@ -1040,11 +1040,6 @@ void P_MovePsprites (player_t* player)
 	}
 
 	}
-	else
-    {
-	psp->sx2 = psp->sx;
-	psp->sy2 = psp->sy;
-    }
 
 	// [crispy] squat down weapon sprite a bit after hitting the ground
 	if (player->psp_dy_max)
