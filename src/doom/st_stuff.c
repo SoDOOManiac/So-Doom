@@ -562,12 +562,24 @@ void ST_refreshBackground(boolean force)
 		{
 			for (x = 0; x < SCREENWIDTH; x++)
 			{
+#ifndef CRISPY_TRUECOLOR
 				*dest++ = src[((y&63)<<6) + (x&63)];
+#else
+				*dest++ = colormaps[src[((y&63)<<6) + (x&63)]];
+#endif
 			}
 		}
 	}
 
-	V_DrawPatch(ST_X, 0, sbar);
+	// [crispy] center unity rerelease wide status bar
+	if (sbar->width > ORIGWIDTH && sbar->leftoffset == 0)
+	{
+	    V_DrawPatch(ST_X + (ORIGWIDTH - sbar->width) / 2, 0, sbar);
+	}
+	else
+	{
+	    V_DrawPatch(ST_X, 0, sbar);
+	}
 
 	// draw right side of bar if needed (Doom 1.0)
 	if (sbarr)
@@ -587,9 +599,17 @@ void ST_refreshBackground(boolean force)
         V_RestoreBuffer();
 
 	// [crispy] copy entire SCREENWIDTH, to preserve the pattern
-	// to the left and right of the status bar in widescren mode
+	// to the left and right of the status bar in widescreen mode
 	if (!force)
-	V_CopyRect(ST_X, 0, st_backing_screen, SCREENWIDTH >> crispy->hires, ST_HEIGHT, ST_X, ST_Y);
+	{
+	    V_CopyRect(ST_X, 0, st_backing_screen, SCREENWIDTH >> crispy->hires, ST_HEIGHT, ST_X, ST_Y);
+	}
+	else if (WIDESCREENDELTA > 0 && !st_firsttime)
+	{
+	    V_CopyRect(0, 0, st_backing_screen, WIDESCREENDELTA, ST_HEIGHT, 0, ST_Y);
+	    V_CopyRect(ORIGWIDTH + WIDESCREENDELTA, 0, st_backing_screen, WIDESCREENDELTA, ST_HEIGHT, ORIGWIDTH + WIDESCREENDELTA, ST_Y);
+	}
+
     }
 
 }

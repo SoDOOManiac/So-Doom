@@ -164,6 +164,39 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.10.0
+
+So Doom 5.10.0 has been released on Aug 24, 2022.
+
+#### So Doom-specific changes
+
+ * "Smart Totals" setting subtracting the extra spawned/respawned/resurrected monsters and their kills from the automap level stats has been implemented, requested by Heck Yeah at Doomworld forums.
+
+
+#### Changes pulled from Crispy Doom
+
+**New features and improvements**
+
+ * Proper support for widescreen assets has been added (by @SmileTheory, thanks @ghost and @chungy).
+ * The bezel bottom edge to the left and right of the status bar in widescreen mode is now preserved (thanks braders1986 and @SmileTheory).
+ * Special treatment is now applied to the No Rest for the Living and The Masterlevels expansions - even during network games, demo recording and playback. This includes level transitions to the secret maps and back, finale text screens, par times, etc. (thanks Coincident and Keyboard_Doomer for input from the DSDA community).
+ * Menu scrolling with the mouse wheel has been improved to be more responsive (by @JNechaevsky).
+ * All textures are now always composed, whether they are multi-patched or not. Furthermore, two separate composites are created, one for opaque and one for translucent mid-textures on 2S walls. Additionally, textures may now be arbitrarily tall.
+ * Freedoom Phase 2 and FreeDM are now explicitly named in the Doom 2 Episode menu.
+ * The status bar is now redrawn in the Main, Episode and Skill menus, where it could get overridden by custom graphics (thanks @JNechaevsky).
+
+**Bug fixes**
+
+ * A crash has been fixed when the -record and -pistolstart parameters were used simultaneously (thanks Spie812).
+ * An optimization inherited from MBF has been fixed which led to sprites not being rendered on the lowest possible floor (thanks @retro65).
+ * Only non-sky flats are now checked for the swirling effect.
+ * Crushed non-bleeding monsters are not removed off the map anymore, their sprites are replaced with the invisible SPR_TNT1 instead (thanks ZeroMaster010 and sorry for the desyncing demo).
+ * Sigil is not auto-loaded anymore with the Freedoom Phase 1 IWAD, since Sigil's own texture definitions may clash with the ones from Freedoom (thanks @Some1NamedNate).
+ * A brightmap definition for an animated flat sequence in HacX has been fixed.
+ * Some fixes to the "--enable-truecolor" configure option have been implemented (i.e. the --disable-truecolor option, the rendering of the status bar bezel, fuzzy column drawing and the translucency factor - thanks xttl).
+ * Window height adjustment when changing window size has been brought back at the cost of the window shrinking when repeatedly changing the widescreen option.
+ * Parts of the status bar being visible during the initial wipe in widescreen mode has been fixed (thanks xttl).
+
 ### So Doom 5.9.2 hotfix
 
 So Doom 5.9.2 hotfix has been applied on July 31, 2022 to fix text lines of graphic detail and messages on/off drawn despite graphic menu patches present
@@ -281,7 +314,6 @@ So Doom 5.7.3 has been released on March 13, 2020 to bring new cheat codes and p
 
 **Changes pulled from Crispy Doom**
 
-<<<<<<< HEAD
  * Fix for segmentation fault when running on rgb565 screen has been pulled from Chocolate Doom, contributed by Wells Lu.
  * Previous colorization of "percent" status bar widgets is now remembered. This applies to the health and armor widgets and forces them to update not only if their value changes, but also if their colorization changes, e.g. when entering the IDDQD cheat. Thanks to unerxai for the attention to the details!
 
@@ -542,12 +574,9 @@ So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Cr
 
 **Known Issues**
 
- * When the 20 separate Master Levels PWADs are automatically loaded, their individual sky textures have to get removed, else they would override the regular sky textures for Doom 2 and NRFTL (thanks @tpoppins for noticing). If you insist to play the Master Levels each with their designated sky, load the individual PWADs on the command line.
+ * Users who insist on the pure Vanilla experience that was formerly applied to the No Rest for the Living and The Masterlevels expansions or who need it to properly play back demos recorded with a previous release will have to rename their PWAD files and explicitly load them on the command line.
 
-Crispy Doom 5.9.0 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`6ba89d0c`](https://github.com/chocolate-doom/chocolate-doom/commit/6ba89d0c05e4b93bdb64460b64a9ba3bdcc4bf6e).
->>>>>>> 36efce43afbaafba3835c49ab37431f92b837906
-
-## Documentation
+## More documentation
 
  * **[Changelog](https://github.com/fabiangreffrath/crispy-doom/wiki/Changelog)**
  * **[Compatibility](https://github.com/fabiangreffrath/crispy-doom/wiki/Compatibility)**

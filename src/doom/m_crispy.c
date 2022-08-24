@@ -167,6 +167,15 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
     {WIDGETS_ALWAYS, "always"},
 };
 
+multiitem_t multiitem_widescreen[NUM_RATIOS] =
+{
+    {RATIO_4_3, "4:3"},
+    {RATIO_MATCH_SCREEN, "Match screen"},
+    {RATIO_16_10, "16:10"},
+    {RATIO_16_9, "16:9"},
+    {RATIO_21_9, "21:9"},
+};
+
 extern void AM_LevelInit (boolean reinit);
 extern void EnableLoadingDisk (void);
 extern void P_SegLengths (boolean contrast_only);

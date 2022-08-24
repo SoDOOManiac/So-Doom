@@ -1345,7 +1345,15 @@ void A_VileTarget (mobj_t*	actor)
     fog->tracer = actor->target;
     // [crispy] play DSFLAMST sound when Arch-Vile spawns fire attack
     if (crispy->soundfix && I_GetSfxLumpNum(&S_sfx[sfx_flamst]) != -1)
+    {
 	S_StartSound(fog, sfx_flamst);
+	// [crispy] make DSFLAMST sound uninterruptible
+	if (crispy->soundfull)
+	{
+		S_UnlinkSound(fog);
+	}
+    }
+
     A_Fire (fog);
 }
 
@@ -1733,7 +1741,7 @@ void A_BossDeath (mobj_t* mo)
     {
 	if (gamemap != 7 &&
 	// [crispy] Master Levels in PC slot 7
-	!(crispy->singleplayer && gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
+	!(gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
 	    return;
 		
 	if ((mo->type != MT_FATSO)
@@ -1778,7 +1786,7 @@ void A_BossDeath (mobj_t* mo)
     {
 	if (gamemap == 7 ||
 	// [crispy] Master Levels in PC slot 7
-	(crispy->singleplayer && gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
+	(gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
 	{
 	    if (mo->type == MT_FATSO)
 	    {
@@ -1897,8 +1905,7 @@ void A_BrainAwake (mobj_t* mo)
     // find all the target spots
     numbraintargets = 0;
     braintargeton = 0;
-	
-    thinker = thinkercap.next;
+
     for (thinker = thinkercap.next ;
 	 thinker != &thinkercap ;
 	 thinker = thinker->next)

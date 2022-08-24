@@ -1,9 +1,9 @@
-AC_INIT(So Doom, 5.9.2,
+AC_INIT(So Doom, 5.10.0,
         zodomaniac@gmail.com, so-doom)
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"
-PACKAGE_COPYRIGHT="Copyright (C) 1993-2020"
+PACKAGE_COPYRIGHT="Copyright (C) 1993-2021"
 PACKAGE_LICENSE="GNU General Public License, version 2"
 PACKAGE_MAINTAINER="Zodomaniac"
 PACKAGE_URL="http://zodomaniac.github.io/so-doom"
@@ -18,7 +18,7 @@ orig_CFLAGS="$CFLAGS"
 AM_PROG_AR
 AC_PROG_CC
 AC_PROG_RANLIB
-AC_CHECK_PROG(HAVE_PYTHON, python, true, false)
+AC_CHECK_PROG(HAVE_PYTHON, python3, true, false)
 
 OPT_LEVEL=2
 
@@ -136,9 +136,10 @@ AS_IF([test "x$with_libpng" != xno], [
 # [crispy] true-color rendering as a compile-time option
 AC_ARG_ENABLE([truecolor],
 AS_HELP_STRING([--enable-truecolor],
-    [true-color rendering (experimental) @<:@default=no@:>@]),
-AC_DEFINE([CRISPY_TRUECOLOR], [1], [true-color rendering])
-)
+    [true-color rendering (experimental) @<:@default=no@:>@]))
+AS_IF([test "x$enable_truecolor" = "xyes"], [
+    AC_DEFINE([CRISPY_TRUECOLOR], [1], [true-color rendering])
+])
 
 # TODO: We currently link everything against libraries that don't need it.
 # Use the specific library CFLAGS/LIBS variables instead of setting them here.

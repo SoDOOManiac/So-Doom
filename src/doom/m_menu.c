@@ -851,14 +851,7 @@ void M_DrawLoad(void)
     for (i = 0;i < load_end; i++)
     {
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-
-	// [crispy] shade empty savegame slots
-	if (!LoadMenu[i].status)
-	    dp_translation = cr[CR_DARK];
-
 	M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
-
-	dp_translation = NULL;
     }
 }
 
@@ -1081,8 +1074,6 @@ void M_QuickSaveResponse(int key)
 
 void M_QuickSave(void)
 {
-    char *savegamestring;
-
     if (!usergame)
     {
 	S_StartSound(NULL,sfx_oof);
@@ -1100,14 +1091,8 @@ void M_QuickSave(void)
 	quickSaveSlot = -2;	// means to pick a slot now
 	return;
     }
-    // [crispy] print savegame name in golden letters
-    savegamestring = M_StringJoin(crstr[CR_GOLD],
-                                  savegamestrings[quickSaveSlot],
-                                  crstr[CR_NONE],
-                                  NULL);
     DEH_snprintf(tempstring, sizeof(tempstring),
-                 QSPROMPT, savegamestring);
-    free(savegamestring);
+                 QSPROMPT, savegamestrings[quickSaveSlot]);
     M_StartMessage(tempstring, M_QuickSaveResponse, true);
 }
 
@@ -1128,8 +1113,6 @@ void M_QuickLoadResponse(int key)
 
 void M_QuickLoad(void)
 {
-    char *savegamestring;
-
     // [crispy] allow quickloading game while multiplayer demo playback
     if (netgame && !demoplayback)
     {
@@ -1146,14 +1129,8 @@ void M_QuickLoad(void)
 	quickSaveSlot = -2;
 	return;
     }
-    // [crispy] print savegame name in golden letters
-    savegamestring = M_StringJoin(crstr[CR_GOLD],
-                                  savegamestrings[quickSaveSlot],
-                                  crstr[CR_NONE],
-                                  NULL);
     DEH_snprintf(tempstring, sizeof(tempstring),
-                 QLPROMPT, savegamestring);
-    free(savegamestring);
+                 QLPROMPT, savegamestrings[quickSaveSlot]);
     M_StartMessage(tempstring, M_QuickLoadResponse, true);
 }
 
@@ -1255,6 +1232,9 @@ void M_MusicVol(int choice)
 //
 void M_DrawMainMenu(void)
 {
+    // [crispy] force status bar refresh
+    inhelpscreens = true;
+
     V_DrawPatchDirect(94, 2,
                       W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
     if (crispy->logo == LOGO_MAINMENU || crispy->logo == LOGO_BOTH)
@@ -1269,6 +1249,9 @@ void M_DrawMainMenu(void)
 //
 void M_DrawNewGame(void)
 {
+    // [crispy] force status bar refresh
+    inhelpscreens = true;
+
     V_DrawPatchDirect(96, 14, W_CacheLumpName(DEH_String("M_NEWG"), PU_CACHE));
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_SKILL"), PU_CACHE));
 }
@@ -1303,6 +1286,9 @@ int     epi;
 
 void M_DrawEpisode(void)
 {
+    // [crispy] force status bar refresh
+    inhelpscreens = true;
+
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
 }
 
@@ -2493,13 +2479,13 @@ boolean M_Responder (event_t* ev)
 	    if (mousebprevweapon >= 0 && ev->data1 & (1 << mousebprevweapon))
 	    {
 		key = key_menu_down;
-		mousewait = I_GetTime() + 5;
+		mousewait = I_GetTime() + 1;
 	    }
 	    else
 	    if (mousebnextweapon >= 0 && ev->data1 & (1 << mousebnextweapon))
 	    {
 		key = key_menu_up;
-		mousewait = I_GetTime() + 5;
+		mousewait = I_GetTime() + 1;
 	    }
 	}
 	else
@@ -3229,19 +3215,10 @@ void M_Drawer (void)
 
 	if (name[0] && (W_CheckNumForName(name) > 0 || alttext))
 	{
-	    // [crispy] shade unavailable menu items
-	    if ((currentMenu == &MainDef && i == savegame && (!usergame || gamestate != GS_LEVEL)) ||
-	        (currentMenu == &OptionsDef && i == endgame && (!usergame || netgame)) ||
-	        (currentMenu == &MainDef && i == loadgame && (netgame && !demoplayback)) ||
-	        (currentMenu == &MainDef && i == newgame && (demorecording || (netgame && !demoplayback))))
-	        dp_translation = cr[CR_DARK];
-
 	    if (W_CheckNumForName(name) > 0 && currentMenu->lumps_missing == -1)
 	    V_DrawPatchDirect (x, y, W_CacheLumpName(name, PU_CACHE));
 	    else if (alttext)
 		M_WriteText(x, y+8-(M_StringHeight(alttext)/2), alttext);
-
-	    dp_translation = NULL;
 	}
 	y += LINEHEIGHT;
     }
@@ -3381,8 +3358,15 @@ void M_Init (void)
         int i;
 
         NewDef.prevMenu = &EpiDef;
-        EpisodeMenu[0].alphaKey = 'h';
-        EpisodeMenu[0].alttext = "Hell on Earth";
+        EpisodeMenu[0].alphaKey = gamevariant == freedm ||
+                                  gamevariant == freedoom ?
+                                 'f' :
+                                 'h';
+        EpisodeMenu[0].alttext = gamevariant == freedm ?
+                                 "FreeDM" :
+                                 gamevariant == freedoom ?
+                                 "Freedoom: Phase 2" :
+                                 "Hell on Earth";
         EpiDef.numitems = 1;
 
         if (crispy->havenerve)

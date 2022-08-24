@@ -883,7 +883,7 @@ void G_DoLoadLevel (void)
         }
         else
         {
-            const char message[] = "The -pistolstart option is not suppported"
+            const char message[] = "The -pistolstart option is not supported"
                                    " for demos and\n"
                                    " network play.";
             if (!demo_p) demorecording = false;
@@ -1836,7 +1836,7 @@ void G_DoCompleted (void)
     wminfo.last = gamemap -1;
     
     // wminfo.next is 0 biased, unlike gamemap
-    if ( gamemission == pack_nerve && gamemap <= 9 && crispy->singleplayer )
+    if ( gamemission == pack_nerve && gamemap <= 9 )
     {
 	if (secretexit)
 	    switch(gamemap)
@@ -1851,7 +1851,7 @@ void G_DoCompleted (void)
 	    }
     }
     else
-    if ( gamemission == pack_master && gamemap <= 21 && crispy->singleplayer )
+    if ( gamemission == pack_master && gamemap <= 21 )
     {
 	wminfo.next = gamemap;
     }
@@ -1938,8 +1938,8 @@ void G_DoCompleted (void)
         {
             wminfo.partime = TICRATE*bex_cpars[gamemap-1];
         }
-        // [crispy] single player par times for NRFTL
-        else if (gamemission == pack_nerve && crispy->singleplayer)
+        // [crispy] par times for NRFTL
+        else if (gamemission == pack_nerve)
         {
             wminfo.partime = TICRATE*npars[gamemap-1];
         }
@@ -2016,7 +2016,7 @@ void G_WorldDone (void)
       if (!crispy->havee1m10 || gameepisode != 1 || gamemap != 1)
 	players[consoleplayer].didsecret = true; 
 
-    if ( gamemission == pack_nerve && crispy->singleplayer )
+    if ( gamemission == pack_nerve )
     {
 	switch (gamemap)
 	{
@@ -2026,7 +2026,7 @@ void G_WorldDone (void)
 	}
     }
     else
-    if ( gamemission == pack_master && crispy->singleplayer )
+    if ( gamemission == pack_master )
     {
 	switch (gamemap)
 	{
@@ -2510,8 +2510,6 @@ G_InitNew
     totalleveltimes = 0;
     defdemotics = 0;
     demostarttic = gametic; // [crispy] fix revenant internal demo bug
-
-    viewactive = true;
 
     // Set the sky to use.
     //

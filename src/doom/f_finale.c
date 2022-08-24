@@ -148,15 +148,6 @@ void F_StartFinale (void)
             screen->level = 5;
         }
 
-        // [crispy] During demo recording/playback or network games
-        // these two packs behave like any other ordinary PWAD
-        if (!crispy->singleplayer &&
-            (gamemission == pack_nerve || gamemission == pack_master)
-            && screen->mission == doom2)
-        {
-            screen->mission = gamemission;
-        }
-
         if (logical_gamemission == screen->mission
          && (logical_gamemission != doom || gameepisode == screen->episode)
          && gamemap == screen->level)
@@ -212,10 +203,10 @@ void F_Ticker (void)
 				
       if (i < MAXPLAYERS)
       {	
-	if (gamemission == pack_nerve && crispy->singleplayer && gamemap == 8)
+	if (gamemission == pack_nerve && gamemap == 8)
 	  F_StartCast ();
 	else
-	if (gamemission == pack_master && crispy->singleplayer && (gamemap == 20 || gamemap == 21))
+	if (gamemission == pack_master && (gamemap == 20 || gamemap == 21))
 	  F_StartCast ();
 	else
 	if (gamemap == 30)
@@ -890,8 +881,8 @@ F_DrawPatchCol
     pixel_t*	desttop;
     int		count;
 	
-    column = (column_t *)((byte *)patch + LONG(patch->columnofs[col >> FRACBITS]));
-    desttop = I_VideoBuffer + x + (WIDESCREENDELTA << crispy->hires);
+    column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
+    desttop = I_VideoBuffer + x;
 
     // step through the posts in a column
     while (column->topdelta != 0xff )
@@ -924,19 +915,43 @@ void F_BunnyScroll (void)
     char	name[10];
     int		stage;
     static int	laststage;
+    int         p2offset, p1offset, pillar_width;
 		
     dxi = (ORIGWIDTH << FRACBITS) / NONWIDEWIDTH;
     dy = (SCREENHEIGHT << FRACBITS) / ORIGHEIGHT;
     dyi = (ORIGHEIGHT << FRACBITS) / SCREENHEIGHT;
 
-    // [crispy] fill pillarboxes in widescreen mode
-    if (SCREENWIDTH != NONWIDEWIDTH)
-    {
-	V_DrawFilledBox(0, 0, SCREENWIDTH, SCREENHEIGHT, 0);
-    }
-
     p1 = W_CacheLumpName (DEH_String("PFUB2"), PU_LEVEL);
     p2 = W_CacheLumpName (DEH_String("PFUB1"), PU_LEVEL);
+
+    // [crispy] fill pillarboxes in widescreen mode
+    pillar_width = (SCREENWIDTH - (p1->width << FRACBITS) / dxi) / 2;
+
+    if (pillar_width > 0)
+    {
+        V_DrawFilledBox(0, 0, pillar_width, SCREENHEIGHT, 0);
+        V_DrawFilledBox(SCREENWIDTH - pillar_width, 0, pillar_width, SCREENHEIGHT, 0);
+    }
+    else
+    {
+        pillar_width = 0;
+    }
+
+    // Calculate the portion of PFUB2 that would be offscreen at original res.
+    p1offset = (ORIGWIDTH - p1->width) / 2;
+
+    if (p2->width == ORIGWIDTH)
+    {
+        // Unity or original PFUBs.
+        // PFUB1 only contains the pixels that scroll off.
+        p2offset = ORIGWIDTH - p1offset;
+    }
+    else
+    {
+        // Widescreen mod PFUBs.
+        // Right side of PFUB2 and left side of PFUB1 are identical.
+        p2offset = ORIGWIDTH + p1offset;
+    }
 
     V_MarkRect (0, 0, SCREENWIDTH, SCREENHEIGHT);
 	
@@ -945,14 +960,15 @@ void F_BunnyScroll (void)
 	scrolled = ORIGWIDTH;
     if (scrolled < 0)
 	scrolled = 0;
-    scrolled <<= FRACBITS;
-		
-    for ( x=0 ; x<ORIGWIDTH << FRACBITS; x+=dxi)
+
+    for (x = pillar_width; x < SCREENWIDTH - pillar_width; x++)
     {
-	if (x+scrolled < ORIGWIDTH << FRACBITS)
-	    F_DrawPatchCol (x/dxi, p1, x+scrolled);
-	else
-	    F_DrawPatchCol (x/dxi, p2, x+scrolled - (ORIGWIDTH << FRACBITS));
+        int x2 = ((x * dxi) >> FRACBITS) - WIDESCREENDELTA + scrolled;
+
+        if (x2 < p2offset)
+            F_DrawPatchCol (x, p1, x2 - p1offset);
+        else
+            F_DrawPatchCol (x, p2, x2 - p2offset);
     }
 	
     if (finalecount < 1130)

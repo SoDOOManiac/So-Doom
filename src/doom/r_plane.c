@@ -432,7 +432,7 @@ void R_DrawPlanes (void)
 
     for (pl = visplanes ; pl < lastvisplane ; pl++)
     {
-	const boolean swirling = (flattranslation[pl->picnum] == -1);
+	boolean swirling;
 
 	if (pl->minx > pl->maxx)
 	    continue;
@@ -486,13 +486,14 @@ void R_DrawPlanes (void)
 		{
 		    angle = ((an + xtoviewangle[x])^flip)>>ANGLETOSKYSHIFT;
 		    dc_x = x;
-		    dc_source = R_GetColumn(texture, angle, false);
+		    dc_source = R_GetColumn(texture, angle);
 		    colfunc ();
 		}
 	    }
 	    continue;
 	}
 	
+	swirling = (flattranslation[pl->picnum] == -1);
 	// regular flat
         lumpnum = firstflat + (swirling ? pl->picnum : flattranslation[pl->picnum]);
 	// [crispy] add support for SMMU swirling flats
