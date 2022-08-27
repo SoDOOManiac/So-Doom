@@ -739,11 +739,15 @@ void I_FinishUpdate (void)
             flags = SDL_GetWindowFlags(screen);
             if ((flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == 0)
             {
+                int old_height;
                 SDL_GetWindowSize(screen, &window_width, &window_height);
+                old_height = window_height;
 
                 // Adjust the window by resizing again so that the window
                 // is the right aspect ratio.
                 AdjustWindowSize();
+                if (window_height < old_height)
+                    window_height = old_height;
                 SDL_SetWindowSize(screen, window_width, window_height);
             }
             CreateUpscaledTexture(false);
@@ -1562,8 +1566,8 @@ void I_GetScreenDimensions (void)
 				h = 10;
 				break;
 			case RATIO_16_9:
-				w = 426;
-				h = 240;
+				w = 16;
+				h = 9;
 				break;
 			case RATIO_17_9:
 				w = 17;
@@ -1583,7 +1587,7 @@ void I_GetScreenDimensions (void)
 
 		SCREENWIDTH = w * ah / h;
 		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
-		SCREENWIDTH = (SCREENWIDTH + 3) & (int)~3;
+		SCREENWIDTH = (SCREENWIDTH + (crispy->hires ? 0 : 3)) & (int)~3;
 		// [crispy] ... but never exceeds MAXWIDTH (array size!)
 		SCREENWIDTH = MIN(SCREENWIDTH, MAXWIDTH);
 	}

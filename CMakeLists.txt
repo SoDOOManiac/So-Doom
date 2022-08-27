@@ -2,7 +2,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.7.2)
 
-project("So Doom" VERSION 5.10.0 LANGUAGES C)
+project("So Doom" VERSION 5.10.1 LANGUAGES C)
 
 # Autotools variables
 set(top_srcdir ${CMAKE_CURRENT_SOURCE_DIR})
@@ -16,7 +16,11 @@ set(PACKAGE_STRING "${PROJECT_NAME} ${PROJECT_VERSION}")
 set(PACKAGE_BUGREPORT "https://github.com/fabiangreffrath/crispy-doom/issues")
 
 string(REGEX REPLACE " Doom$" "" PACKAGE_SHORTNAME "${PACKAGE_NAME}")
+<<<<<<< HEAD
 set(PACKAGE_COPYRIGHT "Copyright (C) 1993-2017")
+=======
+set(PACKAGE_COPYRIGHT "Copyright (C) 1993-2021")
+>>>>>>> 2857014c96c5f2f0c9784ae43ec024ad8d398fd0
 set(PACKAGE_LICENSE "GNU General Public License, version 2")
 
 # Any settings that should apply to all targets in this directory and all
@@ -32,6 +36,8 @@ endif()
 find_package(SDL2 2.0.7)
 find_package(SDL2_mixer 2.0.2)
 find_package(SDL2_net 2.0.0)
+
+option(CRISPY_TRUECOLOR "True color rendering" OFF)
 
 # Check for libsamplerate.
 find_package(samplerate)

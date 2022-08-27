@@ -253,10 +253,19 @@ void D_Display(void)
         case GS_LEVEL:
             if (!gametic)
                 break;
-            if (automapactive)
+            if (automapactive && !crispy->automapoverlay)
+            {
+                // [crispy] update automap while playing
+                R_RenderPlayerView (&players[displayplayer]);
                 AM_Drawer();
+            }
             else
                 R_RenderPlayerView(&players[displayplayer]);
+            if (automapactive && crispy->automapoverlay)
+            {
+                AM_Drawer();
+                BorderNeedRefresh = true;
+            }
             CT_Drawer();
             UpdateState |= I_FULLVIEW;
             SB_Drawer();
@@ -788,6 +797,8 @@ void D_BindVariables(void)
     NET_BindVariables();
 
     M_BindIntVariable("mouse_sensitivity",      &mouseSensitivity);
+    M_BindIntVariable("mouse_sensitivity_x2",   &mouseSensitivity_x2);
+    M_BindIntVariable("mouse_sensitivity_y",    &mouseSensitivity_y);
     M_BindIntVariable("sfx_volume",             &snd_MaxVolume);
     M_BindIntVariable("music_volume",           &snd_MusicVolume);
     M_BindIntVariable("screenblocks",           &screenblocks);
@@ -956,6 +967,9 @@ void D_DoomMain(void)
         startepisode = myargv[p + 1][0] - '0';
         startmap = myargv[p + 2][0] - '0';
         autostart = true;
+
+        // [crispy] if used with -playdemo, fast-forward demo up to the desired map
+        crispy->demowarp = startmap;
     }
 
 //
@@ -1039,7 +1053,7 @@ void D_DoomMain(void)
     if (!M_ParmExists("-noautoload"))
     {
         char *autoload_dir;
-        autoload_dir = M_GetAutoloadDir("heretic.wad");
+        autoload_dir = M_GetAutoloadDir("heretic.wad", true);
         DEH_AutoLoadPatches(autoload_dir);
         W_AutoLoadWADs(autoload_dir);
         free(autoload_dir);
@@ -1248,6 +1262,9 @@ void D_DoomMain(void)
         G_DeferedPlayDemo(demolumpname);
         D_DoomLoop();           // Never returns
     }
+
+    // [crispy] we don't play a demo, so don't skip maps
+    crispy->demowarp = 0;
 
     p = M_CheckParmWithArgs("-timedemo", 1);
     if (p)

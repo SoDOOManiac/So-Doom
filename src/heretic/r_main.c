@@ -21,6 +21,7 @@
 #include "m_bbox.h"
 #include "r_local.h"
 #include "tables.h"
+#include "v_video.h" // [crispy] V_DrawFilledBox for HOM detector
 
 int viewangleoffset;
 
@@ -852,12 +853,28 @@ void R_RenderPlayerView(player_t * player)
 {
     // [crispy] Smooth texture scrolling
     extern void R_InterpolateTextureOffsets(void);
+    extern boolean automapactive;
 
     R_SetupFrame(player);
     R_ClearClipSegs();
     R_ClearDrawSegs();
     R_ClearPlanes();
     R_ClearSprites();
+
+    if (automapactive && !crispy->automapoverlay)
+    {
+        R_RenderBSPNode (numnodes-1);
+        return;
+    }
+
+    // [crispy] flashing HOM indicator
+    if (crispy->flashinghom)
+    {
+        V_DrawFilledBox(viewwindowx, viewwindowy,
+            scaledviewwidth, viewheight,
+            160 - (gametic % 16));
+    }
+
     NetUpdate();                // check for new console commands
     R_InterpolateTextureOffsets(); // [crispy] smooth texture scrolling
     R_RenderBSPNode(numnodes - 1);      // the head node is the last node output

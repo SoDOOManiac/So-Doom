@@ -1050,6 +1050,38 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(vanilla_keyboard_mapping),
 
     //!
+    // If zero, this disables sectors changing their light level.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_sector_lighting),
+
+    //!
+    // If zero, this disables weapon flashes changing the ambient light
+    // level.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_weapon_flash),
+
+    //!
+    // If zero, this disables rendering of weapon flashes sprites.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_weapon_pspr),
+
+    //!
+    // If zero, this disables palette changes upon damage, item pickup,
+    // or when wearing the radiation suit.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_palette_changes),
+
+    //!
+    // If zero, this disables colormap changes during invulnerability.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_invul_colormap),
+
+    //!
     // Name to use in network games for identification.  This is only
     // used on the "waiting" screen while waiting for the game to start.
     //
@@ -1099,6 +1131,18 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(mouseb_straferight),
+
+    //!
+    // Mouse button to turn left.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_turnleft),
+
+    //!
+    // Mouse button to turn right.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_turnright),
 
     //!
     // Mouse button to "use" an object, eg. a door or switch.
@@ -2838,7 +2882,7 @@ static char *GetDefaultConfigDir(void)
         return copy;
     }
 #endif /* #ifndef _WIN32 */
-    return M_StringDuplicate("");
+    return M_StringDuplicate(exedir);
 }
 
 // 
@@ -2861,7 +2905,7 @@ void M_SetConfigDir(const char *dir)
         configdir = GetDefaultConfigDir();
     }
 
-    if (strcmp(configdir, "") != 0)
+    if (strcmp(configdir, exedir) != 0)
     {
         printf("Using %s for configuration and saves\n", configdir);
     }
@@ -2953,7 +2997,7 @@ char *M_GetSaveGameDir(const char *iwadname)
 #endif
     // If not "doing" a configuration directory (Windows), don't "do"
     // a savegame directory, either.
-    else if (!strcmp(configdir, ""))
+    else if (!strcmp(configdir, exedir))
     {
 	savegamedir = M_StringDuplicate("");
     }
@@ -2981,7 +3025,7 @@ char *M_GetSaveGameDir(const char *iwadname)
 // Calculate the path to the directory for autoloaded WADs/DEHs.
 // Creates the directory as necessary.
 //
-char *M_GetAutoloadDir(const char *iwadname)
+char *M_GetAutoloadDir(const char *iwadname, boolean makedir)
 {
     char *result;
 
@@ -2996,7 +3040,10 @@ char *M_GetAutoloadDir(const char *iwadname)
     M_MakeDirectory(autoload_path);
 
     result = M_StringJoin(autoload_path, DIR_SEPARATOR_S, iwadname, NULL);
+    if (makedir) // [crispy] make subdirectory creation optional
+    {
     M_MakeDirectory(result);
+    }
 
     // TODO: Add README file
 

@@ -32,6 +32,7 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 {
     txt_window_t *window;
 
+	/*
     // [So Doom]
     if (gamemission == doom)
     {
@@ -39,6 +40,8 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
     }
     else
     {
+    */
+
     window = TXT_NewWindow("Compatibility");
 
     TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
@@ -49,7 +52,7 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_NewCheckBox("Vanilla demo limit",
                                    &vanilla_demo_limit),
                    NULL);
-    }
+//    }
 }
 
 void BindCompatibilityVariables(void)

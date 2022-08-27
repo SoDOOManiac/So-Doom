@@ -55,7 +55,9 @@ static int *all_mouse_buttons[] = {
     &mousebmouselook, // [crispy]
     &mousebreverse, // [crispy]
     &mousebinvleft,
-    &mousebinvright
+    &mousebinvright,
+    &mousebturnleft,
+    &mousebturnright,
 };
 
 static void MouseSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
@@ -142,7 +144,7 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
     TXT_SetWindowAction(window, TXT_HORIZ_CENTER, TestConfigAction());
     TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
 
-    if (gamemission == doom) // [crispy]
+    if (gamemission == doom || gamemission == heretic) // [crispy]
     {
     TXT_AddWidgets(window,
                    TXT_NewCheckBox("Enable mouse", &usemouse),

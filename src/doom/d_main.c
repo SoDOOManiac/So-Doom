@@ -62,6 +62,7 @@
 #include "i_video.h"
 
 #include "g_game.h"
+#include "a11y.h" // [crispy] A11Y
 
 #include "hu_stuff.h"
 #include "wi_stuff.h"
@@ -409,6 +410,11 @@ void D_BindVariables(void)
     // [crispy] unconditionally disable savegame and demo limits
 //  M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
 //  M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
+    M_BindIntVariable("a11y_sector_lighting",   &a11y_sector_lighting);
+    M_BindIntVariable("a11y_weapon_flash",      &a11y_weapon_flash);
+    M_BindIntVariable("a11y_weapon_pspr",       &a11y_weapon_pspr);
+    M_BindIntVariable("a11y_palette_changes",   &a11y_palette_changes);
+    M_BindIntVariable("a11y_invul_colormap",    &a11y_invul_colormap);
     M_BindIntVariable("show_endoom",            &show_endoom);
     M_BindIntVariable("show_diskicon",          &show_diskicon);
 
@@ -749,6 +755,7 @@ void D_DoAdvanceDemo (void)
 void D_StartTitle (void)
 {
     gameaction = ga_nothing;
+    automapactive = false; // [crispy] clear overlaid automap remainings
     demosequence = -1;
     D_AdvanceDemo ();
 }
@@ -1366,6 +1373,8 @@ static void G_CheckDemoStatusAtExit (void)
     G_CheckDemoStatus();
 }
 
+static const char *const loadparms[] = {"-file", "-merge", NULL};
+
 //
 // D_DoomMain
 //
@@ -1706,14 +1715,14 @@ void D_DoomMain (void)
 
         if (gamemission < pack_chex)
         {
-            autoload_dir = M_GetAutoloadDir("doom-all");
+            autoload_dir = M_GetAutoloadDir("doom-all", true);
             DEH_AutoLoadPatches(autoload_dir);
             W_AutoLoadWADs(autoload_dir);
             free(autoload_dir);
         }
 
         // auto-loaded files per IWAD
-        autoload_dir = M_GetAutoloadDir(D_SaveGameIWADName(gamemission, gamevariant));
+        autoload_dir = M_GetAutoloadDir(D_SaveGameIWADName(gamemission, gamevariant), true);
         DEH_AutoLoadPatches(autoload_dir);
         W_AutoLoadWADs(autoload_dir);
         free(autoload_dir);
@@ -1804,6 +1813,29 @@ void D_DoomMain (void)
 
     // Debug:
 //    W_PrintDirectory();
+
+    // [crispy] add wad files from autoload PWAD directories
+
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    {
+        int i;
+
+        for (i = 0; loadparms[i]; i++)
+        {
+            int p;
+            p = M_CheckParmWithArgs(loadparms[i], 1);
+            if (p)
+            {
+                while (++p != myargc && myargv[p][0] != '-')
+                {
+                    char *autoload_dir;
+                    autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false);
+                    W_AutoLoadWADs(autoload_dir);
+                    free(autoload_dir);
+                }
+            }
+        }
+    }
 
     //!
     // @arg <demo>
@@ -1920,6 +1952,29 @@ void D_DoomMain (void)
         }
 
         printf("  loaded %i DEHACKED lumps from PWAD files.\n", loaded);
+    }
+
+    // [crispy] process .deh files from PWADs autoload directories
+
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    {
+        int i;
+
+        for (i = 0; loadparms[i]; i++)
+        {
+            int p;
+            p = M_CheckParmWithArgs(loadparms[i], 1);
+            if (p)
+            {
+                while (++p != myargc && myargv[p][0] != '-')
+                {
+                    char *autoload_dir;
+                    autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false);
+                    DEH_AutoLoadPatches(autoload_dir);
+                    free(autoload_dir);
+                }
+            }
+        }
     }
 
     // Set the gamedescription string. This is only possible now that

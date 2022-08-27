@@ -1,6 +1,7 @@
 # So Doom
 [![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/SoDOOManiac/so-doom)
 
+<<<<<<< HEAD
 [![Top Language](https://img.shields.io/github/languages/top/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
 [![Code Size](https://img.shields.io/github/languages/code-size/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
 [![License](https://img.shields.io/github/license/SoDOOManiac/so-doom.svg?style=flat&logo=gnu)](https://github.com/SoDOOManiac/so-doom/blob/master/COPYING.md)
@@ -10,6 +11,17 @@
 [![Commits](https://img.shields.io/github/commits-since/SoDOOManiac/so-doom/latest.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
 [![Last Commit](https://img.shields.io/github/last-commit/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
 [![Travis Build Status](https://img.shields.io/travis/com/SoDOOManiac/so-doom.svg?style=flat&logo=travis)](https://travis-ci.com/SoDOOManiac/so-doom/)
+=======
+[![Top Language](https://img.shields.io/github/languages/top/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom)
+[![Code Size](https://img.shields.io/github/languages/code-size/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom)
+[![License](https://img.shields.io/github/license/fabiangreffrath/crispy-doom.svg?logo=gnu)](https://github.com/fabiangreffrath/crispy-doom/blob/master/COPYING.md)
+[![Release](https://img.shields.io/github/release/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
+[![Release Date](https://img.shields.io/github/release-date/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
+[![Downloads](https://img.shields.io/github/downloads/fabiangreffrath/crispy-doom/latest/total.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
+[![Commits](https://img.shields.io/github/commits-since/fabiangreffrath/crispy-doom/latest.svg)](https://github.com/fabiangreffrath/crispy-doom/commits/master)
+[![Last Commit](https://img.shields.io/github/last-commit/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/commits/master)
+[![Build Status](https://github.com/fabiangreffrath/crispy-doom/actions/workflows/main.yml/badge.svg)](https://github.com/fabiangreffrath/crispy-doom/actions/workflows/main.yml)
+>>>>>>> 2857014c96c5f2f0c9784ae43ec024ad8d398fd0
 
 So Doom is a limit-removing enhanced-resolution Doom source port based on [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom).
 
@@ -163,6 +175,87 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+=======
+### Crispy Doom 5.10.3
+
+Crispy Doom 5.10.3 is released on Aug 17, 2021. It is a bug-fix release fixing a regression in savegame restoring introduced by the A11Y features from the 5.10.2 release.
+
+**New Features and Improvements**
+
+ * The translucency map is now always recalculated and no more loaded from a file or lump.
+ * Autoload directories are now also supported for "sideloaded" PWADs - i.e. nerve.wad, masterlevels.wad and sigil.wad (thanks @Raddatoons).
+
+**Bug Fixes**
+
+ * Rendered sector lightlevels are now saved in savegames if they are different from the logical lightlevels, fixing a regression intruduced with A11Y support (thanks Alaux).
+ * The green color translation range has been fine-tuned so that light-blue isn't preferred over green anymore (thanks maxmanium).
+ * The CMake build system has been updated for A11Y (thanks @vanfanel).
+
+Crispy Doom 5.10.3 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`3524a67d`](https://github.com/chocolate-doom/chocolate-doom/commit/3524a67dd3c7d48a172c83d3ae170a7176fb3cfa).
+
+### Crispy Doom 5.10.2
+
+Crispy Doom 5.10.2 is released on Aug 10, 2021. It is a minor release introducing basic accessibility features and accumulated fixes since the previous release.
+
+**New Features and Improvements**
+
+ * Smooth automap rotation and srolling have been implemented (by @JNechaevsky).
+ * Autoload directories for PWADs are now supported (thanks @OpenRift412 for the suggestion and @rfomin for the prior implementation in Woof!).
+ * Basic accessibility features have been added and can be toggled in the Accessibility menu of the setup tool:
+   * Flickering Sector Lighting (disables sectors changing their light levels)
+   * Weapon Flash Lighting (disables weapon flashes changing the ambient light levels)
+   * Weapon Flash Sprite (disables rendering of weapon flashes sprites)
+   * Palette Changes (disables palette changes upon damage, item pickup, or when wearing the radiation suit)
+   * Invulnerability Colormap (disables colormap changes during invulnerability)
+
+**Bug Fixes**
+
+ * In NRFTL the TITLEPIC is only replaced with the INTERPIC if the former is from the IWAD (thanks @OpenRift412).
+ * Overlaid automap remainings are now cleared from the demo loop (by @JNechaevsky).
+ * Adjusting of the BLOCKMAP boundaries to match the Vanilla algorithm has been reverted. Although this was done in the Vanilla algorithm, it doesn't match what's done in the algorithms used by MBF and Boom - and thus PrBoom+ which uses the latter. This fixes sync for one demo reported by galileo31dos01 on 5L1C.wad MAP01.
+ * The Compatibility menu has been removed from the setup tool, it is obsolete for all games now.
+ * The translucency table is now always calculated at gamma level 0, fixing potentially incorrect entries (by @JNechaevsky).
+ * The episode menu is now rendered with the HUD font if the graphics are both from an IWAD and if the patch width for "Hell on Earth" is longer than "No Rest for the Living" (thanks thanks @hackneyed-one).
+ * Automap rotation variables are now properly initialized, preventing line shaking (by @JNechaevsky).
+
+**Crispy Heretic**
+
+ * The `-demoext` parameter (even though enabled by default) only applies to demos loaded on the command line.
+
+**Crispy Hexen**
+
+ * Hexen: Restore pointers to `mobj_t` with garbage identity as `NULL` pointers (by @Dasperal).
+
+Crispy Doom 5.10.2 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`3524a67d`](https://github.com/chocolate-doom/chocolate-doom/commit/3524a67dd3c7d48a172c83d3ae170a7176fb3cfa).
+
+### Crispy Doom 5.10.1
+
+Crispy Doom 5.10.1 is released on Mar 24, 2021. It is a minor release containing the accumulated fixes of the past weeks.
+
+**New Features and Improvements**
+
+ * Some colored text has been reverted back to the pristine Vanilla experience. As a rule of thumb, UI that has been inherited from Vanilla does doesn't get any colorization anymore (thanks @OpenRift412).
+ * Screenwidth values are now rounded *down* to the nearest multiple of 4 in hires mode, and *up* in lores mode. This makes sure we end up with a screenwidth of 852 px for a 16:9 ratio in hires mode, which is exact twice the width of the widescreen assets, and with a screenwidth of 428 px in lores mode, which is the next integer multiple of 4 (thanks @buvk).
+ * A CMake toggle has been added for the truecolor mode (by @zx64).
+
+**Bug Fixes**
+
+ * The weapon sprite coordinates now remain unchanged if neither variable bobbing nor weapon sprite centering is enabled. Coincidently, this will bring back the sloppy bobbing of the chainsaw weapon sprite during its idle frames.
+ * Interpolation of the Archvile's fire sprite is now suppressed to mitigate it being spawned at the wrong location.
+ * Status bar positioning, drawing of fullscreen patches and the bunny scroll screen have been fixed on big-endian systems.
+ * The window height is now prevented from shrinking when changing widescreen modes.
+ * The smooth automap lines features has been fixed for truecolor mode (by @zx64).
+
+**Crispy Heretic**
+
+ * Weapon pickup messages are now shown in cooperative multiplayer mode (by @xttl).
+ * All Crispy Doom specific cheats have been ported over and adapted accordingly (by @xttl).
+ * An Automap overlay mode has been added.
+ * There are now separate mouse sensitivities for turn, strafe and y-axis.
+ * Heretic now has a "demowarp" feature, i.e. support for using both `-playdemo` and `-warp` on the command line (thanks @thom-wye).
+
+Crispy Doom 5.10.1 is based on Chocolate Doom 3.0.1 and has merged all changes to the Chocolate Doom master branch up to commit [`5003ab52`](https://github.com/chocolate-doom/chocolate-doom/commit/5003ab5283ff27c951c97b064c26cdde2bb0f427).
 
 ### So Doom 5.10.0
 

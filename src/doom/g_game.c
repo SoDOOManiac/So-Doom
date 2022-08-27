@@ -381,7 +381,9 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     if (joyxmove < 0
 	|| joyxmove > 0  
 	|| gamekeydown[key_right]
-	|| gamekeydown[key_left]) 
+	|| gamekeydown[key_left]
+	|| mousebuttons[mousebturnright]
+	|| mousebuttons[mousebturnleft])
 	turnheld += ticdup; 
     else 
 	turnheld = 0; 
@@ -478,12 +480,12 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     // let movement keys cancel each other out
     if (strafe) 
     { 
-	if (gamekeydown[key_right]) 
+	if (gamekeydown[key_right] || mousebuttons[mousebturnright])
 	{
 	    // fprintf(stderr, "strafe right\n");
 	    side += sidemove[speed]; 
 	}
-	if (gamekeydown[key_left]) 
+	if (gamekeydown[key_left] || mousebuttons[mousebturnleft])
 	{
 	    //	fprintf(stderr, "strafe left\n");
 	    side -= sidemove[speed]; 
@@ -496,9 +498,9 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     } 
     else 
     { 
-	if (gamekeydown[key_right]) 
+	if (gamekeydown[key_right] || mousebuttons[mousebturnright])
 	    cmd->angleturn -= angleturn[tspeed]; 
-	if (gamekeydown[key_left]) 
+	if (gamekeydown[key_left] || mousebuttons[mousebturnleft])
 	    cmd->angleturn += angleturn[tspeed]; 
 	if (joyxmove > 0) 
 	    cmd->angleturn -= angleturn[tspeed]; 
@@ -1620,7 +1622,7 @@ void G_ScreenShot (void)
 
 
 // DOOM Par Times
-int pars[6][10] =
+static const int pars[6][10] =
 { 
     {0}, 
     {0,30,75,120,90,165,180,180,30,165}, 
@@ -1633,16 +1635,22 @@ int pars[6][10] =
 }; 
 
 // DOOM II Par Times
-int cpars[32] =
+static const int cpars[32] =
 {
     30,90,120,120,90,150,120,120,270,90,	//  1-10
     210,150,150,150,210,150,420,150,210,150,	// 11-20
     240,150,180,150,150,300,330,420,300,180,	// 21-30
     120,30					// 31-32
 };
+
+// Chex Quest Par Times
+static const int chexpars[6] =
+{ 
+    0,120,360,480,200,360
+}; 
  
 // [crispy] No Rest For The Living par times from the BFG Edition
-static int npars[9] =
+static const int npars[9] =
 {
     75,105,120,105,210,105,165,105,135
 };
@@ -1962,7 +1970,14 @@ void G_DoCompleted (void)
             wminfo.partime = TICRATE*bex_pars[gameepisode][gamemap];
         }
         else
-        wminfo.partime = TICRATE*pars[gameepisode][gamemap];
+        if (gameversion == exe_chex && gameepisode == 1 && gamemap < 6)
+        {
+            wminfo.partime = TICRATE*chexpars[gamemap];
+        }
+        else
+        {
+            wminfo.partime = TICRATE*pars[gameepisode][gamemap];
+        }
     }
     else
     {
