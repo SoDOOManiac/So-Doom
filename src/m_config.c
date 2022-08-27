@@ -1904,6 +1904,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Aspect ratio limit.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_arlimit),
+
+    //!
+    // @game doom
+    //
     // Automap overlay mode.
     //
 

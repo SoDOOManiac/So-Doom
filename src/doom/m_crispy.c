@@ -130,6 +130,18 @@ multiitem_t multiitem_logo[NUM_LOGOS] =
     {LOGO_BOTH, "in both menus"},
 };
 
+multiitem_t multiitem_arlimit[NUM_RATIOS] =
+{
+    {RATIO_NON_WIDE, "Non-wide"},
+    {RATIO_MATCH_SCREEN, "Match screen"},
+    {RATIO_16_10, "16:10"},
+    {RATIO_17_10, "17:10"},
+    {RATIO_16_9, "16:9"},
+    {RATIO_17_9, "17:9"},
+    {RATIO_18_9, "18:9"},
+    {RATIO_21_9, "21:9"},
+};
+
 multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
 {
     {SECRETMESSAGE_OFF, "off"},
@@ -177,6 +189,35 @@ extern void ST_createWidgets(void);
 extern void HU_Start(void);
 extern void M_SizeDisplay(int choice);
 
+static void M_CrispyToggleAspectRatioLimitHook (void)
+{
+    crispy->arlimit = (crispy->arlimit + 1) % NUM_RATIOS;
+
+    // [crispy] re-set logical rendering resolution
+
+    //I_ReInitGraphics(REINIT_ASPECTRATIO);
+    // [crispy] re-initialize screenSize_min
+    M_SizeDisplay(-1);
+    // [crispy] re-initialize framebuffers, textures and renderer
+    I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+    // [crispy] re-calculate framebuffer coordinates
+    R_ExecuteSetViewSize();
+    // [crispy] re-draw bezel
+    R_FillBackScreen();
+    // [crispy] re-calculate disk icon coordinates
+    EnableLoadingDisk();
+    // [crispy] re-calculate automap coordinates
+    AM_LevelInit(true);
+
+    if (gamestate == GS_LEVEL && gamemap > 0)
+    {
+	// [crispy] re-arrange status bar widgets
+	ST_createWidgets();
+	// [crispy] re-arrange heads-up widgets
+	HU_Start();
+    }
+}
+
 static void M_CrispyTogglePixelAspectRatioHook (void)
 {
     aspect_ratio_correct = (aspect_ratio_correct + 1) % NUM_PIXELASPECTRATIOS;
@@ -211,6 +252,12 @@ void M_CrispyTogglePixelAspectRatio(int choice)
     choice = 0;
 
     crispy->post_rendering_hook = M_CrispyTogglePixelAspectRatioHook;
+}
+
+void M_CrispyToggleAspectRatioLimit(int choice)
+{
+    choice = 0;
+    crispy->post_rendering_hook = M_CrispyToggleAspectRatioLimitHook;
 }
 
 void M_CrispyToggleAutomapstats(int choice)
@@ -635,7 +682,7 @@ static void M_CrispyToggleWidescreenHook (void)
 {
     crispy->widescreen = (crispy->widescreen + 1) % NUM_WIDESCREEN;
 
-    // [crispy] no need to re-init when switching from wide to compact
+    // [crispy] only re-init when switching from wide to narrow
     if (crispy->widescreen == 1 || crispy->widescreen == 0)
     {
 	// [crispy] re-initialize framebuffers, textures and renderer

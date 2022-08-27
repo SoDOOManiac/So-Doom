@@ -436,13 +436,14 @@ enum
     crispness_sep_rendering,
     crispness_hires,
     crispness_widescreen,
+    crispness_arlimit,
     crispness_pixelaspectratio,
     crispness_uncapped,
     crispness_vsync,
     crispness_smoothscaling,
     //crispness_sep_rendering_,
 
-    crispness_sep_visual,
+    //crispness_sep_visual,
     crispness_logo,
     crispness_coloredhud,
     crispness_translucency,
@@ -462,12 +463,13 @@ static menuitem_t Crispness1Menu[]=
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleHires,'h'},
     {1,"",	M_CrispyToggleWidescreen,'w'},
+    {1,"",  M_CrispyToggleAspectRatioLimit,'a'},
     {1,"",	M_CrispyTogglePixelAspectRatio,'f'},
     {1,"",	M_CrispyToggleUncapped,'u'},
     {1,"",	M_CrispyToggleVsync,'v'},
     {1,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
-    {-1,"",0,'\0'},
+//    {-1,"",0,'\0'},
     {1,"",  M_CrispyToggleLogo,'o'},
     {1,"",	M_CrispyToggleColoredhud,'c'},
     {1,"",	M_CrispyToggleTranslucency,'e'},
@@ -1515,15 +1517,16 @@ static void M_DrawCrispness1(void)
 
     M_DrawCrispnessHeader("SoDOOMy 1/4");
 
-    M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering");
+    M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
     M_DrawCrispnessItem(crispness_hires, "High Resolution Rendering", crispy->hires, true);
     M_DrawCrispnessMultiItem(crispness_widescreen, "Widescreen Rendering", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
+    M_DrawCrispnessMultiItem(crispness_arlimit, "Aspect Ratio Limit", multiitem_arlimit, crispy->arlimit, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Uncapped Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessItem(crispness_vsync, "Enable VSync", crispy->vsync, !force_software_renderer);
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, true);
 
-    M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
+    //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);

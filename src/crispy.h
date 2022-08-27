@@ -36,6 +36,7 @@
 typedef struct
 {
 	// [crispy] "crispness" config variables
+	int arlimit;
 	int automapoverlay;
 	int automaprotate;
 	int automapstats;
@@ -232,6 +233,19 @@ enum
 
 enum
 {
+    RATIO_NON_WIDE,
+    RATIO_MATCH_SCREEN,
+    RATIO_16_10,
+    RATIO_17_10,
+    RATIO_16_9,
+    RATIO_17_9,
+    RATIO_18_9,
+    RATIO_21_9,
+    NUM_RATIOS
+};
+
+enum
+{
     TRANSLUCENCY_OFF,
     TRANSLUCENCY_MISSILE,
     TRANSLUCENCY_ITEM,
@@ -262,16 +276,6 @@ enum
     WIDGETS_AUTOMAP,
     WIDGETS_ALWAYS,
     NUM_WIDGETS
-};
-
-enum
-{
-    RATIO_4_3,
-    RATIO_MATCH_SCREEN,
-    RATIO_16_10,
-    RATIO_16_9,
-    RATIO_21_9,
-    NUM_RATIOS
 };
 
 #endif

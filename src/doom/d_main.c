@@ -424,6 +424,7 @@ void D_BindVariables(void)
     }
 
     // [crispy] bind "crispness" config variables
+	M_BindIntVariable("crispy_arlimit",         &crispy->arlimit);
     M_BindIntVariable("crispy_automapoverlay",  &crispy->automapoverlay);
     M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
     M_BindIntVariable("crispy_automapstats",    &crispy->automapstats);

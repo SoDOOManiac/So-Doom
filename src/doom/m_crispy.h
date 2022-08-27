@@ -40,6 +40,7 @@ extern multiitem_t multiitem_demotimerdir[];
 extern multiitem_t multiitem_freelook[NUM_FREELOOKS];
 extern multiitem_t multiitem_jump[NUM_JUMPS];
 extern multiitem_t multiitem_logo[NUM_LOGOS];
+extern multiitem_t multiitem_arlimit[NUM_RATIOS];
 extern multiitem_t multiitem_sndchannels[4];
 extern multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE];
 extern multiitem_t multiitem_translucency[NUM_TRANSLUCENCY];
@@ -47,6 +48,7 @@ extern multiitem_t multiitem_widescreen[NUM_WIDESCREEN];
 extern multiitem_t multiitem_widgets[NUM_WIDGETS];
 
 extern void M_CrispyTogglePixelAspectRatio(int choice);
+extern void M_CrispyToggleAspectRatioLimit(int choice);
 extern void M_CrispyToggleAutomapstats(int choice);
 extern void M_CrispyToggleBobfactor(int choice);
 extern void M_CrispyToggleBrightmaps(int choice);

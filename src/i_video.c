@@ -1549,17 +1549,29 @@ void I_GetScreenDimensions (void)
 	}
 
 	// [crispy] widescreen rendering makes no sense without aspect ratio correction
-	if (crispy->widescreen && aspect_ratio_correct)
+	if (crispy->widescreen && crispy->arlimit && aspect_ratio_correct)
 	{
-		/* switch(crispy->widescreen)	// [So Doom] will be used later with aspect_ratio+hud_type combinations
+		 switch(crispy->arlimit)	// [So Doom] aspect ratio limit
 		{
 			case RATIO_16_10:
 				w = 16;
 				h = 10;
 				break;
+			case RATIO_17_10:
+				w = 17;
+				h = 10;
+				break;
 			case RATIO_16_9:
 				w = 426;
 				h = 240;
+				break;
+			case RATIO_17_9:
+				w = 17;
+				h = 9;
+				break;
+			case RATIO_18_9:
+				w = 2;
+				h = 1;
 				break;
 			case RATIO_21_9:
 				w = 21;
@@ -1567,7 +1579,7 @@ void I_GetScreenDimensions (void)
 				break;
 			default:
 				break;
-		}*/
+		}
 
 		SCREENWIDTH = w * ah / h;
 		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
