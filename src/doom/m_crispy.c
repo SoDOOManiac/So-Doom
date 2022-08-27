@@ -682,7 +682,7 @@ static void M_CrispyToggleWidescreenHook (void)
 {
     crispy->widescreen = (crispy->widescreen + 1) % NUM_WIDESCREEN;
 
-    // [crispy] only re-init when switching from wide to narrow
+    // [crispy] only re-init when switching from wide to narrow and vice versa
     if (crispy->widescreen == 1 || crispy->widescreen == 0)
     {
 	// [crispy] re-initialize framebuffers, textures and renderer
