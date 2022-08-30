@@ -509,7 +509,7 @@ enum
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
-    crispness_secretcolor,
+    crispness_mapsecrets,
     //crispness_sep_navigational_,
 
     crispness2_next,
@@ -533,7 +533,7 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
     {1,"",	M_CrispyToggleSecretmessage,'s'},
-    {1,"",	M_CrispyToggleSecretcolor,'r'},
+    {1,"",	M_CrispyToggleMapSecrets,'r'},
 //    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -1519,7 +1519,7 @@ static void M_DrawCrispness1(void)
 
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
     M_DrawCrispnessItem(crispness_hires, "High Resolution Rendering", crispy->hires, true);
-    M_DrawCrispnessMultiItem(crispness_widescreen, "Widescreen Rendering", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
+    M_DrawCrispnessMultiItem(crispness_widescreen, "Wide screen/c-thru HUD", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
     M_DrawCrispnessMultiItem(crispness_arlimit, "Aspect Ratio Limit", multiitem_arlimit, crispy->arlimit, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Uncapped Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
@@ -1561,7 +1561,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);
-    M_DrawCrispnessItem(crispness_secretcolor, "Colorize Revealed Secrets", crispy->secretcolor, true);
+    M_DrawCrispnessMultiItem(crispness_mapsecrets, "Map Secrets", multiitem_mapsecrets, crispy->mapsecrets, true);
 
     M_DrawCrispnessGoto(crispness2_next, "Next Page >");
     M_DrawCrispnessGoto(crispness2_prev, "< Prev Page");

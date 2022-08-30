@@ -1550,9 +1550,13 @@ void AM_drawWalls(void)
 	    AM_rotatePoint(&l.a);
 	    AM_rotatePoint(&l.b);
 	}
+
 	if (cheating || (lines[i].flags & ML_MAPPED))
 	{
-	    if ((lines[i].flags & LINE_NEVERSEE) && !cheating)
+	    if ((lines[i].flags & LINE_NEVERSEE) && !cheating && !((crispy->mapsecrets >= 2) && // [So Doom] if the option is set to force mapping of secret walls
+	    ((lines[i].backsector && // upon seeing even if they're neversee like in REKKR
+	    (lines[i].frontsector->oldspecial == 9 || lines[i].frontsector->special == 9 || lines[i].backsector->oldspecial == 9 || lines[i].backsector->special == 9)) || 
+	    (!lines[i].backsector && (lines[i].frontsector->oldspecial == 9 || lines[i].frontsector->special == 9)))))
 		continue;
 	    {
 		// [crispy] draw keyed doors in their respective colors
@@ -1593,14 +1597,12 @@ void AM_drawWalls(void)
 	    if (!lines[i].backsector)
 	    {
 		// [crispy] draw 1S secret sector boundaries in purple
-		if (crispy->extautomap &&
-		    cheating && (lines[i].frontsector->special == 9))
+		if (cheating && (lines[i].frontsector->special == 9))
 		    AM_drawMline(&l, SECRETWALLCOLORS);
 #if defined CRISPY_HIGHLIGHT_REVEALED_SECRETS
 		// [crispy] draw revealed secret sector boundaries in green
 		else
-		if (crispy->extautomap && crispy->secretcolor &&
-		    (lines[i].frontsector->oldspecial == 9))
+		if ((crispy->mapsecrets % 2 == 1) && (lines[i].frontsector->oldspecial == 9))
 		    AM_drawMline(&l, REVEALEDSECRETWALLCOLORS);
 #endif
 		else
@@ -1625,7 +1627,7 @@ void AM_drawWalls(void)
 		}
 #if defined CRISPY_HIGHLIGHT_REVEALED_SECRETS
 		// [crispy] draw revealed secret sector boundaries in green
-		else if (crispy->extautomap && crispy->secretcolor &&
+		else if ((crispy->mapsecrets % 2 == 1) &&
 		    (lines[i].backsector->oldspecial == 9 ||
 		    lines[i].frontsector->oldspecial == 9))
 		{
@@ -1633,7 +1635,7 @@ void AM_drawWalls(void)
 		}
 #endif
 		// [crispy] draw 2S secret sector boundaries in purple
-		else if (crispy->extautomap && cheating &&
+		else if (cheating &&
 		    (lines[i].backsector->special == 9 ||
 		    lines[i].frontsector->special == 9))
 		{

@@ -71,7 +71,7 @@ typedef struct
 	int pitch;
 	int playercoords;
 	int recoil;
-	int secretcolor;
+	int mapsecrets;
 	int secretmessage;
 	int smarttotals;
 	int smoothlight;
@@ -259,6 +259,15 @@ enum
     SECRETMESSAGE_ON,
     SECRETMESSAGE_COUNT,
     NUM_SECRETMESSAGE
+};
+
+enum
+{
+    MAPSECRETS_DEFAULT,
+    MAPSECRETS_DEFAULT_AND_COLOR,
+    MAPSECRETS_FORCE,
+    MAPSECRETS_FORCE_AND_COLOR,
+    NUM_MAPSECRETS
 };
 
 enum

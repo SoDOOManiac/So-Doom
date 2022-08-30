@@ -149,6 +149,14 @@ multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
     {SECRETMESSAGE_COUNT, "count"},
 };
 
+multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS] =
+{
+    {MAPSECRETS_DEFAULT, "default"},
+    {MAPSECRETS_DEFAULT_AND_COLOR, "default + color revealed"},
+    {MAPSECRETS_FORCE, "force"},
+    {MAPSECRETS_FORCE_AND_COLOR, "force + color revealed"},
+};
+
 multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =
 {
     {TRANSLUCENCY_OFF, "off"},
@@ -166,10 +174,10 @@ multiitem_t multiitem_sndchannels[4] =
 
 multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
 {
-    {WIDESCREEN_OFF, "off"},
-    {WIDESCREEN_WIDE, "on, wide HUD"},
-    {WIDESCREEN_COMPACT, "on, compact HUD"},
-    {WIDESCREEN_COCKPIT, "on, cockpit HUD"},
+    {WIDESCREEN_OFF, "off/narrow"},
+    {WIDESCREEN_WIDE, "on/wide"},
+    {WIDESCREEN_COMPACT, "on/compact"},
+    {WIDESCREEN_COCKPIT, "on/cockpit"},
 };
 
 multiitem_t multiitem_widgets[NUM_WIDGETS] =
@@ -566,16 +574,16 @@ void M_CrispyToggleRecoil(int choice)
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 }
 
-void M_CrispyToggleSecretcolor(int choice)
-{
-    choice = 0;
-    crispy->secretcolor = !crispy->secretcolor;
-}
-
 void M_CrispyToggleSecretmessage(int choice)
 {
     choice = 0;
     crispy->secretmessage = (crispy->secretmessage + 1) % NUM_SECRETMESSAGE;
+}
+
+void M_CrispyToggleMapSecrets(int choice)
+{
+    choice = 0;
+    crispy->mapsecrets = (crispy->mapsecrets + 1) % NUM_MAPSECRETS;
 }
 
 void M_CrispyToggleSmartTotals(int choice)

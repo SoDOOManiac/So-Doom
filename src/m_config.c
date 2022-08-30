@@ -2228,10 +2228,11 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Color (bright green) the revealed secret sector in the automap.
+    // Automapping borders of secret sectors: default based on line flags (don't map if ML_DONTDRAW), default + color bright green when triggered (if not ML_DONTDRAW),
+    // forced when seen, forced when seen + color bright green when triggered.
     //
 
-    CONFIG_VARIABLE_INT(crispy_secretcolor),
+    CONFIG_VARIABLE_INT(crispy_mapsecrets),
 
     //!
     // @game doom
