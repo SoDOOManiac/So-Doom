@@ -1551,11 +1551,18 @@ void AM_drawWalls(void)
 	    AM_rotatePoint(&l.b);
 	}
 
+	if ((crispy->mapsecrets >= 2) && lines[i].backsector && // [So Doom] if a two-sided line with equal floor and ceiling heights on both sides is a revealed secret border, map it
+	(lines[i].frontsector->floorheight == lines[i].backsector->floorheight) && (lines[i].frontsector->ceilingheight == lines[i].backsector->ceilingheight) &&
+	(lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9))
+	{
+	    lines[i].flags |= ML_MAPPED;
+	}
+
 	if (cheating || (lines[i].flags & ML_MAPPED))
 	{
 	    if ((lines[i].flags & LINE_NEVERSEE) && !cheating && !((crispy->mapsecrets >= 2) && // [So Doom] if the option is set to force mapping of secret walls
 	    ((lines[i].backsector && // upon seeing even if they're neversee like in REKKR
-	    (lines[i].frontsector->oldspecial == 9 || lines[i].frontsector->special == 9 || lines[i].backsector->oldspecial == 9 || lines[i].backsector->special == 9)) || 
+	    (lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9 || lines[i].frontsector->special == 9 || lines[i].backsector->special == 9)) || 
 	    (!lines[i].backsector && (lines[i].frontsector->oldspecial == 9 || lines[i].frontsector->special == 9)))))
 		continue;
 	    {
