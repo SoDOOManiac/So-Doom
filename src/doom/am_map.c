@@ -1551,13 +1551,6 @@ void AM_drawWalls(void)
 	    AM_rotatePoint(&l.b);
 	}
 
-	if ((crispy->mapsecrets >= 2) && lines[i].backsector && // [So Doom] if a two-sided line with equal floor and ceiling heights on both sides is a revealed secret border, map it
-	(lines[i].frontsector->floorheight == lines[i].backsector->floorheight) && (lines[i].frontsector->ceilingheight == lines[i].backsector->ceilingheight) &&
-	(lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9))
-	{
-	    lines[i].flags |= ML_MAPPED;
-	}
-
 	if (cheating || (lines[i].flags & ML_MAPPED))
 	{
 	    if ((lines[i].flags & LINE_NEVERSEE) && !cheating && !((crispy->mapsecrets >= 2) && // [So Doom] if the option is set to force mapping of secret walls
@@ -1641,13 +1634,23 @@ void AM_drawWalls(void)
 		    AM_drawMline(&l, REVEALEDSECRETWALLCOLORS);
 		}
 #endif
-		// [crispy] draw 2S secret sector boundaries in purple
+		// [crispy] with IDDT, draw 2S secret sector boundaries in purple
 		else if (cheating &&
 		    (lines[i].backsector->special == 9 ||
 		    lines[i].frontsector->special == 9))
 		{
 		    AM_drawMline(&l, SECRETWALLCOLORS);
 		}
+
+		// [So Doom] if no IDDT and force draw with no highlight, draw 2S secret sector boundaries in gray if no linedef action
+		else if (lines[i].special == 0 && ((crispy->mapsecrets == 2 &&
+		    (lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9 ||
+		    lines[i].frontsector->special == 9 || lines[i].backsector->special == 9)) ||
+		    (crispy->mapsecrets == 3 && (lines[i].frontsector->special == 9 || lines[i].backsector->special == 9)))) // revealed secret boundaries are greened, exclude them
+		{
+		    AM_drawMline(&l, TSWALLCOLORS+lightlev);
+		}
+
 		else if (lines[i].backsector->floorheight
 			   != lines[i].frontsector->floorheight) {
 		    AM_drawMline(&l, FDWALLCOLORS + lightlev); // floor level change

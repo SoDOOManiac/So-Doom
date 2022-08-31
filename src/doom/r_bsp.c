@@ -361,8 +361,13 @@ void R_AddLine (seg_t*	line)
     // Window.
     if (backsector->interpceilingheight != frontsector->interpceilingheight
 	|| backsector->interpfloorheight != frontsector->interpfloorheight)
-	goto clippass;	
-		
+	goto clippass;
+
+	// [So Doom] empty lines that belong to secret sectors should also get mapped
+    if (backsector->interpceilingheight == frontsector->interpceilingheight && backsector->interpfloorheight == frontsector->interpfloorheight &&
+	(frontsector->oldspecial == 9 || backsector->oldspecial == 9 || frontsector->special == 9 || backsector->special == 9))
+	goto clippass;
+	
     // Reject empty lines used for triggers
     //  and special events.
     // Identical floor and ceiling on both sides,
