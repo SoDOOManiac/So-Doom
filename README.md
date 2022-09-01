@@ -179,11 +179,17 @@ After successful compilation the resulting binaries can be found in the `src/` d
 =======
 ### So Doom 5.10.3
 
-So Doom 5.10.3 will have been released on Sep N, 2022.
+So Doom 5.10.3 has been released on Sep 1, 2022.
+
+#### Known Issues
+
+Free standalone IWAD version of REKKR (REKKRSA.WAD) doesn't run properly with the inner DEHACKED lump (i.e. `so-doom -iwad rekkrsa.wad`), it should be run with suppressing loading the internal DEH and loading the external REKKR.DEH (i.e. `so-doom -iwad rekkrsa.wad -nodeh -deh rekkr.deh`). You can get both the WAD and the DEH [in this bundle with Chocolate Doom](https://drive.google.com/open?id=1Yx7yUH3TMUpNZXmodELmVgEUCrcOLhpI). The same issue is present in Crispy Doom 5.10.3 which So Doom 5.10.3 is based on.
 
 #### So Doom-specific changes
 
- * "Color Revealed Secrets" SoDOOMy setting has baeen changed to "Map Secrets" with expanded set of values: default (not mapping hidden lines or those without floor/ceiling level change or special), default + color revealed (colored mapping of revealed secrets' lines that are not hidden or without floor/ceiling level change or special), force (standard mapping of all seen lines of secret sectors) and force + color revealed (standard mapping of all seen lines of unrevealed secret sectors + green mapping of all revealed secret sectors' lines).
+ * "Color Revealed Secrets" SoDOOMy setting has been changed to "Map Secrets" with expanded set of values: default (not mapping hidden lines or those without floor/ceiling level change or special), default + color revealed (colored mapping of revealed secrets' lines that are not hidden or without floor/ceiling level change or special), force (standard mapping of all seen lines of secret sectors) and force + color revealed (standard mapping of all seen lines of unrevealed secret sectors + green mapping of all revealed secret sectors' lines). Inspired by Revae's REKKR total conversion for Ultimate Doom where most secret sector lines are labeled hidden. 
+ * Aspect ratio limit option has been introduced, working the same way as Crispy Doom but with more values. This should be useful for playing on really wide monitors with aspect ratios 18:9 and above. To add this option I had to unite the Rendering and Visual menu sections under one header.
+ * Changed wording of widescreen rendering and see-through HUD combined option.
 
 #### Changes pulled from Crispy Doom
 
