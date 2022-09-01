@@ -363,8 +363,9 @@ void R_AddLine (seg_t*	line)
 	|| backsector->interpfloorheight != frontsector->interpfloorheight)
 	goto clippass;
 
-	// [So Doom] empty lines that belong to secret sectors should also get mapped
-    if (backsector->interpceilingheight == frontsector->interpceilingheight && backsector->interpfloorheight == frontsector->interpfloorheight &&
+	// [So Doom] lines with no floor or ceiling level change that belong to secret sectors should also get mapped when in field of view if mapping secret lines is forced
+    if (crispy->mapsecrets >= 2 && backsector->interpceilingheight == frontsector->interpceilingheight &&
+	backsector->interpfloorheight == frontsector->interpfloorheight &&
 	(frontsector->oldspecial == 9 || backsector->oldspecial == 9 || frontsector->special == 9 || backsector->special == 9))
 	goto clippass;
 	
@@ -373,7 +374,8 @@ void R_AddLine (seg_t*	line)
     // Identical floor and ceiling on both sides,
     // identical light levels on both sides,
     // and no middle texture.
-    if (backsector->ceilingpic == frontsector->ceilingpic
+    // [So Doom] added else because there are some lines for which both last conditions are met
+    else if (backsector->ceilingpic == frontsector->ceilingpic
 	&& backsector->floorpic == frontsector->floorpic
 	&& backsector->lightlevel == frontsector->lightlevel
 	&& curline->sidedef->midtexture == 0)

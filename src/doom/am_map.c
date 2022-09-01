@@ -1643,8 +1643,8 @@ void AM_drawWalls(void)
 		}
 
 		// [So Doom] if no IDDT and force draw with no highlight, draw 2S secret sector boundaries in gray if no linedef action
-		else if (lines[i].special == 0 && ((crispy->mapsecrets == 2 &&
-		    (lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9 ||
+		else if (lines[i].special == 0 &&
+		    ((crispy->mapsecrets == 2 && (lines[i].frontsector->oldspecial == 9 || lines[i].backsector->oldspecial == 9 ||
 		    lines[i].frontsector->special == 9 || lines[i].backsector->special == 9)) ||
 		    (crispy->mapsecrets == 3 && (lines[i].frontsector->special == 9 || lines[i].backsector->special == 9)))) // revealed secret boundaries are greened, exclude them
 		{
