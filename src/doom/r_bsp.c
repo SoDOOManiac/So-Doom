@@ -363,9 +363,8 @@ void R_AddLine (seg_t*	line)
 	|| backsector->interpfloorheight != frontsector->interpfloorheight)
 	goto clippass;
 
-	// [So Doom] lines with no floor or ceiling level change that belong to secret sectors should also get mapped when in field of view if mapping secret lines is forced
-    if (crispy->mapsecrets >= 2 && backsector->interpceilingheight == frontsector->interpceilingheight &&
-	backsector->interpfloorheight == frontsector->interpfloorheight &&
+	// [So Doom] all lines that belong to secret sectors should get mapped when in field of view if mapping secret lines is forced
+    if (crispy->mapsecrets >= 2 &&
 	(frontsector->oldspecial == 9 || backsector->oldspecial == 9 || frontsector->special == 9 || backsector->special == 9))
 	goto clippass;
 	
