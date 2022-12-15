@@ -83,7 +83,8 @@ boolean P_GiveAmmo(player_t* player, ammotype_t ammo, int num)
         num = clipammo[ammo]/2;
 
     if(gameskill == sk_baby
-        || gameskill == sk_nightmare)
+        || gameskill == sk_nightmare
+        || critical->moreammo)
     {
         // give double ammo in trainer mode,
         // you'll need in nightmare
@@ -354,7 +355,8 @@ boolean P_GivePower(player_t* player, powertype_t power)
         return false;
 
     // villsa [STRIFE]
-    if(power == pw_targeter)
+    switch (power) {
+    case pw_targeter:
     {
         player->powers[power] = TARGTICS;
         P_SetPsprite(player, ps_targcenter, S_TRGT_00); // 10
@@ -368,7 +370,7 @@ boolean P_GivePower(player_t* player, powertype_t power)
         return true;
     }
 
-    if(power == pw_invisibility)
+    case pw_invisibility:
     {
         // if player already had this power...
         if(player->powers[power])
@@ -386,13 +388,13 @@ boolean P_GivePower(player_t* player, powertype_t power)
         return true;
     }
 
-    if(power == pw_ironfeet)
+    case pw_ironfeet:
     {
         player->powers[power] = IRONTICS;
         return true;
     }
 
-    if(power == pw_strength)
+    case pw_strength:
     {
         P_GiveBody(player, 100);
         player->powers[power] = 1;
@@ -400,7 +402,7 @@ boolean P_GivePower(player_t* player, powertype_t power)
     }
 
     // villsa [STRIFE]
-    if(power == pw_allmap)
+    case pw_allmap:
     {
         // remember in mapstate
         if(gamemap < 40)
@@ -411,14 +413,17 @@ boolean P_GivePower(player_t* player, powertype_t power)
     }
 
     // villsa [STRIFE]
-    if(power == pw_communicator)
+    case pw_communicator:
     {
         player->powers[power] = 1;
         return true;
     }
 
-    // default behavior:
-    player->powers[power] = 1;
+    case NUMPOWERS:
+        // This should never actually happen
+        break;
+    }
+
     return true;
 }
 

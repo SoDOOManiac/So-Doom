@@ -30,7 +30,7 @@ extern int		dc_yh;
 extern fixed_t		dc_iscale;
 extern fixed_t		dc_texturemid;
 extern int		dc_texheight;
-extern byte*		dc_brightmap;
+extern const byte*		dc_brightmap;
 
 // first pixel in a column
 extern byte*		dc_source;		
@@ -69,7 +69,7 @@ extern int		ds_x1;
 extern int		ds_x2;
 
 extern lighttable_t*	ds_colormap[2];
-extern byte*		ds_brightmap;
+extern const byte*		ds_brightmap;
 
 extern fixed_t		ds_xfrac;
 extern fixed_t		ds_yfrac;
@@ -90,6 +90,11 @@ void 	R_DrawSpan (void);
 // Low resolution mode, 160x200?
 void 	R_DrawSpanLow (void);
 
+void 	R_DrawSpanSolid (void);
+void 	R_DrawSpanSolidLow (void);
+
+extern boolean goobers_mode;
+void R_SetGoobers (boolean mode);
 
 void
 R_InitBuffer

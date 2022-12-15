@@ -156,7 +156,7 @@ unsigned**		texturecolumnofs; // [crispy] column offsets for composited transluc
 unsigned**		texturecolumnofs2; // [crispy] column offsets for composited opaque textures
 byte**			texturecomposite; // [crispy] composited translucent mid-textures on 2S walls
 byte**			texturecomposite2; // [crispy] composited opaque textures
-byte**			texturebrightmap; // [crispy] brightmaps
+const byte**	texturebrightmap; // [crispy] brightmaps
 
 // for global animation
 int*		flattranslation;
@@ -451,6 +451,17 @@ void R_GenerateLookup (int texnum)
 	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
+
+	// [crispy] detect patches in PNG format... and fail
+	{
+		const unsigned char *magic = (const unsigned char *) realpatch;
+
+		if (magic[0] == 0x89 &&
+		    magic[1] == 'P' && magic[2] == 'N' && magic[3] == 'G')
+		{
+			I_Error("Patch in PNG format detected: %.8s", lumpinfo[patch->patch]->name);
+		}
+	}
 	
 	if (x1 < 0)
 	    x = 0;
@@ -685,7 +696,6 @@ void R_InitTextures (void)
     
     int*		patchlookup;
     
-    int			totalwidth;
     int			nummappatches;
     int			offset;
     int			maxoff = 0;
@@ -860,8 +870,6 @@ void R_InitTextures (void)
     textureheight = Z_Malloc (numtextures * sizeof(*textureheight), PU_STATIC, 0);
     texturebrightmap = Z_Malloc (numtextures * sizeof(*texturebrightmap), PU_STATIC, 0);
 
-    totalwidth = 0;
-    
     //	Really complex printing shit...
     temp1 = W_GetNumForName (DEH_String("S_START"));  // P_???????
     temp2 = W_GetNumForName (DEH_String("S_END")) - 1;
@@ -960,10 +968,9 @@ void R_InitTextures (void)
 
 	texturewidthmask[i] = j-1;
 	textureheight[i] = texture->height<<FRACBITS;
+
 	// [crispy] texture width for wrapping column getter function
 	texturewidth[i] = texture->width;
-		
-	totalwidth += texture->width;
     }
 
     Z_Free(patchlookup);
@@ -1053,6 +1060,17 @@ static const int tran_filter_pct = 66;
 
 static void R_InitTranMap()
 {
+    int lump = W_CheckNumForName("TRANMAP");
+
+    // If a tranlucency filter map lump is present, use it
+    if (lump != -1 && W_LumpLength(lump) == 256*256)
+    {
+        // Set a pointer to the translucency filter maps.
+        tranmap = W_CacheLumpNum(lump, PU_STATIC);
+        // [crispy] loaded from a lump
+        printf(":");
+    }
+    else
     {
 	// Compose a default transparent filter map based on PLAYPAL.
 	unsigned char *playpal = W_CacheLumpName("PLAYPAL", PU_STATIC);

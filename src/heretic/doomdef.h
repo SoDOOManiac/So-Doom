@@ -438,7 +438,7 @@ typedef struct player_s
     fixed_t bob;                // bounded/scaled total momentum
 
     int flyheight;
-    int lookdir;
+    int lookdir, oldlookdir;
     boolean centering;
     int health;                 // only used between levels, mo->health
     // is used during levels
@@ -746,6 +746,7 @@ void P_ArchiveThinkers(void);
 void P_UnArchiveThinkers(void);
 void P_ArchiveSpecials(void);
 void P_UnArchiveSpecials(void);
+void P_RestoreTargets(void);
 // load / save game routines
 
 

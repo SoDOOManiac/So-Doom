@@ -38,11 +38,13 @@ static const iwad_t iwads[] =
     { "tnt.wad",      pack_tnt,  commercial, "Final Doom: TNT: Evilution" },
     { "doom.wad",     doom,      retail,     "Doom" },
     { "doom1.wad",    doom,      shareware,  "Doom Shareware" },
+    { "doom2f.wad",   doom2,     commercial, "Doom II: L'Enfer sur Terre" },
     { "chex.wad",     pack_chex, retail,     "Chex Quest" },
     { "hacx.wad",     pack_hacx, commercial, "Hacx" },
     { "freedoom2.wad", doom2,    commercial, "Freedoom: Phase 2" },
     { "freedoom1.wad", doom,     retail,     "Freedoom: Phase 1" },
     { "freedm.wad",   doom2,     commercial, "FreeDM" },
+    { "rekkrsa.wad",  doom,      retail,     "REKKR" }, // [crispy] REKKR
     { "heretic.wad",  heretic,   retail,     "Heretic" },
     { "heretic1.wad", heretic,   shareware,  "Heretic Shareware" },
     { "hexen.wad",    hexen,     commercial, "Hexen" },
@@ -72,10 +74,10 @@ boolean D_IsIWADName(const char *name)
 #define MAX_IWAD_DIRS 128
 
 static boolean iwad_dirs_built = false;
-static char *iwad_dirs[MAX_IWAD_DIRS];
+static const char *iwad_dirs[MAX_IWAD_DIRS];
 static int num_iwad_dirs = 0;
 
-static void AddIWADDir(char *dir)
+static void AddIWADDir(const char *dir)
 {
     if (num_iwad_dirs < MAX_IWAD_DIRS)
     {
@@ -261,6 +263,7 @@ static registry_value_t steam_install_location =
 static char *steam_install_subdirs[] =
 {
     "steamapps\\common\\doom 2\\base",
+    "steamapps\\common\\doom 2\\finaldoombase",
     "steamapps\\common\\final doom\\base",
     "steamapps\\common\\ultimate doom\\base",
     "steamapps\\common\\heretic shadow of the serpent riders\\base",
@@ -634,7 +637,8 @@ static void AddIWADPath(const char *path, const char *suffix)
 // <http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html>
 static void AddXdgDirs(void)
 {
-    char *env, *tmp_env;
+    const char *env;
+    char *tmp_env;
 
     // Quote:
     // > $XDG_DATA_HOME defines the base directory relative to which
@@ -697,7 +701,8 @@ static void AddXdgDirs(void)
 // about everyone.
 static void AddSteamDirs(void)
 {
-    char *homedir, *steampath;
+    const char *homedir;
+    char *steampath;
 
     homedir = getenv("HOME");
     if (homedir == NULL)
@@ -707,6 +712,7 @@ static void AddSteamDirs(void)
     steampath = M_StringJoin(homedir, "/.steam/root/steamapps/common", NULL);
 
     AddIWADPath(steampath, "/Doom 2/base");
+    AddIWADPath(steampath, "/Doom 2/finaldoombase");
     AddIWADPath(steampath, "/Master Levels of Doom/doom2");
     AddIWADPath(steampath, "/Ultimate Doom/base");
     AddIWADPath(steampath, "/Final Doom/base");
@@ -741,14 +747,14 @@ static void BuildIWADDirList(void)
     AddIWADDir(M_DirName(myargv[0]));
 
     // Add DOOMWADDIR if it is in the environment
-    env = getenv("DOOMWADDIR");
+    env = M_getenv("DOOMWADDIR");
     if (env != NULL)
     {
         AddIWADDir(env);
     }
 
     // Add dirs from DOOMWADPATH:
-    env = getenv("DOOMWADPATH");
+    env = M_getenv("DOOMWADPATH");
     if (env != NULL)
     {
         AddIWADPath(env, "");

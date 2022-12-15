@@ -125,6 +125,13 @@ HUlib_drawTextLine
 	    x = l->x;
 	    y += SHORT(l->f[0]->height) + 1;
 	}
+	// [crispy] support tab stops
+	else if (c == '\t')
+	{
+	    x = x - (x - l->x)%12 + 12;
+	    if (x >= ORIGWIDTH + WIDESCREENDELTA)
+		break;
+	}
 	else
 	if (c != ' '
 	    && c >= l->sc

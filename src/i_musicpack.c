@@ -26,7 +26,6 @@
 #include "SDL_mixer.h"
 
 #include "i_glob.h"
-#include "i_midipipe.h"
 
 #include "config.h"
 #include "doomtype.h"
@@ -44,6 +43,13 @@
 #include "sha1.h"
 #include "w_wad.h"
 #include "z_zone.h"
+
+
+char *music_pack_path = "";
+
+
+#ifndef DISABLE_SDL2MIXER
+
 
 #define MID_HEADER_MAGIC "MThd"
 #define MUS_HEADER_MAGIC "MUS\x1a"
@@ -100,7 +106,6 @@ static boolean music_initialized = false;
 
 static boolean sdl_was_initialized = false;
 
-char *music_pack_path = "";
 
 // If true, we are playing a substitute digital track rather than in-WAD
 // MIDI/MUS track, and file_metadata contains loop metadata.
@@ -581,7 +586,7 @@ static void ReadLoopPoints(const char *filename, file_metadata_t *metadata)
     metadata->start_time = 0;
     metadata->end_time = -1;
 
-    fs = fopen(filename, "rb");
+    fs = M_fopen(filename, "rb");
 
     if (fs == NULL)
     {
@@ -1018,7 +1023,7 @@ static void DumpSubstituteConfig(const char *filename)
     unsigned int lumpnum;
     size_t h;
 
-    fs = fopen(filename, "w");
+    fs = M_fopen(filename, "w");
 
     if (fs == NULL)
     {
@@ -1376,3 +1381,83 @@ music_module_t music_pack_module =
     I_MP_PollMusic,
 };
 
+
+#else // DISABLE_SDL2MIXER
+
+
+static boolean I_NULL_InitMusic(void)
+{
+    return false;
+}
+
+
+static void I_NULL_ShutdownMusic(void)
+{
+}
+
+
+static void I_NULL_SetMusicVolume(int volume)
+{
+}
+
+
+static void I_NULL_PauseSong(void)
+{
+}
+
+
+static void I_NULL_ResumeSong(void)
+{
+}
+
+
+static void *I_NULL_RegisterSong(void *data, int len)
+{
+    return NULL;
+}
+
+
+static void I_NULL_UnRegisterSong(void *handle)
+{
+}
+
+
+static void I_NULL_PlaySong(void *handle, boolean looping)
+{
+}
+
+
+static void I_NULL_StopSong(void)
+{
+}
+
+
+static boolean I_NULL_MusicIsPlaying(void)
+{
+    return false;
+}
+
+
+static void I_NULL_PollMusic(void)
+{
+}
+
+music_module_t music_pack_module =
+{
+    NULL,
+    0,
+    I_NULL_InitMusic,
+    I_NULL_ShutdownMusic,
+    I_NULL_SetMusicVolume,
+    I_NULL_PauseSong,
+    I_NULL_ResumeSong,
+    I_NULL_RegisterSong,
+    I_NULL_UnRegisterSong,
+    I_NULL_PlaySong,
+    I_NULL_StopSong,
+    I_NULL_MusicIsPlaying,
+    I_NULL_PollMusic,
+};
+
+
+#endif // DISABLE_SDL2MIXER

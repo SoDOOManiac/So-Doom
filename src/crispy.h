@@ -55,12 +55,12 @@ typedef struct
 	int demobar;
 	int evadinginterover;
 	int extautomap;
-	int extsaveg;
 	int flipcorpses;
 	int fliplevels;
 	int flipweapons;
 	int freeaim;
 	int freelook;
+	int freelook_hh;
 	int hires;
 	int jump;
 	int leveltime;
@@ -70,8 +70,11 @@ typedef struct
 	int overunder;
 	int pitch;
 	int playercoords;
+<<<<<<< HEAD
 	int recoil;
 	int mapsecrets;
+=======
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 	int secretmessage;
 	int smarttotals;
 	int smoothlight;
@@ -80,17 +83,18 @@ typedef struct
 	int soundfix;
 	int soundfull;
 	int soundmono;
+	int statsformat;
 	int translucency;
 #ifdef CRISPY_TRUECOLOR
 	int truecolor;
 #endif
 	int uncapped;
 	int vsync;
-	int weaponsquat;
 	int widescreen;
 
 	// [crispy] in-game switches and variables
 	int screenshotmsg;
+	int snowflakes;
 	int cleanscreenshot;
 	int demowarp;
 	int fps;
@@ -102,12 +106,19 @@ typedef struct
 	boolean havee1m10;
 	boolean havemap33;
 	boolean havessg;
-	boolean pistolstart;
 	boolean singleplayer;
 	boolean stretchsky;
 
+	// [crispy] custom difficulty parameters
+	boolean autohealth;
+	boolean fast;
+	boolean keysloc;
+	boolean moreammo;
+	boolean pistolstart;
+
 	char *havenerve;
 	char *havemaster;
+	char *havesigil;
 
 	const char *sdlversion;
 	const char *platform;
@@ -216,6 +227,13 @@ enum
 
 enum
 {
+    FREELOOK_HH_LOCK,
+    FREELOOK_HH_SPRING,
+    NUM_FREELOOKS_HH
+};
+
+enum
+{
     JUMP_OFF,
     JUMP_LOW,
     JUMP_HIGH,
@@ -263,28 +281,53 @@ enum
 
 enum
 {
+<<<<<<< HEAD
     MAPSECRETS_DEFAULT,
     MAPSECRETS_DEFAULT_AND_COLOR,
     MAPSECRETS_FORCE,
     MAPSECRETS_FORCE_AND_COLOR,
     NUM_MAPSECRETS
+=======
+    WIDGETS_OFF,
+    WIDGETS_AUTOMAP,
+    WIDGETS_ALWAYS,
+    WIDGETS_STBAR,
+    NUM_WIDGETS
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 enum
 {
+<<<<<<< HEAD
     WIDESCREEN_OFF,
     WIDESCREEN_WIDE,
     WIDESCREEN_COMPACT,
     WIDESCREEN_COCKPIT,
     NUM_WIDESCREEN
+=======
+    STATSFORMAT_RATIO,
+    STATSFORMAT_REMAINING,
+    STATSFORMAT_PERCENT,
+    STATSFORMAT_BOOLEAN,
+    NUM_STATSFORMATS
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 enum
 {
+<<<<<<< HEAD
     WIDGETS_OFF,
     WIDGETS_AUTOMAP,
     WIDGETS_ALWAYS,
     NUM_WIDGETS
+=======
+    RATIO_4_3,
+    RATIO_MATCH_SCREEN,
+    RATIO_16_10,
+    RATIO_16_9,
+    RATIO_21_9,
+    NUM_RATIOS
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 #endif

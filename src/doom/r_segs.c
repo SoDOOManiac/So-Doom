@@ -263,8 +263,10 @@ R_RenderMaskedSegRange
 		if (index >=  MAXLIGHTSCALE )
 		    index = MAXLIGHTSCALE-1;
 
-		// [crispy] no brightmaps for mid-textures
-		dc_colormap[0] = dc_colormap[1] = walllights[index];
+		// [crispy] brightmaps for mid-textures
+		dc_brightmap = texturebrightmap[texnum];
+		dc_colormap[0] = walllights[index];
+		dc_colormap[1] = (crispy->brightmaps & BRIGHTMAPS_TEXTURES) ? colormaps : dc_colormap[0];
 	    }
 			
 	    // [crispy] apply Killough's int64 sprtopscreen overflow fix
@@ -389,7 +391,7 @@ void R_RenderSegLoop (void)
 
 	    // [crispy] optional brightmaps
 	    dc_colormap[0] = walllights[index];
-	    dc_colormap[1] = (!fixedcolormap && (crispy->brightmaps & BRIGHTMAPS_TEXTURES)) ? scalelight[LIGHTLEVELS-1][MAXLIGHTSCALE-1] : dc_colormap[0];
+	    dc_colormap[1] = (!fixedcolormap && (crispy->brightmaps & BRIGHTMAPS_TEXTURES)) ? colormaps : dc_colormap[0];
 	    dc_x = rw_x;
 	    dc_iscale = 0xffffffffu / (unsigned)rw_scale;
 	}
@@ -499,8 +501,8 @@ void R_RenderSegLoop (void)
 // above R_StoreWallRange
 fixed_t R_ScaleFromGlobalAngle (angle_t visangle)
 {
-    int		anglea = ANG90 + (visangle - viewangle);
-    int		angleb = ANG90 + (visangle - rw_normalangle);
+    angle_t	anglea = ANG90 + (visangle - viewangle);
+    angle_t	angleb = ANG90 + (visangle - rw_normalangle);
     int		den = FixedMul(rw_distance, finesine[anglea >> ANGLETOFINESHIFT]);
     fixed_t	num = FixedMul(projection, finesine[angleb >> ANGLETOFINESHIFT])<<detailshift;
     fixed_t 	scale;

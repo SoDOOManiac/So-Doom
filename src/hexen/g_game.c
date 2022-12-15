@@ -32,6 +32,9 @@
 
 #define AM_STARTKEY	9
 
+#define MLOOKUNIT 8 // [crispy] for mouselook
+#define MLOOKUNITLOWRES 16 // [crispy] for mouselook when recording
+
 // External functions
 
 extern void R_InitSky(int map);
@@ -109,6 +112,8 @@ boolean precache = true;        // if true, load all graphics at start
 byte consistancy[MAXPLAYERS][BACKUPTICS];
 
 int mouseSensitivity = 5;
+int mouseSensitivity_x2 = 5; // [crispy]
+int mouseSensitivity_y = 5; // [crispy]
 
 int LeaveMap;
 static int LeavePosition;
@@ -153,7 +158,7 @@ int lookheld;
 boolean mousearray[MAX_MOUSE_BUTTONS + 1];
 boolean *mousebuttons = &mousearray[1];
         // allow [-1]
-int mousex, mousey;             // mouse values are used once
+int mousex, mousex2, mousey;             // mouse values are used once
 int dclicktime, dclickstate, dclicks;
 int dclicktime2, dclickstate2, dclicks2;
 
@@ -196,6 +201,13 @@ int testcontrols_mousespeed;
 extern boolean inventory;
 boolean usearti = true;
 
+boolean speedkeydown (void)
+{
+    return (key_speed < NUMKEYS && gamekeydown[key_speed]) ||
+           (joybspeed < MAX_JOY_BUTTONS && joybuttons[joybspeed]) ||
+           (mousebspeed < MAX_MOUSE_BUTTONS && mousebuttons[mousebspeed]);
+}
+
 void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 {
     int i;
@@ -205,6 +217,9 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     int look, arti;
     int flyheight;
     int pClass;
+
+    static unsigned int mbmlookctrl = 0; // [crispy]
+    static unsigned int kbdlookctrl = 0; // [crispy]
 
     extern boolean artiskip;
 
@@ -226,10 +241,9 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 
     // Allow joybspeed hack.
 
-    speed = key_speed >= NUMKEYS
-        || joybspeed >= MAX_JOY_BUTTONS
-        || gamekeydown[key_speed]
-        || joybuttons[joybspeed];
+    speed = (key_speed >= NUMKEYS
+        || joybspeed >= MAX_JOY_BUTTONS);
+    speed ^= speedkeydown();
 
     // haleyjd: removed externdriver crap
     
@@ -266,6 +280,44 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         lspeed = 2;             // 5;
     }
 
+    // [crispy] toggle "always run"
+    if (gamekeydown[key_toggleautorun])
+    {
+        static int joybspeed_old = 2;
+
+        if (joybspeed >= MAX_JOY_BUTTONS)
+        {
+            joybspeed = joybspeed_old;
+        }
+        else
+        {
+            joybspeed_old = joybspeed;
+            joybspeed = 29;
+        }
+
+        P_SetMessage(&players[consoleplayer], (joybspeed >= MAX_JOY_BUTTONS) ?
+                     "ALWAYS RUN ON" :
+                     "ALWAYS RUN OFF", false);
+
+        S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+
+        gamekeydown[key_toggleautorun] = false;
+    }
+
+// [crispy] Toggle vertical mouse movement
+    if (gamekeydown[key_togglenovert])
+    {
+        novert = !novert;
+
+        P_SetMessage(&players[consoleplayer], novert ?
+                     "VERTICAL MOUSE MOVEMENT OFF" :
+                     "VERTICAL MOUSE MOVEMENT ON", false);
+
+        S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+
+        gamekeydown[key_togglenovert] = false;
+    }
+
 //
 // let movement keys cancel each other out
 //
@@ -300,11 +352,11 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
             cmd->angleturn += angleturn[tspeed];
     }
 
-    if (gamekeydown[key_up])
+    if (gamekeydown[key_up] || gamekeydown[key_alt_up]) // [crispy] add key_alt_*
     {
         forward += forwardmove[pClass][speed];
     }
-    if (gamekeydown[key_down])
+    if (gamekeydown[key_down] || gamekeydown[key_alt_down]) // [crispy] add key_alt_*
     {
         forward -= forwardmove[pClass][speed];
     }
@@ -316,30 +368,52 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     {
         forward -= forwardmove[pClass][speed];
     }
-    if (gamekeydown[key_straferight] || mousebuttons[mousebstraferight]
+    if (gamekeydown[key_straferight] || gamekeydown[key_alt_straferight] || mousebuttons[mousebstraferight] // [crispy] add key_alt_*
      || joystrafemove > 0 || joybuttons[joybstraferight])
     {
         side += sidemove[pClass][speed];
     }
-    if (gamekeydown[key_strafeleft] || mousebuttons[mousebstrafeleft]
+    if (gamekeydown[key_strafeleft] || gamekeydown[key_alt_strafeleft] || mousebuttons[mousebstrafeleft] // [crispy] add key_alt_*
      || joystrafemove < 0 || joybuttons[joybstrafeleft])
     {
         side -= sidemove[pClass][speed];
     }
 
     // Look up/down/center keys
-    if (gamekeydown[key_lookup] || joylook < 0)
+    // [crispy] Keyboard lookspring
+    if (crispy->freelook_hh == FREELOOK_HH_SPRING)
     {
-        look = lspeed;
+        if (gamekeydown[key_lookup] || joylook < 0)
+        {
+            look = lspeed;
+            kbdlookctrl += ticdup;
+        }
+        else if (gamekeydown[key_lookdown] || joylook > 0)
+        {
+            look = -lspeed;
+            kbdlookctrl += ticdup;
+        }
+        else if (gamekeydown[key_lookcenter] || kbdlookctrl)
+        {
+            look = TOCENTER;
+            kbdlookctrl = 0;
+        }
     }
-    if (gamekeydown[key_lookdown] || joylook > 0)
+    else
     {
-        look = -lspeed;
-    }
-    // haleyjd: removed externdriver crap
-    if (gamekeydown[key_lookcenter])
-    {
-        look = TOCENTER;
+        if (gamekeydown[key_lookup] || joylook < 0)
+        {
+            look = lspeed;
+        }
+        if (gamekeydown[key_lookdown] || joylook > 0)
+        {
+            look = -lspeed;
+        }
+        // haleyjd: removed externdriver crap
+        if (gamekeydown[key_lookcenter])
+        {
+            look = TOCENTER;
+        }
     }
 
     // haleyjd: removed externdriver crap
@@ -360,13 +434,14 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         look = TOCENTER;
     }
     // Use artifact key
-    if (gamekeydown[key_useartifact])
+    if (gamekeydown[key_useartifact] || mousebuttons[mousebuseartifact])
     {
         if (gamekeydown[key_speed] && artiskip)
         {
             if (players[consoleplayer].inventory[inv_ptr].type != arti_none)
             {                   // Skip an artifact
                 gamekeydown[key_useartifact] = false;
+                mousebuttons[mousebuseartifact] = false;
                 P_PlayerNextArtifact(&players[consoleplayer]);
             }
         }
@@ -573,7 +648,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 
     if (strafe)
     {
-        side += mousex * 2;
+        side += mousex2 * 2;
     }
     else
     {
@@ -585,9 +660,47 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         testcontrols_mousespeed = 0;
     }
 
-    if (!novert)
+    if (crispy->mouselook || mousebuttons[mousebmouselook])
+    {
+        if (demorecording || lowres_turn)
+        {
+            // [crispy] Map mouse movement to look variable when recording
+            look += mouse_y_invert ? -mousey / MLOOKUNITLOWRES
+                                        : mousey / MLOOKUNITLOWRES;
+
+            // [crispy] Limit to max speed of keyboard look up/down
+            if (look > 2)
+                look = 2;
+            else if (look < -2)
+                look = -2;
+        }
+        else
+        {
+            cmd->lookdir = mouse_y_invert ? -mousey : mousey;
+            cmd->lookdir /= MLOOKUNIT;
+        }
+    }
+    else if (!novert)
+    {
         forward += mousey;
-    mousex = mousey = 0;
+    }
+
+    // [crispy] single click on mouse look button centers view
+    if (mousebuttons[mousebmouselook]) // [crispy] clicked
+    {
+        mbmlookctrl += ticdup;
+    }
+    else if (mbmlookctrl) // [crispy] released
+    {
+        if (crispy->freelook_hh == FREELOOK_HH_SPRING ||
+                mbmlookctrl < SLOWTURNTICS) // [crispy] short click
+        {
+            look = TOCENTER;
+        }
+        mbmlookctrl = 0;
+    }
+
+    mousex = mousex2 = mousey = 0;
 
     if (forward > MaxPlayerMove[pClass])
     {
@@ -705,7 +818,7 @@ void G_DoLoadLevel(void)
 
     memset(gamekeydown, 0, sizeof(gamekeydown));
     joyxmove = joyymove = joystrafemove = joylook = 0;
-    mousex = mousey = 0;
+    mousex = mousex2 = mousey = 0;
     sendpause = sendsave = paused = false;
     memset(mousearray, 0, sizeof(mousearray));
     memset(joyarray, 0, sizeof(joyarray));
@@ -744,9 +857,70 @@ static void SetJoyButtons(unsigned int buttons_mask)
     }
 }
 
+// If an InventoryMove*() function is called when the inventory is not active,
+// it will instead activate the inventory without attempting to change the
+// selected item. This action is indicated by a return value of false.
+// Otherwise, it attempts to change items and will return a value of true.
+
+static boolean InventoryMoveLeft()
+{
+    inventoryTics = 5 * 35;
+    if (!inventory)
+    {
+        inventory = true;
+        return false;
+    }
+    inv_ptr--;
+    if (inv_ptr < 0)
+    {
+        inv_ptr = 0;
+    }
+    else
+    {
+        curpos--;
+        if (curpos < 0)
+        {
+            curpos = 0;
+        }
+    }
+    return true;
+}
+
+static boolean InventoryMoveRight()
+{
+    player_t *plr;
+
+    plr = &players[consoleplayer];
+    inventoryTics = 5 * 35;
+    if (!inventory)
+    {
+        inventory = true;
+        return false;
+    }
+    inv_ptr++;
+    if (inv_ptr >= plr->inventorySlotNum)
+    {
+        inv_ptr--;
+        if (inv_ptr < 0)
+            inv_ptr = 0;
+    }
+    else
+    {
+        curpos++;
+        if (curpos > 6)
+        {
+            curpos = 6;
+        }
+    }
+    return true;
+}
+
 static void SetMouseButtons(unsigned int buttons_mask)
 {
     int i;
+    player_t *plr;
+
+    plr = &players[consoleplayer];
 
     for (i=0; i<MAX_MOUSE_BUTTONS; ++i)
     {
@@ -763,6 +937,22 @@ static void SetMouseButtons(unsigned int buttons_mask)
             else if (i == mousebnextweapon)
             {
                 next_weapon = 1;
+            }
+            else if (i == mousebinvleft)
+            {
+                InventoryMoveLeft();
+            }
+            else if (i == mousebinvright)
+            {
+                InventoryMoveRight();
+            }
+            else if (i == mousebuseartifact)
+            {
+                if (!inventory)
+                {
+                    plr->readyArtifact = plr->inventory[inv_ptr].type;
+                }
+                usearti = true;
             }
         }
 
@@ -847,51 +1037,19 @@ boolean G_Responder(event_t * ev)
         case ev_keydown:
             if (ev->data1 == key_invleft)
             {
-                inventoryTics = 5 * 35;
-                if (!inventory)
+                if (InventoryMoveLeft())
                 {
-                    inventory = true;
-                    break;
+                    return (true);
                 }
-                inv_ptr--;
-                if (inv_ptr < 0)
-                {
-                    inv_ptr = 0;
-                }
-                else
-                {
-                    curpos--;
-                    if (curpos < 0)
-                    {
-                        curpos = 0;
-                    }
-                }
-                return (true);
+                break;
             }
             if (ev->data1 == key_invright)
             {
-                inventoryTics = 5 * 35;
-                if (!inventory)
+                if (InventoryMoveRight())
                 {
-                    inventory = true;
-                    break;
+                    return (true);
                 }
-                inv_ptr++;
-                if (inv_ptr >= plr->inventorySlotNum)
-                {
-                    inv_ptr--;
-                    if (inv_ptr < 0)
-                        inv_ptr = 0;
-                }
-                else
-                {
-                    curpos++;
-                    if (curpos > 6)
-                    {
-                        curpos = 6;
-                    }
-                }
-                return (true);
+                break;
             }
             if (ev->data1 == key_pause && !MenuActive)
             {
@@ -913,8 +1071,18 @@ boolean G_Responder(event_t * ev)
 
         case ev_mouse:
             SetMouseButtons(ev->data1);
+            if (mouseSensitivity)
             mousex = ev->data2 * (mouseSensitivity + 5) / 10;
-            mousey = ev->data3 * (mouseSensitivity + 5) / 10;
+            else
+                mousex = 0; // [crispy] disable entirely
+            if (mouseSensitivity_x2)
+                mousex2 = ev->data2 * (mouseSensitivity_x2 + 5) / 10; // [crispy] separate sensitivity for strafe
+            else
+                mousex2 = 0; // [crispy] disable entirely
+            if (mouseSensitivity_y)
+            mousey = ev->data3 * (mouseSensitivity_y + 5) / 10; // [crispy] separate sensitivity for y-axis
+            else
+                mousey = 0; // [crispy] disable entirely
             return (true);      // eat events
 
         case ev_joystick:
@@ -955,6 +1123,8 @@ void G_Ticker(void)
 //
     while (gameaction != ga_nothing)
     {
+        // [crispy] check if we are in the demo reel
+        CheckCrispySingleplayer(!demorecording && gameaction != ga_playdemo && !netgame);
         switch (gameaction)
         {
             case ga_loadlevel:
@@ -1089,6 +1259,9 @@ void G_Ticker(void)
         inventory = false;
         cmd->arti = 0;
     }
+
+    oldleveltime = leveltime; // [crispy] Track if game is running
+
 //
 // do main actions
 //

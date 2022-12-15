@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 AC_INIT(So Doom, 5.10.3,
         zodomaniac@gmail.com, so-doom)
+=======
+AC_INIT(Crispy Doom, 5.12.0,
+        fabian@greffrath.com, crispy-doom)
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"
-PACKAGE_COPYRIGHT="Copyright (C) 1993-2021"
+PACKAGE_COPYRIGHT="Copyright (C) 1993-2022"
 PACKAGE_LICENSE="GNU General Public License, version 2"
 PACKAGE_MAINTAINER="Zodomaniac"
 PACKAGE_URL="http://zodomaniac.github.io/so-doom"
@@ -32,8 +37,23 @@ then
 fi
 
 PKG_CHECK_MODULES(SDL, [sdl2 >= 2.0.7])
-PKG_CHECK_MODULES(SDLMIXER, [SDL2_mixer >= 2.0.2])
-PKG_CHECK_MODULES(SDLNET, [SDL2_net >= 2.0.0])
+# Check for SDL2_mixer
+AC_ARG_ENABLE([sdl2mixer],
+AS_HELP_STRING([--disable-sdl2mixer], [Disable SDL2_mixer support])
+)
+AS_IF([test "x$enable_sdl2mixer" != xno], [
+    PKG_CHECK_MODULES(SDLMIXER, [SDL2_mixer >= 2.0.2])], [
+    AC_DEFINE([DISABLE_SDL2MIXER], [1], [SDL2_mixer disabled])
+])
+
+# Check for networking
+AC_ARG_ENABLE([sdl2net],
+AS_HELP_STRING([--disable-sdl2net], [Disable SDL2_net support])
+)
+AS_IF([test "x$enable_sdl2net" != xno], [
+    PKG_CHECK_MODULES(SDLNET, [SDL2_net >= 2.0.0])], [
+    AC_DEFINE([DISABLE_SDL2NET], [1], [SDL2_net disabled])
+])
 
 # Check for bash-completion.
 AC_ARG_ENABLE([bash-completion],
@@ -97,6 +117,14 @@ AS_IF([test "x$with_zlib" != xno], [
     ])
 ])
 
+# Check for memory pool debugging.
+AC_ARG_ENABLE([zpool],
+AS_HELP_STRING([--disable-zpool], [Disable memory pools for debugging])
+)
+AS_IF([test "x$enable_zpool" != xno], [], [
+    AC_DEFINE([DISABLE_ZPOOL], [1], [Memory pooling disabled])
+])
+
 # Check for libsamplerate.
 AC_ARG_WITH([libsamplerate],
 AS_HELP_STRING([--without-libsamplerate],
@@ -145,6 +173,13 @@ AS_IF([test "x$enable_truecolor" = "xyes"], [
 # Use the specific library CFLAGS/LIBS variables instead of setting them here.
 CFLAGS="$CFLAGS $SDL_CFLAGS ${SAMPLERATE_CFLAGS:-} ${PNG_CFLAGS:-} ${LIBZ_CFLAGS:-}"
 LDFLAGS="$LDFLAGS $SDL_LIBS ${SAMPLERATE_LIBS:-} ${PNG_LIBS:-} ${LIBZ_LIBS:-}"
+case "$host" in
+  *-*-mingw* | *-*-cygwin* | *-*-msvc* )
+    LDFLAGS="$LDFLAGS -lwinmm"
+    ;;
+  *)
+esac
+
 AC_CHECK_LIB(m, log)
 
 # [crispy] use stdlib's qsort() function for sorting the vissprites[] array
@@ -183,6 +218,7 @@ AM_CONDITIONAL(HAVE_BASH_COMPLETION, [test "x$enable_bash_completion" != xno])
 AM_CONDITIONAL(HAVE_DOC, [test "x$enable_doc" != xno])
 AM_CONDITIONAL(HAVE_FONTS, [test "x$enable_fonts" != xno])
 AM_CONDITIONAL(HAVE_ICONS, [test "x$enable_icons" != xno])
+AM_CONDITIONAL(HAVE_ZPOOL, [test "x$enable_zpool" != xno])
 
 dnl Automake v1.8.0 is required, please upgrade!
 
@@ -202,7 +238,7 @@ AC_DEFINE_UNQUOTED(PROGRAM_PREFIX, "$PROGRAM_PREFIX",
                    Change this when you create your awesome forked version)
 AC_SUBST(PROGRAM_SPREFIX)
 
-AM_CONFIG_HEADER(config.h:config.hin)
+AC_CONFIG_HEADERS(config.h:config.hin)
 
 AC_SUBST(WINDOWS_RC_VERSION)
 AC_SUBST(SDLMIXER_CFLAGS)
@@ -225,7 +261,7 @@ AC_SUBST(PACKAGE_BUGREPORT)
 dnl Shut up the datarootdir warnings.
 AC_DEFUN([AC_DATAROOTDIR_CHECKED])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 man/Makefile
 man/bash-completion/Makefile
@@ -233,7 +269,6 @@ man/bash-completion/doom.template
 man/bash-completion/heretic.template
 man/bash-completion/hexen.template
 man/bash-completion/strife.template
-midiproc/Makefile
 opl/Makefile
 opl/examples/Makefile
 pcsound/Makefile
@@ -243,21 +278,24 @@ pkg/osx/Info.plist
 rpm.spec
 data/Makefile
 src/Makefile
+src/doom-res.rc
 src/Doom.metainfo.xml
 src/Doom.desktop
 src/Doom_Screensaver.desktop
 src/doom/Makefile
+src/heretic-res.rc
 src/Heretic.metainfo.xml
 src/Heretic.desktop
 src/heretic/Makefile
+src/hexen-res.rc
 src/Hexen.metainfo.xml
 src/Hexen.desktop
 src/hexen/Makefile
-src/resource.rc
 src/setup-res.rc
 src/setup/Makefile
 src/setup/Setup.desktop
 src/setup/setup-manifest.xml
+src/strife-res.rc
 src/Strife.metainfo.xml
 src/Strife.desktop
 src/strife/Makefile
@@ -265,4 +303,4 @@ textscreen/Makefile
 textscreen/examples/Makefile
 textscreen/fonts/Makefile
 ])
-
+AC_OUTPUT

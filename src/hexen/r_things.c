@@ -20,6 +20,7 @@
 #include "h2def.h"
 #include "i_system.h"
 #include "i_swap.h"
+#include "r_bmaps.h"
 #include "r_local.h"
 
 //void R_DrawTranslatedAltTLColumn(void);
@@ -45,6 +46,10 @@ This is not the same as the angle, which increases counter clockwise
 fixed_t pspritescale, pspriteiscale;
 
 lighttable_t **spritelights;
+
+// [AM] Fractional part of the current tic, in the half-open
+//      range of [0.0, 1.0).  Used for interpolation.
+extern fixed_t          fractionaltic;
 
 // constant arrays used for psprite clipping and initializing clipping
 short negonearray[MAXWIDTH];
@@ -324,13 +329,25 @@ void R_DrawMaskedColumn(column_t * column, signed int baseclip)
 {
     int topscreen, bottomscreen;
     fixed_t basetexturemid;
+    int top = -1; // [crispy]
 
     basetexturemid = dc_texturemid;
+    dc_texheight = 0; // [crispy]
 
     for (; column->topdelta != 0xff;)
     {
+        // [crispy] support for DeePsea tall patches
+        if (column->topdelta <= top)
+        {
+            top += column->topdelta;
+        }
+        else
+        {
+            top = column->topdelta;
+        }
+
 // calculate unclipped screen coordinates for post
-        topscreen = sprtopscreen + spryscale * column->topdelta;
+        topscreen = sprtopscreen + spryscale * top;
         bottomscreen = topscreen + spryscale * column->length;
         dc_yl = (topscreen + FRACUNIT - 1) >> FRACBITS;
         dc_yh = (bottomscreen - 1) >> FRACBITS;
@@ -346,7 +363,7 @@ void R_DrawMaskedColumn(column_t * column, signed int baseclip)
         if (dc_yl <= dc_yh)
         {
             dc_source = (byte *) column + 3;
-            dc_texturemid = basetexturemid - (column->topdelta << FRACBITS);
+            dc_texturemid = basetexturemid - (top << FRACBITS);
 //                      dc_source = (byte *)column + 3 - column->topdelta;
             colfunc();          // either R_DrawColumn or R_DrawTLColumn
         }
@@ -377,7 +394,10 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
 
     patch = W_CacheLumpNum(vis->patch + firstspritelump, PU_CACHE);
 
-    dc_colormap = vis->colormap;
+    // [crispy] brightmaps for select sprites
+    dc_colormap[0] = vis->colormap[0];
+    dc_colormap[1] = vis->colormap[1];
+    dc_brightmap = vis->brightmap;
 
 //      if(!dc_colormap)
 //              colfunc = tlcolfunc;  // NULL colormap = shadow draw
@@ -480,16 +500,44 @@ void R_ProjectSprite(mobj_t * thing)
     angle_t ang;
     fixed_t iscale;
 
+    fixed_t             interpx;
+    fixed_t             interpy;
+    fixed_t             interpz;
+    fixed_t             interpangle;
+
     if (thing->flags2 & MF2_DONTDRAW)
     {                           // Never make a vissprite when MF2_DONTDRAW is flagged.
         return;
     }
 
+    // [AM] Interpolate between current and last position,
+    //      if prudent.
+    if (crispy->uncapped &&
+        // Don't interpolate if the mobj did something
+        // that would necessitate turning it off for a tic.
+        thing->interp == true &&
+        // Don't interpolate during a paused state.
+        leveltime > oldleveltime)
+    {
+        interpx = thing->oldx + FixedMul(thing->x - thing->oldx, fractionaltic);
+        interpy = thing->oldy + FixedMul(thing->y - thing->oldy, fractionaltic);
+        interpz = thing->oldz + FixedMul(thing->z - thing->oldz, fractionaltic);
+        interpangle = R_InterpolateAngle(thing->oldangle, thing->angle, fractionaltic);
+    }
+
+    else
+    {
+        interpx = thing->x;
+        interpy = thing->y;
+        interpz = thing->z;
+        interpangle = thing->angle;
+    }
+
 //
 // transform the origin point
 //
-    trx = thing->x - viewx;
-    try = thing->y - viewy;
+    trx = interpx - viewx;
+    try = interpy - viewy;
 
     gxt = FixedMul(trx, viewcos);
     gyt = -FixedMul(try, viewsin);
@@ -523,8 +571,8 @@ void R_ProjectSprite(mobj_t * thing)
 
     if (sprframe->rotate)
     {                           // choose a different rotation based on player view
-        ang = R_PointToAngle(thing->x, thing->y);
-        rot = (ang - thing->angle + (unsigned) (ANG45 / 2) * 9) >> 29;
+        ang = R_PointToAngle(interpx, interpy);
+        rot = (ang - interpangle + (unsigned) (ANG45 / 2) * 9) >> 29;
         lump = sprframe->lump[rot];
         flip = (boolean) sprframe->flip[rot];
     }
@@ -554,10 +602,10 @@ void R_ProjectSprite(mobj_t * thing)
     vis->mobjflags = thing->flags;
     vis->psprite = false;
     vis->scale = xscale << detailshift;
-    vis->gx = thing->x;
-    vis->gy = thing->y;
-    vis->gz = thing->z;
-    vis->gzt = thing->z + spritetopoffset[lump];
+    vis->gx = interpx;
+    vis->gy = interpy;
+    vis->gz = interpz;
+    vis->gzt = interpz + spritetopoffset[lump];
     if (thing->flags & MF_TRANSLATION)
     {
         if (thing->player)
@@ -602,16 +650,20 @@ void R_ProjectSprite(mobj_t * thing)
 //      else ...
 
     if (fixedcolormap)
-        vis->colormap = fixedcolormap;  // fixed map
+        vis->colormap[0] = vis->colormap[1] = fixedcolormap;  // fixed map
     else if (LevelUseFullBright && thing->frame & FF_FULLBRIGHT)
-        vis->colormap = colormaps;      // full bright
+        vis->colormap[0] = vis->colormap[1] = colormaps;      // full bright
     else
     {                           // diminished light
         index = xscale >> (LIGHTSCALESHIFT - detailshift + crispy->hires);
         if (index >= MAXLIGHTSCALE)
             index = MAXLIGHTSCALE - 1;
-        vis->colormap = spritelights[index];
+        // [crispy] brightmaps for select sprites
+        vis->colormap[0] = spritelights[index];
+        vis->colormap[1] = LevelUseFullBright ? colormaps : spritelights[index];
     }
+
+    vis->brightmap = R_BrightmapForSprite(thing->state - states);
 }
 
 
@@ -755,7 +807,7 @@ void R_DrawPSprite(pspdef_t * psp)
     if (viewplayer->powers[pw_invulnerability] && viewplayer->class
         == PCLASS_CLERIC)
     {
-        vis->colormap = spritelights[MAXLIGHTSCALE - 1];
+        vis->colormap[0] = vis->colormap[1] = spritelights[MAXLIGHTSCALE - 1];
         if (viewplayer->powers[pw_invulnerability] > 4 * 32)
         {
             if (viewplayer->mo->flags2 & MF2_DONTDRAW)
@@ -775,18 +827,20 @@ void R_DrawPSprite(pspdef_t * psp)
     else if (fixedcolormap)
     {
         // Fixed color
-        vis->colormap = fixedcolormap;
+        vis->colormap[0] = vis->colormap[1] = fixedcolormap;
     }
     else if (psp->state->frame & FF_FULLBRIGHT)
     {
         // Full bright
-        vis->colormap = colormaps;
+        vis->colormap[0] = vis->colormap[1] = colormaps;
     }
     else
     {
         // local light
-        vis->colormap = spritelights[MAXLIGHTSCALE - 1];
+        vis->colormap[0] = spritelights[MAXLIGHTSCALE - 1];
+        vis->colormap[1] = LevelUseFullBright ? colormaps : spritelights[MAXLIGHTSCALE - 1];
     }
+    vis->brightmap = R_BrightmapForState(psp->state - states);
     R_DrawVisSprite(vis, vis->x1, vis->x2);
 }
 

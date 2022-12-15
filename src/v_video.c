@@ -477,11 +477,12 @@ void V_DrawTLPatch(int x, int y, patch_t * patch)
 
     y -= SHORT(patch->topoffset);
     x -= SHORT(patch->leftoffset);
+    x += WIDESCREENDELTA; // [crispy] horizontal widescreen offset
 
     if (x < 0
-     || x + SHORT(patch->width) > ORIGWIDTH
+     || x + SHORT(patch->width) > (SCREENWIDTH >> crispy->hires)
      || y < 0
-     || y + SHORT(patch->height) > ORIGHEIGHT)
+     || y + SHORT(patch->height) > (SCREENHEIGHT >> crispy->hires))
     {
         I_Error("Bad V_DrawTLPatch");
     }
@@ -505,7 +506,7 @@ void V_DrawTLPatch(int x, int y, patch_t * patch)
 
             while (count--)
             {
-                *dest = tinttable[((*dest) << 8) + source[srccol >> FRACBITS]];
+                *dest = tinttable[*dest + ((source[srccol >> FRACBITS]) << 8)];
                 srccol += dyi;
                 dest += SCREENWIDTH;
             }
@@ -581,11 +582,12 @@ void V_DrawAltTLPatch(int x, int y, patch_t * patch)
 
     y -= SHORT(patch->topoffset);
     x -= SHORT(patch->leftoffset);
+    x += WIDESCREENDELTA; // [crispy] horizontal widescreen offset
 
     if (x < 0
-     || x + SHORT(patch->width) > ORIGWIDTH
+     || x + SHORT(patch->width) > (SCREENWIDTH >> crispy->hires)
      || y < 0
-     || y + SHORT(patch->height) > ORIGHEIGHT)
+     || y + SHORT(patch->height) > (SCREENHEIGHT >> crispy->hires))
     {
         I_Error("Bad V_DrawAltTLPatch");
     }
@@ -635,11 +637,12 @@ void V_DrawShadowedPatch(int x, int y, patch_t *patch)
 
     y -= SHORT(patch->topoffset);
     x -= SHORT(patch->leftoffset);
+    x += WIDESCREENDELTA; // [crispy] horizontal widescreen offset
 
     if (x < 0
-     || x + SHORT(patch->width) > ORIGWIDTH
+     || x + SHORT(patch->width) > (SCREENWIDTH >> crispy->hires)
      || y < 0
-     || y + SHORT(patch->height) > ORIGHEIGHT)
+     || y + SHORT(patch->height) > (SCREENHEIGHT >> crispy->hires))
     {
         I_Error("Bad V_DrawShadowedPatch");
     }
@@ -822,7 +825,7 @@ void V_DrawBox(int x, int y, int w, int h, int c)
 
 void V_CopyScaledBuffer(pixel_t *dest, pixel_t *src, size_t size)
 {
-    int i, j;
+    int i, j, index;
 
 #ifdef RANGECHECK
     if (size > ORIGWIDTH * ORIGHEIGHT)
@@ -831,15 +834,42 @@ void V_CopyScaledBuffer(pixel_t *dest, pixel_t *src, size_t size)
     }
 #endif
 
+    // [crispy] Fill pillarboxes in widescreen mode. Needs to be two separate
+    // pillars to allow for Heretic finale vertical scrolling.
+    if (SCREENWIDTH != NONWIDEWIDTH)
+    {
+        V_DrawFilledBox(0, 0, WIDESCREENDELTA << crispy->hires, SCREENHEIGHT, 0);
+        V_DrawFilledBox(SCREENWIDTH - (WIDESCREENDELTA << crispy->hires), 0,
+                        WIDESCREENDELTA << crispy->hires, SCREENHEIGHT, 0);
+    }
+
+    index = ((size / ORIGWIDTH) << crispy->hires) * SCREENWIDTH - 1;
+
+    if (size % ORIGWIDTH)
+    {
+        // [crispy] Handles starting in the middle of a row.
+        index += ((size % ORIGWIDTH) + WIDESCREENDELTA) << crispy->hires;
+    }
+    else
+    {
+        index -= WIDESCREENDELTA << crispy->hires;
+    }
+
     while (size--)
     {
         for (i = 0; i <= crispy->hires; i++)
         {
             for (j = 0; j <= crispy->hires; j++)
             {
-                *(dest + (size << crispy->hires) + (crispy->hires * (int) (size / ORIGWIDTH) + i) * SCREENWIDTH + j) = *(src + size);
+                *(dest + index - (j * SCREENWIDTH) - i) = *(src + size);
             }
         }
+        if (size % ORIGWIDTH == 0)
+        {
+            index -= 2 * (WIDESCREENDELTA << crispy->hires)
+                     + crispy->hires * SCREENWIDTH;
+        }
+        index -= 1 + crispy->hires;
     }
 }
  
@@ -848,6 +878,28 @@ void V_DrawRawScreen(pixel_t *raw)
     V_CopyScaledBuffer(dest_screen, raw, ORIGWIDTH * ORIGHEIGHT);
 }
 
+// [crispy] For Heretic and Hexen widescreen support of replacement TITLE,
+// HELP1, etc. These lumps are normally 320 x 200 raw graphics. If the lump
+// size is larger than expected, proceed as if it were a patch.
+void V_DrawFullscreenRawOrPatch(lumpindex_t index)
+{
+    patch_t *patch;
+
+    patch = W_CacheLumpNum(index, PU_CACHE);
+
+    if (W_LumpLength(index) == ORIGWIDTH * ORIGHEIGHT)
+    {
+        V_DrawRawScreen((pixel_t*)patch);
+    }
+    else if ((SHORT(patch->height) == 200) && (SHORT(patch->width) >= 320))
+    {
+        V_DrawPatchFullScreen(patch, false);
+    }
+    else
+    {
+        I_Error("Invalid fullscreen graphic.");
+    }
+}
 //
 // V_Init
 // 
@@ -1015,7 +1067,7 @@ void WritePNGfile(char *filename, pixel_t *data,
     }
 */
 
-    handle = fopen(filename, "wb");
+    handle = M_fopen(filename, "wb");
     if (!handle)
     {
         return;

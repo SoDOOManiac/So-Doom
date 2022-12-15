@@ -22,6 +22,7 @@
 #include "i_swap.h"
 #include "i_system.h"
 #include "m_misc.h"
+#include "r_bmaps.h"
 #include "r_local.h"
 #include "p_local.h"
 #include "v_trans.h" // [crispy] color translation and color string tables
@@ -61,6 +62,7 @@ int *texturecompositesize;
 short **texturecolumnlump;
 unsigned short **texturecolumnofs;
 byte **texturecomposite;
+const byte **texturebrightmap;  // [crispy] brightmaps
 
 int *flattranslation;           // for global animation
 int *texturetranslation;        // for global animation
@@ -302,7 +304,6 @@ void R_InitTextures(void)
     int *maptex, *maptex2, *maptex1;
     char name[9], *names, *name_p;
     int *patchlookup;
-    int totalwidth;
     int nummappatches;
     int offset, maxoff, maxoff2;
     int numtextures1, numtextures2;
@@ -368,8 +369,7 @@ void R_InitTextures(void)
     texturecompositesize = Z_Malloc(numtextures * sizeof(int), PU_STATIC, 0);
     texturewidthmask = Z_Malloc(numtextures * sizeof(int), PU_STATIC, 0);
     textureheight = Z_Malloc(numtextures * sizeof(fixed_t), PU_STATIC, 0);
-
-    totalwidth = 0;
+    texturebrightmap = Z_Malloc(numtextures * sizeof(*texturebrightmap), PU_STATIC, 0);
 
     for (i = 0; i < numtextures; i++, directory++)
     {
@@ -401,6 +401,8 @@ void R_InitTextures(void)
         memcpy(texture->name, mtexture->name, sizeof(texture->name));
         mpatch = &mtexture->patches[0];
         patch = &texture->patches[0];
+        // [crispy] initialize brightmaps
+        texturebrightmap[i] = R_BrightmapForTexName(texture->name);
         for (j = 0; j < texture->patchcount; j++, mpatch++, patch++)
         {
             patch->originx = SHORT(mpatch->originx);
@@ -419,8 +421,6 @@ void R_InitTextures(void)
             j <<= 1;
         texturewidthmask[i] = j - 1;
         textureheight[i] = texture->height << FRACBITS;
-
-        totalwidth += texture->width;
     }
 
     Z_Free(patchlookup);
@@ -568,11 +568,18 @@ void R_InitColormaps(void)
 
 void R_InitData(void)
 {
+    // [crispy] Moved R_InitFlats() to the top, because it sets firstflat/lastflat
+    // which are required by R_InitTextures() to prevent flat lumps from being
+    // mistaken as patches and by R_InitBrightmaps() to set brightmaps for flats.
+    // R_InitBrightmaps() comes next, because it sets R_BrightmapForTexName()
+    // to initialize brightmaps depending on gameversion in R_InitTextures().
     //tprintf("\nR_InitTextures ", 0);
+    R_InitFlats();
+    R_InitBrightmaps();
     R_InitTextures();
     printf (".");
     //tprintf("R_InitFlats\n", 0);
-    R_InitFlats();
+//  R_InitFlats (); [crispy] moved ...
     IncThermo();
     printf (".");
     //tprintf("R_InitSpriteLumps ", 0);
@@ -598,12 +605,15 @@ int R_FlatNumForName(const char *name)
     int i;
     char namet[9];
 
-    i = W_CheckNumForName(name);
+    i = W_CheckNumForNameFromTo(name, lastflat, firstflat);
     if (i == -1)
     {
         namet[8] = 0;
         memcpy(namet, name, 8);
-        I_Error("R_FlatNumForName: %s not found", namet);
+        fprintf(stderr, "R_FlatNumForName: %s not found\n", namet);
+        // [crispy] since there is no "No Flat" marker,
+        // render missing flats as SKY
+        return skyflatnum;
     }
     return i - firstflat;
 }

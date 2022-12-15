@@ -385,21 +385,30 @@ void P_ZMovement (mobj_t* mo)
 		// after hitting the ground (hard),
 		// and utter appropriate sound.
 		mo->player->deltaviewheight = mo->momz>>3;
-		// [crispy] squat down weapon sprite as well
-		if (crispy->weaponsquat)
-		{
-			mo->player->psp_dy_max = mo->momz>>2;
-		}
 		// [crispy] center view if not using permanent mouselook
 		if (!crispy->mouselook)
 		    mo->player->centering = true;
 		// [crispy] dead men don't say "oof"
 		if (mo->health > 0 || !crispy->soundfix)
 		{
+		// [NS] Landing sound for longer falls. (Hexen's calculation.)
+		if (mo->momz < -GRAVITY * 12)
+		{
+		    S_StartSoundOptional(mo, sfx_plland, sfx_oof);
+		}
+		else
 		S_StartSound (mo, sfx_oof);
 		}
 	    }
+	    // [NS] Beta projectile bouncing.
+	    if ( (mo->flags & MF_MISSILE) && (mo->flags & MF_BOUNCES) )
+	    {
+		mo->momz = -mo->momz;
+	    }
+	    else
+	    {
 	    mo->momz = 0;
+	    }
 	}
 	mo->z = mo->floorz;
 
@@ -414,7 +423,8 @@ void P_ZMovement (mobj_t* mo)
             mo->momz = -mo->momz;
 
 	if ( (mo->flags & MF_MISSILE)
-	     && !(mo->flags & MF_NOCLIP) )
+	     // [NS] Beta projectile bouncing.
+	     && !(mo->flags & MF_NOCLIP) && !(mo->flags & MF_BOUNCES) )
 	{
 	    P_ExplodeMissile (mo);
 	    return;
@@ -432,7 +442,17 @@ void P_ZMovement (mobj_t* mo)
     {
 	// hit the ceiling
 	if (mo->momz > 0)
+	{
+	// [NS] Beta projectile bouncing.
+	    if ( (mo->flags & MF_MISSILE) && (mo->flags & MF_BOUNCES) )
+	    {
+		mo->momz = -mo->momz;
+	    }
+	    else
+	    {
 	    mo->momz = 0;
+	    }
+	}
 	{
 	    mo->z = mo->ceilingz - mo->height;
 	}
@@ -443,7 +463,7 @@ void P_ZMovement (mobj_t* mo)
 	}
 	
 	if ( (mo->flags & MF_MISSILE)
-	     && !(mo->flags & MF_NOCLIP) )
+	     && !(mo->flags & MF_NOCLIP) && !(mo->flags & MF_BOUNCES) )
 	{
 	    P_ExplodeMissile (mo);
 	    return;
@@ -1057,18 +1077,6 @@ void P_SpawnMapThing (mapthing_t* mthing)
 	mobj->health = 1000 + musid;
     }
 
-    // [crispy] Lost Souls bleed Puffs
-    if (crispy->coloredblood && i == MT_SKULL)
-        mobj->flags |= MF_NOBLOOD;
-
-    // [crispy] randomly colorize space marine corpse objects
-    if (!netgame && crispy->coloredblood &&
-        (mobj->info->spawnstate == S_PLAY_DIE7 ||
-        mobj->info->spawnstate == S_PLAY_XDIE9))
-    {
-	mobj->flags |= (Crispy_Random() & 3) << MF_TRANSSHIFT;
-    }
-
     // [crispy] blinking key or skull in the status bar
     if (mobj->sprite == SPR_BSKU)
 	st_keyorskull[it_bluecard] = 3;
@@ -1154,10 +1162,6 @@ P_SpawnBlood
 
     // [crispy] connect blood object with the monster that bleeds it
     th->target = target;
-
-    // [crispy] Spectres bleed spectre blood
-    if (crispy->coloredblood)
-	th->flags |= (target->flags & MF_SHADOW);
 }
 
 

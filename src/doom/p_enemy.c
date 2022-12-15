@@ -1567,11 +1567,15 @@ A_PainShootSkull
 	P_DamageMobj (newmobj,actor,actor,10000);	
 	return;
     }
+<<<<<<< HEAD
 
     // [crispy] Lost Souls bleed Puffs
     if (crispy->coloredblood)
 	    newmobj->flags |= MF_NOBLOOD;
 
+=======
+		
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     newmobj->target = actor->target;
     A_SkullAttack (newmobj);
 }
@@ -1719,9 +1723,9 @@ static boolean CheckBossEnd(mobjtype_t motype)
                 return (gamemap == 6 && motype == MT_CYBORG)
                     || (gamemap == 8 && motype == MT_SPIDER);
 
-            // [crispy] Sigil
+            // [crispy] no trigger for auto-loaded Sigil E5
             case 5:
-                return false;
+                return (gamemap == 8 && !critical->havesigil);
 
             default:
                 return gamemap == 8;

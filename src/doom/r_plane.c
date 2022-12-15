@@ -174,7 +174,7 @@ R_MapPlane
 	    index = MAXLIGHTZ-1;
 
 	ds_colormap[0] = planezlight[index];
-	ds_colormap[1] = zlight[LIGHTLEVELS-1][MAXLIGHTZ-1];
+	ds_colormap[1] = colormaps;
     }
 	
     ds_y = y;
@@ -418,15 +418,15 @@ void R_DrawPlanes (void)
 				
 #ifdef RANGECHECK
     if (ds_p - drawsegs > numdrawsegs)
-	I_Error ("R_DrawPlanes: drawsegs overflow (%" PRIiPTR ")",
+	I_Error ("R_DrawPlanes: drawsegs overflow (%td)",
 		 ds_p - drawsegs);
     
     if (lastvisplane - visplanes > numvisplanes)
-	I_Error ("R_DrawPlanes: visplane overflow (%" PRIiPTR ")",
+	I_Error ("R_DrawPlanes: visplane overflow (%td)",
 		 lastvisplane - visplanes);
     
     if (lastopening - openings > MAXOPENINGS)
-	I_Error ("R_DrawPlanes: opening overflow (%" PRIiPTR ")",
+	I_Error ("R_DrawPlanes: opening overflow (%td)",
 		 lastopening - openings);
 #endif
 

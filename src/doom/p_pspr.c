@@ -42,37 +42,25 @@
 #define WEAPONBOTTOM	128*FRACUNIT
 #define WEAPONTOP		32*FRACUNIT
 
-// [crispy] weapon recoil {thrust, pitch} values
-// thrust values from prboom-plus/src/p_pspr.c:73-83
-static const int recoil_values[][2] = {
-  {10,   0}, // wp_fist
-  {10,   4}, // wp_pistol
-  {30,   8}, // wp_shotgun
-  {10,   4}, // wp_chaingun
-  {100, 16}, // wp_missile
-  {20,   4}, // wp_plasma
-  {100, 20}, // wp_bfg
-  {0,   -2}, // wp_chainsaw
-  {80,  16}, // wp_supershotgun
+// [crispy] weapon recoil pitch values
+static const int recoil_values[] = {
+   0, // wp_fist
+   4, // wp_pistol
+   8, // wp_shotgun
+   4, // wp_chaingun
+  16, // wp_missile
+   4, // wp_plasma
+  20, // wp_bfg
+  -2, // wp_chainsaw
+  16, // wp_supershotgun
 };
 
-// [crispy] add weapon recoil
-// adapted from prboom-plus/src/p_pspr.c:484-495 (A_FireSomething ())
-extern void P_Thrust (player_t* player, angle_t angle, fixed_t move);
+// [crispy] add weapon recoil pitch
 void A_Recoil (player_t* player)
 {
-	if (player)
+	if (player && crispy->pitch)
 	{
-
-		if (critical->recoil && !(player->mo->flags & MF_NOCLIP))
-		{
-			P_Thrust(player, ANG180 + player->mo->angle, 2048 * recoil_values[player->readyweapon][0]);
-		}
-
-		if (crispy->pitch)
-		{
-			player->recoilpitch = recoil_values[player->readyweapon][1];
-		}
+		player->recoilpitch = recoil_values[player->readyweapon];
 	}
 }
 
@@ -189,8 +177,6 @@ void P_BringUpWeapon (player_t* player)
 
     player->pendingweapon = wp_nochange;
     player->psprites[ps_weapon].sy = WEAPONBOTTOM;
-    // [crispy] squat down weapon sprite
-    player->psprites[ps_weapon].dy = 0;
 
     P_SetPsprite (player, ps_weapon, newstate);
 }
@@ -1045,6 +1031,7 @@ void P_MovePsprites (player_t* player)
 
 	}
 
+<<<<<<< HEAD
 	// [crispy] squat down weapon sprite a bit after hitting the ground
 	if (player->psp_dy_max)
 	{
@@ -1063,6 +1050,8 @@ void P_MovePsprites (player_t* player)
     
 
 	player->psprites[ps_flash].dy = psp->dy;
+=======
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 	player->psprites[ps_flash].sx2 = psp->sx2;
 	player->psprites[ps_flash].sy2 = psp->sy2;
 }

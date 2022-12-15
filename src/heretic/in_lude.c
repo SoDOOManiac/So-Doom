@@ -149,12 +149,22 @@ static yahpt_t YAHspot[3][9] = {
 static const char *NameForMap(int map)
 {
     const char *name = LevelNames[(gameepisode - 1) * 9 + map - 1];
+    int skip = 0;
     name = DEH_String(name);
-    if (strlen(name) < 7)
+
+    // [crispy] check if map name starts with identifier before skipping it
+    if (strlen(name) >= 4 &&
+        toupper(name[0]) == 'E' && isdigit(name[1]) &&
+        toupper(name[2]) == 'M' && isdigit(name[3]))
+    {
+        skip = 7;
+    }
+
+    if (strlen(name) < skip)
     {
         return "";
     }
-    return name + 7;
+    return name + skip;
 }
 
 //========================================================================
@@ -573,21 +583,21 @@ void IN_Drawer(void)
         case 1:                // leaving old level
             if (gameepisode < 4)
             {
-                V_DrawPatch(0, 0, patchINTERPIC);
+                V_DrawPatchFullScreen(patchINTERPIC, false);
                 IN_DrawOldLevel();
             }
             break;
         case 2:                // going to the next level
             if (gameepisode < 4)
             {
-                V_DrawPatch(0, 0, patchINTERPIC);
+                V_DrawPatchFullScreen(patchINTERPIC, false);
                 IN_DrawYAH();
             }
             break;
         case 3:                // waiting before going to the next level
             if (gameepisode < 4)
             {
-                V_DrawPatch(0, 0, patchINTERPIC);
+                V_DrawPatchFullScreen(patchINTERPIC, false);
             }
             break;
         default:
@@ -944,10 +954,10 @@ void IN_DrawDMStats(void)
             }
             else
             {
-                V_DrawTLPatch(40, ypos,
+                V_DrawAltTLPatch(40, ypos,
                               W_CacheLumpNum(patchFaceOkayBase + i,
                                              PU_CACHE));
-                V_DrawTLPatch(xpos, 18,
+                V_DrawAltTLPatch(xpos, 18,
                               W_CacheLumpNum(patchFaceDeadBase + i,
                                              PU_CACHE));
             }

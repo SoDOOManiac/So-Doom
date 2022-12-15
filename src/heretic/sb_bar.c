@@ -83,6 +83,9 @@ int ArtifactFlash;
 
 static int DisplayTicker = 0;
 
+// [crispy] for widescreen status bar background
+pixel_t *st_backing_screen;
+
 // Private Data
 
 static int HealthMarker;
@@ -262,6 +265,8 @@ void SB_Init(void)
     playpalette = W_GetNumForName(DEH_String("PLAYPAL"));
     spinbooklump = W_GetNumForName(DEH_String("SPINBK0"));
     spinflylump = W_GetNumForName(DEH_String("SPFLY0"));
+
+    st_backing_screen = (pixel_t *) Z_Malloc(MAXWIDTH * (42 << 1) * sizeof(*st_backing_screen), PU_STATIC, 0);
 }
 
 //---------------------------------------------------------------------------
@@ -436,7 +441,7 @@ static void ShadeLine(int x, int y, int height, int shade)
     height <<= crispy->hires;
 
     shades = colormaps + 9 * 256 + shade * 2 * 256;
-    dest = I_VideoBuffer + y * SCREENWIDTH + x;
+    dest = I_VideoBuffer + y * SCREENWIDTH + x + (WIDESCREENDELTA << crispy->hires);
     while (height--)
     {
         if (crispy->hires)
@@ -572,10 +577,63 @@ int playerkeys = 0;
 
 extern boolean automapactive;
 
+// [crispy] Needed to support widescreen status bar.
+void SB_ForceRedraw(void)
+{
+    SB_state = -1;
+}
+
+// [crispy] Create background texture which appears at each side of the status
+// bar in widescreen rendering modes. The chosen textures match those which
+// surround the non-fullscreen game window.
+static void RefreshBackground()
+{
+    V_UseBuffer(st_backing_screen);
+
+    if ((SCREENWIDTH >> crispy->hires) != ORIGWIDTH)
+    {
+        int x, y;
+        byte *src;
+        pixel_t *dest;
+        const char *name = (gamemode == shareware) ?
+                           DEH_String("FLOOR04") :
+                           DEH_String("FLAT513");
+
+        src = W_CacheLumpName(name, PU_CACHE);
+        dest = st_backing_screen;
+
+        for (y = SCREENHEIGHT - (42 << crispy->hires); y < SCREENHEIGHT; y++)
+        {
+            for (x = 0; x < SCREENWIDTH; x++)
+            {
+                *dest++ = src[((y & 63) << 6) + (x & 63)];
+            }
+        }
+
+        // [crispy] preserve bezel bottom edge
+        if (scaledviewwidth == SCREENWIDTH)
+        {
+            patch_t *const patch = W_CacheLumpName("bordb", PU_CACHE);
+
+            for (x = 0; x < WIDESCREENDELTA; x += 16)
+            {
+                V_DrawPatch(x - WIDESCREENDELTA, 0, patch);
+                V_DrawPatch(ORIGWIDTH + WIDESCREENDELTA - x - 16, 0, patch);
+            }
+        }
+    }
+
+    V_RestoreBuffer();
+    V_CopyRect(0, 0, st_backing_screen, SCREENWIDTH >> crispy->hires, 42, 0, 158);
+}
+
+extern int left_widget_w, right_widget_w; // [crispy]
+
 void SB_Drawer(void)
 {
     int frame;
     static boolean hitCenterFrame;
+    int spinfly_x, spinbook_x; // [crispy]
 
     // Sound info debug stuff
     if (DebugSound == true)
@@ -592,7 +650,20 @@ void SB_Drawer(void)
     {
         if (SB_state == -1)
         {
-            V_DrawPatch(0, 158, PatchBARBACK);
+            RefreshBackground(); // [crispy] for widescreen
+
+            // [crispy] support wide status bars with 0 offset
+            if (SHORT(PatchBARBACK->width) > ORIGWIDTH &&
+                    SHORT(PatchBARBACK->leftoffset) == 0)
+            {
+                V_DrawPatch((ORIGWIDTH - SHORT(PatchBARBACK->width)) / 2, 158,
+                        PatchBARBACK);
+            }
+            else
+            {
+                V_DrawPatch(0, 158, PatchBARBACK);
+            }
+
             if (players[consoleplayer].cheats & CF_GODMODE)
             {
                 V_DrawPatch(16, 167,
@@ -635,6 +706,12 @@ void SB_Drawer(void)
     // Flight icons
     if (CPlayer->powers[pw_flight])
     {
+        spinfly_x = 20 - WIDESCREENDELTA; // [crispy]
+
+        // [crispy] Move flight icon out of the way of stats widget.
+        // left_widget_w is 0 if stats widget is off.
+        spinfly_x += left_widget_w;
+
         if (CPlayer->powers[pw_flight] > BLINKTHRESHOLD
             || !(CPlayer->powers[pw_flight] & 16))
         {
@@ -643,13 +720,15 @@ void SB_Drawer(void)
             {
                 if (hitCenterFrame && (frame != 15 && frame != 0))
                 {
-                    V_DrawPatch(20, 17, W_CacheLumpNum(spinflylump + 15,
-                                                       PU_CACHE));
+                    V_DrawPatch(spinfly_x, 17,
+                                W_CacheLumpNum(spinflylump + 15,
+                                                PU_CACHE));
                 }
                 else
                 {
-                    V_DrawPatch(20, 17, W_CacheLumpNum(spinflylump + frame,
-                                                       PU_CACHE));
+                    V_DrawPatch(spinfly_x, 17,
+                                W_CacheLumpNum(spinflylump + frame,
+                                                PU_CACHE));
                     hitCenterFrame = false;
                 }
             }
@@ -657,14 +736,16 @@ void SB_Drawer(void)
             {
                 if (!hitCenterFrame && (frame != 15 && frame != 0))
                 {
-                    V_DrawPatch(20, 17, W_CacheLumpNum(spinflylump + frame,
-                                                       PU_CACHE));
+                    V_DrawPatch(spinfly_x, 17,
+                                W_CacheLumpNum(spinflylump + frame,
+                                                PU_CACHE));
                     hitCenterFrame = false;
                 }
                 else
                 {
-                    V_DrawPatch(20, 17, W_CacheLumpNum(spinflylump + 15,
-                                                       PU_CACHE));
+                    V_DrawPatch(spinfly_x, 17,
+                                W_CacheLumpNum(spinflylump + 15,
+                                                PU_CACHE));
                     hitCenterFrame = true;
                 }
             }
@@ -680,11 +761,17 @@ void SB_Drawer(void)
 
     if (CPlayer->powers[pw_weaponlevel2] && !CPlayer->chickenTics)
     {
+        spinbook_x = 300 + WIDESCREENDELTA; // [crispy]
+
+        // [crispy] Move tome icon out of the way of coordinates widget and fps
+        // counter. right_widget_w is 0 if those are off.
+        spinbook_x -= right_widget_w;
+
         if (CPlayer->powers[pw_weaponlevel2] > BLINKTHRESHOLD
             || !(CPlayer->powers[pw_weaponlevel2] & 16))
         {
             frame = (leveltime / 3) & 15;
-            V_DrawPatch(300, 17,
+            V_DrawPatch(spinbook_x, 17,
                         W_CacheLumpNum(spinbooklump + frame, PU_CACHE));
             BorderTopRefresh = true;
             UpdateState |= I_MESSAGES;
@@ -981,7 +1068,7 @@ void DrawFullScreenStuff(void)
         if (CPlayer->readyArtifact > 0)
         {
             patch = DEH_String(patcharti[CPlayer->readyArtifact]);
-            V_DrawTLPatch(286, 170, W_CacheLumpName(DEH_String("ARTIBOX"), PU_CACHE));
+            V_DrawAltTLPatch(286, 170, W_CacheLumpName(DEH_String("ARTIBOX"), PU_CACHE));
             V_DrawPatch(286, 170, W_CacheLumpName(patch, PU_CACHE));
             DrSmallNumber(CPlayer->inventory[inv_ptr].count, 307, 192);
         }
@@ -991,7 +1078,7 @@ void DrawFullScreenStuff(void)
         x = inv_ptr - curpos;
         for (i = 0; i < 7; i++)
         {
-            V_DrawTLPatch(50 + i * 31, 168,
+            V_DrawAltTLPatch(50 + i * 31, 168,
                           W_CacheLumpName(DEH_String("ARTIBOX"), PU_CACHE));
             if (CPlayer->inventorySlotNum > x + i
                 && CPlayer->inventory[x + i].type != arti_none)

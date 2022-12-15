@@ -33,7 +33,10 @@ set(DEDSERV_FILES
 add_executable("${PROGRAM_PREFIX}server" WIN32 ${COMMON_SOURCE_FILES} ${DEDSERV_FILES})
 target_include_directories("${PROGRAM_PREFIX}server"
                            PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/../")
-target_link_libraries("${PROGRAM_PREFIX}server" SDL2::SDL2main SDL2::net)
+target_link_libraries("${PROGRAM_PREFIX}server" SDL2::SDL2main SDL2::SDL2)
+if(ENABLE_SDL2_NET)
+    target_link_libraries("${PROGRAM_PREFIX}server" SDL2::net)
+endif()
 
 # Source files used by the game binaries (chocolate-doom, etc.)
 
@@ -55,7 +58,6 @@ set(GAME_SOURCE_FILES
     i_input.c           i_input.h
     i_joystick.c        i_joystick.h
                         i_swap.h
-    i_midipipe.c        i_midipipe.h
     i_musicpack.c
     i_oplmusic.c
     i_pcsound.c
@@ -65,6 +67,7 @@ set(GAME_SOURCE_FILES
     i_timer.c           i_timer.h
     i_video.c           i_video.h
     i_videohr.c         i_videohr.h
+    i_winmusic.c        i_winmusic.h
     midifile.c          midifile.h
     mus2mid.c           mus2mid.h
     m_bbox.c            m_bbox.h
@@ -124,16 +127,25 @@ set(DEHACKED_SOURCE_FILES
 set(SOURCE_FILES ${COMMON_SOURCE_FILES} ${GAME_SOURCE_FILES})
 set(SOURCE_FILES_WITH_DEH ${SOURCE_FILES} ${DEHACKED_SOURCE_FILES})
 
-set(EXTRA_LIBS SDL2::SDL2main SDL2::SDL2 SDL2::mixer SDL2::net textscreen pcsound opl)
+set(EXTRA_LIBS SDL2::SDL2main SDL2::SDL2 textscreen pcsound opl)
+if(ENABLE_SDL2_MIXER)
+    list(APPEND EXTRA_LIBS SDL2::mixer)
+endif()
+if(ENABLE_SDL2_NET)
+    list(APPEND EXTRA_LIBS SDL2::net)
+endif()
 if(SAMPLERATE_FOUND)
     list(APPEND EXTRA_LIBS samplerate::samplerate)
 endif()
 if(PNG_FOUND)
     list(APPEND EXTRA_LIBS PNG::PNG)
 endif()
+if(WIN32)
+	list(APPEND EXTRA_LIBS winmm)
+endif()
 
 if(WIN32)
-    add_executable("${PROGRAM_PREFIX}doom" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/resource.rc")
+    add_executable("${PROGRAM_PREFIX}doom" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/doom-res.rc")
 else()
     add_executable("${PROGRAM_PREFIX}doom" ${SOURCE_FILES_WITH_DEH})
 endif()
@@ -147,7 +159,7 @@ if(MSVC)
 endif()
 
 if(WIN32)
-    add_executable("${PROGRAM_PREFIX}heretic" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/resource.rc")
+    add_executable("${PROGRAM_PREFIX}heretic" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/heretic-res.rc")
 else()
     add_executable("${PROGRAM_PREFIX}heretic" ${SOURCE_FILES_WITH_DEH})
 endif()
@@ -161,7 +173,7 @@ if(MSVC)
 endif()
 
 if(WIN32)
-    add_executable("${PROGRAM_PREFIX}hexen" WIN32 ${SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/resource.rc")
+    add_executable("${PROGRAM_PREFIX}hexen" WIN32 ${SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/hexen-res.rc")
 else()
     add_executable("${PROGRAM_PREFIX}hexen" ${SOURCE_FILES})
 endif()
@@ -175,7 +187,7 @@ if(MSVC)
 endif()
 
 if(WIN32)
-    add_executable("${PROGRAM_PREFIX}strife" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/resource.rc")
+    add_executable("${PROGRAM_PREFIX}strife" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/strife-res.rc")
 else()
     add_executable("${PROGRAM_PREFIX}strife" ${SOURCE_FILES_WITH_DEH})
 endif()
@@ -213,7 +225,13 @@ endif()
 
 target_include_directories("${PROGRAM_PREFIX}setup"
                            PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/../")
-target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::SDL2main SDL2::SDL2 SDL2::mixer SDL2::net setup textscreen)
+target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::SDL2main SDL2::SDL2 setup textscreen)
+if(ENABLE_SDL2_MIXER)
+    target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::mixer)
+endif()
+if(ENABLE_SDL2_NET)
+    target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::net)
+endif()
 
 if(MSVC)
     set_target_properties("${PROGRAM_PREFIX}setup" PROPERTIES

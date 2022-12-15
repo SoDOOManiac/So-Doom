@@ -66,7 +66,8 @@ int spanstop[MAXHEIGHT];
 // Texture mapping
 lighttable_t **planezlight;
 fixed_t planeheight;
-fixed_t yslope[MAXHEIGHT];
+fixed_t *yslope;
+fixed_t yslopes[LOOKDIRS][MAXHEIGHT]; // [crispy]
 fixed_t distscale[MAXWIDTH];
 fixed_t basexscale, baseyscale;
 fixed_t cachedheight[MAXHEIGHT];
@@ -75,6 +76,8 @@ fixed_t cachedxstep[MAXHEIGHT];
 fixed_t cachedystep[MAXHEIGHT];
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
+static fixed_t xsmoothscrolloffset; // [crispy]
+static fixed_t ysmoothscrolloffset; // [crispy]
 
 // CODE --------------------------------------------------------------------
 
@@ -135,9 +138,9 @@ void R_InitPlanes(void)
 
 void R_MapPlane(int y, int x1, int x2)
 {
-    angle_t angle;
-    fixed_t distance, length;
+    fixed_t distance;
     unsigned index;
+    int dx, dy;
 
 #ifdef RANGECHECK
     if (x2 < x1 || x1 < 0 || x2 >= viewwidth || (unsigned) y > viewheight)
@@ -146,12 +149,20 @@ void R_MapPlane(int y, int x1, int x2)
     }
 #endif
 
+// [crispy] visplanes with the same flats now match up far better than before
+// adapted from prboom-plus/src/r_plane.c:191-239, translated to fixed-point math
+
+    if (!(dy = abs(centery - y)))
+    {
+	return;
+    }
+
     if (planeheight != cachedheight[y])
     {
         cachedheight[y] = planeheight;
         distance = cacheddistance[y] = FixedMul(planeheight, yslope[y]);
-        ds_xstep = cachedxstep[y] = FixedMul(distance, basexscale);
-        ds_ystep = cachedystep[y] = FixedMul(distance, baseyscale);
+        ds_xstep = cachedxstep[y] = (FixedMul(viewsin, planeheight) / dy) << detailshift;
+        ds_ystep = cachedystep[y] = (FixedMul(viewcos, planeheight) / dy) << detailshift;
     }
     else
     {
@@ -160,10 +171,13 @@ void R_MapPlane(int y, int x1, int x2)
         ds_ystep = cachedystep[y];
     }
 
-    length = FixedMul(distance, distscale[x1]);
-    angle = (viewangle + xtoviewangle[x1]) >> ANGLETOFINESHIFT;
-    ds_xfrac = viewx + FixedMul(finecosine[angle], length);
-    ds_yfrac = -viewy - FixedMul(finesine[angle], length);
+    dx = x1 - centerx;
+    ds_xfrac = viewx + FixedMul(viewcos, distance) + dx * ds_xstep;
+    ds_yfrac = -viewy - FixedMul(viewsin, distance) + dx * ds_ystep;
+
+     // [crispy]
+    ds_xfrac += xsmoothscrolloffset;
+    ds_yfrac += ysmoothscrolloffset;
 
     if (fixedcolormap)
     {
@@ -365,6 +379,8 @@ void R_MakeSpans(int x, int t1, int b1, int t2, int b2)
 //
 //==========================================================================
 
+extern fixed_t fractionaltic; // [crispy]
+
 #define SKYTEXTUREMIDSHIFTED 200
 
 void R_DrawPlanes(void)
@@ -385,6 +401,8 @@ void R_DrawPlanes(void)
     int scrollOffset;
     int frac;
     int fracstep = FRACUNIT >> crispy->hires;
+    static int interpfactor; // [crispy]
+    int heightmask; // [crispy]
 
     extern byte *ylookup[MAXHEIGHT];
     extern int columnofs[MAXWIDTH];
@@ -392,17 +410,17 @@ void R_DrawPlanes(void)
 #ifdef RANGECHECK
     if (ds_p - drawsegs > MAXDRAWSEGS)
     {
-        I_Error("R_DrawPlanes: drawsegs overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: drawsegs overflow (%td)",
                 ds_p - drawsegs);
     }
     if (lastvisplane - visplanes > MAXVISPLANES)
     {
-        I_Error("R_DrawPlanes: visplane overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: visplane overflow (%td)",
                 lastvisplane - visplanes);
     }
     if (lastopening - openings > MAXOPENINGS)
     {
-        I_Error("R_DrawPlanes: opening overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: opening overflow (%td)",
                 lastopening - openings);
     }
 #endif
@@ -438,21 +456,55 @@ void R_DrawPlanes(void)
                         source2 = R_GetColumn(skyTexture2, angle + offset2);
                         dest = ylookup[dc_yl] + columnofs[x];
                         frac = SKYTEXTUREMIDSHIFTED * FRACUNIT + (dc_yl - centery) * fracstep;
-                        do
+                        heightmask = SKYTEXTUREMIDSHIFTED - 1; // [crispy]
+
+                        // not a power of 2 -- killough
+                        if (SKYTEXTUREMIDSHIFTED & heightmask)
                         {
-                            if (source[frac >> FRACBITS])
-                            {
-                                *dest = source[frac >> FRACBITS];
-                                frac += fracstep;
-                            }
+                            heightmask++;
+                            heightmask <<= FRACBITS;
+
+                            if (frac < 0)
+                                while ((frac += heightmask) < 0);
                             else
+                                while (frac >= heightmask)
+                                    frac -= heightmask;
+
+                            do
                             {
-                                *dest = source2[frac >> FRACBITS];
-                                frac += fracstep;
-                            }
-                            dest += SCREENWIDTH;
+                                if (source[frac >> FRACBITS])
+                                {
+                                    *dest = source[frac >> FRACBITS];
+                                }
+                                else
+                                {
+                                    *dest = source2[frac >> FRACBITS];
+                                }
+                                dest += SCREENWIDTH;
+                                if ((frac += fracstep) >= heightmask)
+                                {
+                                    frac -= heightmask;
+                                }
+                            } while (count--);
                         }
-                        while (count--);
+                        // texture height is a power of 2 -- killough
+                        else
+                        {
+                            do
+                            {
+                                if (source[(frac >> FRACBITS) & heightmask])
+                                {
+                                    *dest = source[(frac >> FRACBITS) & heightmask];
+                                }
+                                else
+                                {
+                                    *dest = source2[(frac >> FRACBITS) & heightmask];
+                                }
+
+                                dest += SCREENWIDTH;
+                                frac += fracstep;
+                            } while (count--);
+                        }
                     }
                 }
                 continue;       // Next visplane
@@ -485,13 +537,40 @@ void R_DrawPlanes(void)
                         source = R_GetColumn(skyTexture, angle + offset);
                         dest = ylookup[dc_yl] + columnofs[x];
                         frac = SKYTEXTUREMIDSHIFTED * FRACUNIT + (dc_yl - centery) * fracstep;
-                        do
+                        heightmask = SKYTEXTUREMIDSHIFTED - 1; // [crispy]
+                        // not a power of 2 -- killough
+                        if (SKYTEXTUREMIDSHIFTED & heightmask)
                         {
-                            *dest = source[frac >> FRACBITS];
-                            dest += SCREENWIDTH;
-                            frac += fracstep;
+                            heightmask++;
+                            heightmask <<= FRACBITS;
+
+                            if (frac < 0)
+                                while ((frac += heightmask) < 0);
+                            else
+                                while (frac >= heightmask)
+                                    frac -= heightmask;
+
+                            do
+                            {
+                                *dest = source[frac >> FRACBITS];
+                                dest += SCREENWIDTH;
+
+                                if ((frac += fracstep) >= heightmask)
+                                {
+                                    frac -= heightmask;
+                                }
+                            } while (count--);
                         }
-                        while (count--);
+                        // texture height is a power of 2 -- killough
+                        else
+                        {
+                            do
+                            {
+                                *dest = source[(frac >> FRACBITS) & heightmask];
+                                dest += SCREENWIDTH;
+                                frac += fracstep;
+                            } while (count--);
+                        }
                     }
                 }
                 continue;       // Next visplane
@@ -501,35 +580,66 @@ void R_DrawPlanes(void)
         tempSource = W_CacheLumpNum(firstflat +
                                     flattranslation[pl->picnum], PU_STATIC);
         scrollOffset = leveltime >> 1 & 63;
+
+        // [crispy] Use old value of interpfactor if uncapped and paused. This
+        // ensures that scrolling stops smoothly when pausing.
+        if (crispy->uncapped && leveltime > oldleveltime)
+        {
+            // [crispy] Scrolling normally advances every *other* gametic, so
+            // interpolation needs to span two tics
+            if (leveltime & 1)
+            {
+                interpfactor = (FRACUNIT + fractionaltic) >> 1;
+            }
+            else
+            {
+                interpfactor = fractionaltic >> 1;
+            }
+        }
+        else if (!crispy->uncapped)
+        {
+            interpfactor = 0;
+        }
+
         switch (pl->special)
         {                       // Handle scrolling flats
             case 201:
             case 202:
             case 203:          // Scroll_North_xxx
+                xsmoothscrolloffset = 0;
+                ysmoothscrolloffset = interpfactor << (pl->special - 201);
                 ds_source = tempSource + ((scrollOffset
                                            << (pl->special - 201) & 63) << 6);
                 break;
             case 204:
             case 205:
             case 206:          // Scroll_East_xxx
+                xsmoothscrolloffset = -(interpfactor << (pl->special - 204));
+                ysmoothscrolloffset = 0;
                 ds_source = tempSource + ((63 - scrollOffset)
                                           << (pl->special - 204) & 63);
                 break;
             case 207:
             case 208:
             case 209:          // Scroll_South_xxx
+                xsmoothscrolloffset = 0;
+                ysmoothscrolloffset = -(interpfactor << (pl->special - 207));
                 ds_source = tempSource + (((63 - scrollOffset)
                                            << (pl->special - 207) & 63) << 6);
                 break;
             case 210:
             case 211:
             case 212:          // Scroll_West_xxx
+                xsmoothscrolloffset = interpfactor << (pl->special - 210);
+                ysmoothscrolloffset = 0;
                 ds_source = tempSource + (scrollOffset
                                           << (pl->special - 210) & 63);
                 break;
             case 213:
             case 214:
             case 215:          // Scroll_NorthWest_xxx
+                xsmoothscrolloffset = interpfactor << (pl->special - 213);
+                ysmoothscrolloffset = interpfactor << (pl->special - 213);
                 ds_source = tempSource + (scrollOffset
                                           << (pl->special - 213) & 63) +
                     ((scrollOffset << (pl->special - 213) & 63) << 6);
@@ -537,6 +647,8 @@ void R_DrawPlanes(void)
             case 216:
             case 217:
             case 218:          // Scroll_NorthEast_xxx
+                xsmoothscrolloffset = -(interpfactor << (pl->special - 216));
+                ysmoothscrolloffset = interpfactor << (pl->special - 216);
                 ds_source = tempSource + ((63 - scrollOffset)
                                           << (pl->special - 216) & 63) +
                     ((scrollOffset << (pl->special - 216) & 63) << 6);
@@ -544,6 +656,8 @@ void R_DrawPlanes(void)
             case 219:
             case 220:
             case 221:          // Scroll_SouthEast_xxx
+                xsmoothscrolloffset = -(interpfactor << (pl->special - 219));
+                ysmoothscrolloffset = -(interpfactor << (pl->special - 219));
                 ds_source = tempSource + ((63 - scrollOffset)
                                           << (pl->special - 219) & 63) +
                     (((63 - scrollOffset) << (pl->special - 219) & 63) << 6);
@@ -551,11 +665,15 @@ void R_DrawPlanes(void)
             case 222:
             case 223:
             case 224:          // Scroll_SouthWest_xxx
+                xsmoothscrolloffset = interpfactor << (pl->special - 222);
+                ysmoothscrolloffset = -(interpfactor << (pl->special - 222));
                 ds_source = tempSource + (scrollOffset
                                           << (pl->special - 222) & 63) +
                     (((63 - scrollOffset) << (pl->special - 222) & 63) << 6);
                 break;
             default:
+                xsmoothscrolloffset = 0;
+                ysmoothscrolloffset = 0;
                 ds_source = tempSource;
                 break;
         }

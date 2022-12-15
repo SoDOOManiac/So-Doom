@@ -42,6 +42,7 @@ int key_fire = KEY_RCTRL;
 int key_use = ' ';
 int key_strafe = KEY_RALT;
 int key_speed = KEY_RSHIFT; 
+int key_demospeed = KEYP_PLUS; // [crispy]
 int key_toggleautorun = KEY_CAPSLOCK; // [crispy]
 int key_togglenovert = 0; // [crispy]
 
@@ -114,6 +115,7 @@ int key_invdrop   = KEY_BACKSPACE;
 int mousebfire = 0;
 int mousebstrafe = 1;
 int mousebforward = 2;
+int mousebspeed = 3;
 
 int mousebjump = -1;
 
@@ -126,10 +128,15 @@ int mousebuse = -1;
 int mousebmouselook = -1; // [crispy]
 int mousebreverse = -1; // [crispy]
 
+int mousebmapzoomin = 3; // [crispy]
+int mousebmapzoomout = 4; // [crispy]
+int mousebmapmaxzoom = -1; // [crispy]
+int mousebmapfollow = -1; // [crispy]
 int mousebprevweapon = 4; // [crispy]
 int mousebnextweapon = 3; // [crispy]
 int mousebinvleft = -1;
 int mousebinvright = -1;
+int mousebuseartifact = -1;
 
 int key_message_refresh = KEY_ENTER;
 int key_pause = KEY_PAUSE;
@@ -251,10 +258,12 @@ void M_BindBaseControls(void)
     M_BindIntVariable("key_use",            &key_use);
     M_BindIntVariable("key_strafe",         &key_strafe);
     M_BindIntVariable("key_speed",          &key_speed);
+    M_BindIntVariable("key_demospeed",      &key_demospeed); // [crispy]
 
     M_BindIntVariable("mouseb_fire",        &mousebfire);
     M_BindIntVariable("mouseb_strafe",      &mousebstrafe);
     M_BindIntVariable("mouseb_forward",     &mousebforward);
+    M_BindIntVariable("mouseb_speed",       &mousebspeed);
 
     M_BindIntVariable("joyb_fire",          &joybfire);
     M_BindIntVariable("joyb_strafe",        &joybstrafe);
@@ -307,6 +316,7 @@ void M_BindHereticControls(void)
 
     M_BindIntVariable("mouseb_invleft", &mousebinvleft);
     M_BindIntVariable("mouseb_invright", &mousebinvright);
+    M_BindIntVariable("mouseb_useartifact", &mousebuseartifact);
 
     M_BindIntVariable("key_arti_quartz",        &key_arti_quartz);
     M_BindIntVariable("key_arti_urn",           &key_arti_urn);
@@ -406,6 +416,10 @@ void M_BindMapControls(void)
     M_BindIntVariable("key_map_clearmark",  &key_map_clearmark);
     M_BindIntVariable("key_map_overlay",    &key_map_overlay); // [crispy]
     M_BindIntVariable("key_map_rotate",     &key_map_rotate); // [crispy]
+    M_BindIntVariable("mouseb_mapzoomin",   &mousebmapzoomin); // [crispy]
+    M_BindIntVariable("mouseb_mapzoomout",  &mousebmapzoomout); // [crispy]
+    M_BindIntVariable("mouseb_mapmaxzoom",  &mousebmapmaxzoom); // [crispy]
+    M_BindIntVariable("mouseb_mapfollow",   &mousebmapfollow); // [crispy]
 }
 
 void M_BindMenuControls(void)

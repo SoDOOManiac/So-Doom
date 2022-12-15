@@ -44,6 +44,7 @@ extern multiitem_t multiitem_arlimit[NUM_RATIOS];
 extern multiitem_t multiitem_sndchannels[4];
 extern multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS];
 extern multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE];
+extern multiitem_t multiitem_statsformat[NUM_STATSFORMATS];
 extern multiitem_t multiitem_translucency[NUM_TRANSLUCENCY];
 extern multiitem_t multiitem_widescreen[NUM_WIDESCREEN];
 extern multiitem_t multiitem_widgets[NUM_WIDGETS];
@@ -66,7 +67,6 @@ extern void M_CrispyToggleDemoTimerDir(int choice);
 extern void M_CrispyToggleDemoUseTimer(int choice);
 extern void M_CrispyToggleEvadingInterOver(int choice);
 extern void M_CrispyToggleExtAutomap(int choice);
-extern void M_CrispyToggleExtsaveg(int choice);
 extern void M_CrispyToggleFlipcorpses(int choice);
 extern void M_CrispyToggleFreeaim(int choice);
 extern void M_CrispyToggleFreelook(int choice);
@@ -80,8 +80,11 @@ extern void M_CrispyToggleNeghealth(int choice);
 extern void M_CrispyToggleOverunder(int choice);
 extern void M_CrispyTogglePitch(int choice);
 extern void M_CrispyTogglePlayerCoords(int choice);
+<<<<<<< HEAD
 extern void M_CrispyToggleRecoil(int choice);
 extern void M_CrispyToggleMapSecrets(int choice);
+=======
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 extern void M_CrispyToggleSecretmessage(int choice);
 extern void M_CrispyToggleSmartTotals(int choice);
 extern void M_CrispyToggleSmoothLighting(int choice);
@@ -90,10 +93,10 @@ extern void M_CrispyToggleSmoothScaling(int choice);
 extern void M_CrispyToggleSndChannels(int choice);
 extern void M_CrispyToggleSoundfixes(int choice);
 extern void M_CrispyToggleSoundMono(int choice);
+extern void M_CrispyToggleStatsFormat(int choice);
 extern void M_CrispyToggleTranslucency(int choice);
 extern void M_CrispyToggleUncapped(int choice);
 extern void M_CrispyToggleVsync(int choice);
-extern void M_CrispyToggleWeaponSquat(int choice);
 extern void M_CrispyToggleWidescreen(int choice);
 
 #endif

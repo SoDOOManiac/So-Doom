@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <assert.h>
+#include <locale.h>
 
 #include "SDL_filesystem.h"
 
@@ -452,6 +453,12 @@ static default_t	doom_defaults_list[] =
     CONFIG_VARIABLE_KEY(key_speed),
 
     //!
+    // Keyboard key to fast-forward through a demo.
+    //
+
+    CONFIG_VARIABLE_KEY(key_demospeed),
+
+    //!
     // If non-zero, mouse input is enabled.  If zero, mouse input is
     // disabled.
     //
@@ -476,6 +483,13 @@ static default_t	doom_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(mouseb_forward),
+
+    //!
+    // Mouse button to turn on running.  When held down, the player
+    // will run while moving.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_speed),
 
     //!
     // @game hexen strife
@@ -997,6 +1011,12 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_STRING(music_pack_path),
 
     //!
+    // Full path to a soundfont file to use with FluidSynth MIDI playback.
+    //
+
+    CONFIG_VARIABLE_STRING(fluidsynth_sf_path),
+
+    //!
     // Full path to a Timidity configuration file to use for MIDI
     // playback. The file will be evaluated from the directory where
     // it is evaluated, so there is no need to add "dir" commands
@@ -1054,6 +1074,12 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(a11y_sector_lighting),
+
+    //!
+    // Amount of extra light to add to the game scene.
+    //
+
+    CONFIG_VARIABLE_INT(a11y_extra_lighting),
 
     //!
     // If zero, this disables weapon flashes changing the ambient light
@@ -1183,6 +1209,14 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(mouseb_invright),
+
+    //!
+    // @game heretic hexen
+    //
+    // Mouse button to use artifact.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_useartifact),
 
     //!
     // If non-zero, double-clicking a mouse button acts like pressing
@@ -1638,6 +1672,30 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_KEY(key_map_rotate),
+
+    //!
+    // Mouse button to zoom in when in the map view.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_mapzoomin),
+
+    //!
+    // Mouse button to zoom out when in the map view.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_mapzoomout),
+
+    //!
+    // Mouse button to zoom out the max amount when in the map view.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_mapmaxzoom),
+
+    //!
+    // Mouse button to toggle follow mode when in the map view.
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_mapfollow),
 
     //!
     // Key to select weapon 1.
@@ -2101,14 +2159,6 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Extended Savegames.
-    //
-
-    CONFIG_VARIABLE_INT(crispy_extsaveg),
-
-    //!
-    // @game doom
-    //
     // Enable Mirrored Corpses.
     //
 
@@ -2220,6 +2270,7 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+<<<<<<< HEAD
     // Enable weapon recoil thrust.
     //
 
@@ -2237,6 +2288,8 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+=======
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     // Show a centered message and play a sound when a secret is found.
     //
 
@@ -2302,6 +2355,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Level Stats Format.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_statsformat),
+
+    //!
+    // @game doom
+    //
     // Enable translucency.
     //
 
@@ -2332,14 +2393,6 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_vsync),
-
-    //!
-    // @game doom
-    //
-    // Squat down weapon on impact.
-    //
-
-    CONFIG_VARIABLE_INT(crispy_weaponsquat),
 
     //!
     // @game doom
@@ -2411,7 +2464,7 @@ static void SaveDefaultCollection(default_collection_t *collection)
     int i, v;
     FILE *f;
 	
-    f = fopen (collection->filename, "w");
+    f = M_fopen(collection->filename, "w");
     if (!f)
 	return; // can't write the file, but don't complain
 
@@ -2560,7 +2613,41 @@ static void SetVariable(default_t *def, const char *value)
             break;
 
         case DEFAULT_FLOAT:
-            *def->location.f = (float) atof(value);
+        {
+            // Different locales use different decimal separators.
+            // However, the choice of the current locale isn't always
+            // under our own control. If the atof() function fails to
+            // parse the string representing the floating point number
+            // using the current locale's decimal separator, it will
+            // return 0, resulting in silent sound effects. To
+            // mitigate this, we replace the first non-digit,
+            // non-minus character in the string with the current
+            // locale's decimal separator before passing it to atof().
+            struct lconv *lc = localeconv();
+            char dec, *str;
+            int i = 0;
+
+            dec = lc->decimal_point[0];
+            str = M_StringDuplicate(value);
+
+            // Skip sign indicators.
+            if (str[i] == '-' || str[i] == '+')
+            {
+                i++;
+            }
+
+            for ( ; str[i] != '\0'; i++)
+            {
+                if (!isdigit(str[i]))
+                {
+                    str[i] = dec;
+                    break;
+                }
+            }
+
+            *def->location.f = (float) atof(str);
+            free(str);
+        }
             break;
     }
 }
@@ -2573,7 +2660,7 @@ static void LoadDefaultCollection(default_collection_t *collection)
     char strparm[100];
 
     // read the file in, overriding any set defaults
-    f = fopen(collection->filename, "r");
+    f = M_fopen(collection->filename, "r");
 
     if (f == NULL)
     {
@@ -2938,6 +3025,11 @@ void M_SetMusicPackDir(void)
     }
 
     prefdir = SDL_GetPrefPath("", PACKAGE_TARNAME);
+    if (prefdir == NULL)
+    {
+        printf("M_SetMusicPackDir: SDL_GetPrefPath failed, music pack directory not set\n");
+        return;
+    }
     music_pack_path = M_StringJoin(prefdir, "music-packs", NULL);
 
     M_MakeDirectory(prefdir);
@@ -3034,6 +3126,11 @@ char *M_GetAutoloadDir(const char *iwadname, boolean makedir)
     {
         char *prefdir;
         prefdir = SDL_GetPrefPath("", PACKAGE_TARNAME);
+        if (prefdir == NULL)
+        {
+            printf("M_GetAutoloadDir: SDL_GetPrefPath failed\n");
+            return NULL;
+        }
         autoload_path = M_StringJoin(prefdir, "autoload", NULL);
         SDL_free(prefdir);
     }

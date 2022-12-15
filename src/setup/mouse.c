@@ -37,11 +37,12 @@ static int mouse_threshold = 10;
 static int mouseSensitivity_y = 5; // [crispy]
 static float mouse_acceleration_y = 1.0; // [crispy]
 static int mouse_threshold_y = 0; // [crispy]
+static int mouse_y_invert = 0; // [crispy]
 static int grabmouse = 1;
 
 int novert = 1;
 
-static int *all_mouse_buttons[] = {
+static int *game_mouse_buttons[] = {
     &mousebfire,
     &mousebstrafe,
     &mousebforward,
@@ -54,10 +55,20 @@ static int *all_mouse_buttons[] = {
     &mousebnextweapon,
     &mousebmouselook, // [crispy]
     &mousebreverse, // [crispy]
+    &mousebspeed,
     &mousebinvleft,
     &mousebinvright,
+    &mousebuseartifact,
     &mousebturnleft,
     &mousebturnright,
+};
+
+// [crispy]
+static int *map_mouse_buttons[] = {
+    &mousebmapzoomin,
+    &mousebmapzoomout,
+    &mousebmapmaxzoom,
+    &mousebmapfollow,
 };
 
 static void MouseSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
@@ -68,12 +79,30 @@ static void MouseSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
     // Check if the same mouse button is used for a different action
     // If so, set the other action(s) to -1 (unset)
 
-    for (i=0; i<arrlen(all_mouse_buttons); ++i)
+    for (i=0; i<arrlen(game_mouse_buttons); ++i)
     {
-        if (*all_mouse_buttons[i] == *variable
-         && all_mouse_buttons[i] != variable)
+        if (*game_mouse_buttons[i] == *variable
+         && game_mouse_buttons[i] != variable)
         {
-            *all_mouse_buttons[i] = -1;
+            *game_mouse_buttons[i] = -1;
+        }
+    }
+}
+
+static void MouseMapSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
+{
+    TXT_CAST_ARG(int, variable);
+    unsigned int i;
+
+    // Check if the same mouse button is used for a different action
+    // If so, set the other action(s) to -1 (unset)
+
+    for (i=0; i<arrlen(map_mouse_buttons); ++i)
+    {
+        if (*map_mouse_buttons[i] == *variable
+         && map_mouse_buttons[i] != variable)
+        {
+            *map_mouse_buttons[i] = -1;
         }
     }
 }
@@ -91,10 +120,23 @@ static void AddMouseControl(TXT_UNCAST_ARG(table), const char *label, int *var)
     TXT_SignalConnect(mouse_input, "set", MouseSetCallback, var);
 }
 
+static void AddMouseMapControl(TXT_UNCAST_ARG(table), const char *label, int *var)
+{
+    TXT_CAST_ARG(txt_table_t, table);
+    txt_mouse_input_t *mouse_input;
+
+    TXT_AddWidget(table, TXT_NewLabel(label));
+
+    mouse_input = TXT_NewMouseInput(var);
+    TXT_AddWidget(table, mouse_input);
+
+    TXT_SignalConnect(mouse_input, "set", MouseMapSetCallback, var);
+}
+
 static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 {
     txt_window_t *window;
-    txt_table_t *buttons_table;
+    txt_table_t *buttons_table, *am_buttons_table;
 
     window = TXT_NewWindow("Additional mouse buttons");
 
@@ -104,7 +146,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
                    buttons_table = TXT_NewTable(4),
                    NULL);
 
-    TXT_SetColumnWidths(buttons_table, 16, 11, 14, 10);
+    TXT_SetColumnWidths(buttons_table, 16, 11, 16, 10);
 
     AddMouseControl(buttons_table, "Move forward", &mousebforward);
     AddMouseControl(buttons_table, "Strafe left", &mousebstrafeleft);
@@ -113,11 +155,14 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     AddMouseControl(buttons_table, "Previous weapon", &mousebprevweapon);
     AddMouseControl(buttons_table, "Strafe on", &mousebstrafe);
     AddMouseControl(buttons_table, "Next weapon", &mousebnextweapon);
+    AddMouseControl(buttons_table, "Run", &mousebspeed);
     
-    if (gamemission == heretic)
+    if (gamemission == heretic || gamemission == hexen)
     {
+      AddMouseControl(buttons_table, "Mouselook", &mousebmouselook);
       AddMouseControl(buttons_table, "Inventory left", &mousebinvleft);
       AddMouseControl(buttons_table, "Inventory right", &mousebinvright);
+      AddMouseControl(buttons_table, "Use artifact", &mousebuseartifact);
     }
 
     if (gamemission == hexen || gamemission == strife)
@@ -130,6 +175,21 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddMouseControl(buttons_table, "Quick Reverse", &mousebreverse);
         AddMouseControl(buttons_table, "Mouse Look [*]", &mousebmouselook);
         AddMouseControl(buttons_table, "Jump [*]", &mousebjump);
+    }
+
+    if (gamemission == doom || gamemission == heretic || gamemission == hexen)
+    {
+        TXT_AddWidgets(window,
+                       TXT_NewSeparator("Automap"),
+                       am_buttons_table = TXT_NewTable(4),
+                       NULL);
+
+        TXT_SetColumnWidths(am_buttons_table, 16, 11, 16, 10);
+
+        AddMouseMapControl(am_buttons_table, "Zoom in", &mousebmapzoomin);
+        AddMouseMapControl(am_buttons_table, "Zoom out", &mousebmapzoomout);
+        AddMouseMapControl(am_buttons_table, "Max zoom out", &mousebmapmaxzoom);
+        AddMouseMapControl(am_buttons_table, "Toggle follow", &mousebmapfollow);
     }
 }
 
@@ -144,7 +204,7 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
     TXT_SetWindowAction(window, TXT_HORIZ_CENTER, TestConfigAction());
     TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
 
-    if (gamemission == doom || gamemission == heretic) // [crispy]
+    if (gamemission == doom || gamemission == heretic || gamemission == hexen) // [crispy]
     {
     TXT_AddWidgets(window,
                    TXT_NewCheckBox("Enable mouse", &usemouse),
@@ -220,12 +280,14 @@ void BindMouseVariables(void)
     M_BindIntVariable("mouse_sensitivity",       &mouseSensitivity);
     M_BindIntVariable("mouse_threshold",         &mouse_threshold);
     M_BindFloatVariable("mouse_acceleration",    &mouse_acceleration);
-    if (gamemission == doom) // [crispy]
-    {
+    // [crispy]
     M_BindIntVariable("mouse_sensitivity_x2",    &mouseSensitivity_x2);
     M_BindIntVariable("mouse_sensitivity_y",     &mouseSensitivity_y);
     M_BindIntVariable("mouse_threshold_y",       &mouse_threshold_y);
     M_BindFloatVariable("mouse_acceleration_y",  &mouse_acceleration_y);
+    M_BindIntVariable("mouse_y_invert",          &mouse_y_invert);
+    if (gamemission == doom || gamemission == heretic || gamemission == hexen)
+    {
     M_BindIntVariable("crispy_mouselook",        &crispy->mouselook);
     }
 }

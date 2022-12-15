@@ -23,6 +23,7 @@
 #include "doomstat.h"
 #include "deh_main.h"
 #include "d_iwad.h"
+#include "m_argv.h"
 #include "m_config.h"
 #include "m_misc.h"
 #include "w_main.h"
@@ -34,9 +35,9 @@ extern char *iwadfile;
 void D_LoadSigilWad (void)
 {
 	int i, j;
-	char *sigil_wad = NULL, *sigil_shreds = NULL;
-	char *sigil_basename, *autoload_dir;
-	char *dirname;
+	char *sigil_shreds = NULL;
+	const char *sigil_basename;
+	char *dirname, *autoload_dir;
 
 	const char *const sigil_wads[] = {
 		"SIGIL_v1_21.wad",
@@ -70,6 +71,11 @@ void D_LoadSigilWad (void)
 	i = W_CheckNumForName("E5M1");
 	if (i != -1)
 	{
+		// [crispy] indicate that SIGIL_*.WAD is already loaded as a PWAD
+		if (!strncasecmp(W_WadNameForLump(lumpinfo[i]), "SIGIL", 5))
+		{
+			crispy->havesigil = (char *)-1;
+		}
 		return;
 	}
 
@@ -97,33 +103,32 @@ void D_LoadSigilWad (void)
 	// [crispy] load SIGIL.WAD
 	for (i = 0; i < arrlen(sigil_wads); i++)
 	{
-		sigil_wad = M_StringJoin(dirname, DIR_SEPARATOR_S, sigil_wads[i], NULL);
+		crispy->havesigil = M_StringJoin(dirname, DIR_SEPARATOR_S, sigil_wads[i], NULL);
 
-		if (M_FileExists(sigil_wad))
+		if (M_FileExists(crispy->havesigil))
 		{
 			break;
 		}
 
-		free(sigil_wad);
-		sigil_wad = D_FindWADByName(sigil_wads[i]);
+		free(crispy->havesigil);
+		crispy->havesigil = D_FindWADByName(sigil_wads[i]);
 
-		if (sigil_wad)
+		if (crispy->havesigil)
 		{
 			break;
 		}
 	}
 	free(dirname);
 
-	if (sigil_wad == NULL)
+	if (crispy->havesigil == NULL)
 	{
 		free(sigil_shreds);
 		return;
 	}
 
-	printf(" [Sigil] adding %s\n", sigil_wad);
-	W_AddFile(sigil_wad);
-	sigil_basename = M_StringDuplicate(M_BaseName(sigil_wad));
-	free(sigil_wad);
+	printf(" [Sigil] adding %s\n", crispy->havesigil);
+	W_AddFile(crispy->havesigil);
+	sigil_basename = M_BaseName(crispy->havesigil);
 
 	// [crispy] load SIGIL_SHREDS.WAD
 	if (!M_FileExists(sigil_shreds))
@@ -168,11 +173,15 @@ void D_LoadSigilWad (void)
 	}
 
 	// [crispy] load WAD and DEH files from autoload directories
-	autoload_dir = M_GetAutoloadDir(sigil_basename, false);
-	W_AutoLoadWADs(autoload_dir);
-	DEH_AutoLoadPatches(autoload_dir);
-	free(autoload_dir);
-	free(sigil_basename);
+	if (!M_ParmExists("-noautoload"))
+	{
+		if ((autoload_dir = M_GetAutoloadDir(sigil_basename, false)))
+		{
+			W_AutoLoadWADs(autoload_dir);
+			DEH_AutoLoadPatches(autoload_dir);
+			free(autoload_dir);
+		}
+	}
 
 	// [crispy] regenerate the hashtable
 	W_GenerateHashTable();
@@ -219,6 +228,13 @@ static void CheckLoadNerve (void)
 		{"TITLEPIC", "NERVEPIC"},
 		{"INTERPIC", "NERVEINT"},
 	};
+
+	// [crispy] don't load if another PWAD already provides MAP01
+	i = W_CheckNumForName("MAP01");
+	if (i != -1 && !W_IsIWADLump(lumpinfo[i]))
+	{
+		return;
+	}
 
 	if (strrchr(iwadfile, DIR_SEPARATOR) != NULL)
 	{
@@ -273,10 +289,15 @@ static void CheckLoadNerve (void)
 	}
 
 	// [crispy] load WAD and DEH files from autoload directories
-	autoload_dir = M_GetAutoloadDir(nerve_basename, false);
-	W_AutoLoadWADs(autoload_dir);
-	DEH_AutoLoadPatches(autoload_dir);
-	free(autoload_dir);
+	if (!M_ParmExists("-noautoload"))
+	{
+		if ((autoload_dir = M_GetAutoloadDir(nerve_basename, false)))
+		{
+			W_AutoLoadWADs(autoload_dir);
+			DEH_AutoLoadPatches(autoload_dir);
+			free(autoload_dir);
+		}
+	}
 
 	// [crispy] regenerate the hashtable
 	W_GenerateHashTable();
@@ -318,6 +339,13 @@ static boolean CheckLoadMasterlevels (void)
 	const char *master_basename;
 	char *autoload_dir;
 	int i, j;
+
+	// [crispy] don't load if another PWAD already provides MAP01
+	i = W_CheckNumForName("MAP01");
+	if (i != -1 && !W_IsIWADLump(lumpinfo[i]))
+	{
+		return false;
+	}
 
 	if (strrchr(iwadfile, DIR_SEPARATOR) != NULL)
 	{
@@ -370,10 +398,15 @@ static boolean CheckLoadMasterlevels (void)
 	}
 
 	// [crispy] load WAD and DEH files from autoload directories
-	autoload_dir = M_GetAutoloadDir(master_basename, false);
-	W_AutoLoadWADs(autoload_dir);
-	DEH_AutoLoadPatches(autoload_dir);
-	free(autoload_dir);
+	if (!M_ParmExists("-noautoload"))
+	{
+		if ((autoload_dir = M_GetAutoloadDir(master_basename, false)))
+		{
+			W_AutoLoadWADs(autoload_dir);
+			DEH_AutoLoadPatches(autoload_dir);
+			free(autoload_dir);
+		}
+	}
 
 	// [crispy] regenerate the hashtable
 	W_GenerateHashTable();
@@ -417,6 +450,13 @@ static boolean CheckMasterlevelsAvailable (void)
 {
 	int i;
 	char *dir;
+
+	// [crispy] don't load if another PWAD already provides MAP01
+	i = W_CheckNumForName("MAP01");
+	if (i != -1 && !W_IsIWADLump(lumpinfo[i]))
+	{
+		return false;
+	}
 
 	dir = M_DirName(iwadfile);
 

@@ -194,8 +194,13 @@ typedef enum
     // Hmm ???.
     MF_TRANSSHIFT	= 26,
 
+<<<<<<< HEAD
     // [So Doom] Nightmare-spawned, Icon of Sin-spawned and Archvile-resurrected monsters
     MF_EXTRASPAWNED		= 0x10000000,
+=======
+    // [NS] Beta projectile bouncing.
+    MF_BOUNCES		= 0x20000000,
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
     // [crispy] randomly flip corpse, blood and death animation sprites
     MF_FLIPPABLE        = 0x40000000,

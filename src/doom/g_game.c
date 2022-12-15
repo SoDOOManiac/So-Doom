@@ -334,7 +334,8 @@ static int G_NextWeapon(int direction)
 boolean speedkeydown (void)
 {
     return (key_speed < NUMKEYS && gamekeydown[key_speed]) ||
-           (joybspeed < MAX_JOY_BUTTONS && joybuttons[joybspeed]);
+           (joybspeed < MAX_JOY_BUTTONS && joybuttons[joybspeed]) ||
+           (mousebspeed < MAX_MOUSE_BUTTONS && mousebuttons[mousebspeed]);
 }
 
 //
@@ -370,8 +371,8 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 
     // [crispy] when "always run" is active,
     // pressing the "run" key will result in walking
-    speed = key_speed >= NUMKEYS
-         || joybspeed >= MAX_JOY_BUTTONS;
+    speed = (key_speed >= NUMKEYS
+         || joybspeed >= MAX_JOY_BUTTONS);
     speed ^= speedkeydown();
  
     forward = side = look = 0;
@@ -431,14 +432,14 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         else
         {
             joybspeed_old = joybspeed;
-            joybspeed = 29;
+            joybspeed = MAX_JOY_BUTTONS;
         }
 
         M_snprintf(playermessage, sizeof(playermessage), "ALWAYS RUN %s%s",
             (joybspeed >= MAX_JOY_BUTTONS) ? crstr[CR_GREEN] : crstr[CR_RED],
             (joybspeed >= MAX_JOY_BUTTONS) ? "ON" : "OFF");
         player->message = playermessage;
-        S_StartSound(NULL, sfx_swtchn);
+        S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 
         gamekeydown[key_toggleautorun] = false;
     }
@@ -453,7 +454,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
             !novert ? crstr[CR_GREEN] : crstr[CR_RED],
             !novert ? "ON" : "OFF");
         player->message = playermessage;
-        S_StartSound(NULL, sfx_swtchn);
+        S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 
         gamekeydown[key_togglenovert] = false;
     }
@@ -871,6 +872,16 @@ void G_DoLoadLevel (void)
     // [crispy] update the "singleplayer" variable
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 
+    // [crispy] double ammo
+    if (crispy->moreammo && !crispy->singleplayer)
+    {
+        const char message[] = "The -doubleammo option is not supported"
+                               " for demos and\n"
+                               " network play.";
+        if (!demo_p) demorecording = false;
+        I_Error(message);
+    }
+
     // [crispy] pistol start
     if (crispy->pistolstart)
     {
@@ -906,6 +917,12 @@ void G_DoLoadLevel (void)
     sendpause = sendsave = paused = false;
     memset(mousearray, 0, sizeof(mousearray));
     memset(joyarray, 0, sizeof(joyarray));
+    R_SetGoobers(false);
+
+    // [crispy] jff 4/26/98 wake up the status bar in case were coming out of a DM demo
+    // [crispy] killough 5/13/98: in case netdemo has consoleplayer other than green
+    ST_Start();
+    HU_Start();
 
     if (testcontrols)
     {
@@ -973,6 +990,28 @@ static void SetMouseButtons(unsigned int buttons_mask)
 // 
 boolean G_Responder (event_t* ev) 
 { 
+    // [crispy] demo pause (from prboom-plus)
+    if (gameaction == ga_nothing && 
+        (demoplayback || gamestate == GS_DEMOSCREEN))
+    {
+        if (ev->type == ev_keydown && ev->data1 == key_pause)
+        {
+            if (paused ^= 2)
+                S_PauseSound();
+            else
+                S_ResumeSound();
+            return true;
+        }
+    }
+
+    // [crispy] demo fast-forward
+    if (ev->type == ev_keydown && ev->data1 == key_demospeed && 
+        (demoplayback || gamestate == GS_DEMOSCREEN))
+    {
+        singletics = !singletics;
+        return true;
+    }
+ 
     // allow spy mode changes even during the demo
     if (gamestate == GS_LEVEL && ev->type == ev_keydown 
      && ev->data1 == key_spy && (singledemo || !deathmatch) )
@@ -984,6 +1023,13 @@ boolean G_Responder (event_t* ev)
 	    if (displayplayer == MAXPLAYERS) 
 		displayplayer = 0; 
 	} while (!playeringame[displayplayer] && displayplayer != consoleplayer); 
+	// [crispy] killough 3/7/98: switch status bar views too
+	ST_Start();
+	HU_Start();
+	S_UpdateSounds(players[displayplayer].mo);
+	// [crispy] re-init automap variables for correct player arrow angle
+	if (automapactive)
+	AM_initVariables();
 	return true; 
     }
     
@@ -996,10 +1042,10 @@ boolean G_Responder (event_t* ev)
 	    (ev->type == ev_mouse && ev->data1) || 
 	    (ev->type == ev_joystick && ev->data1) ) 
 	{ 
-	    M_StartControlPanel (); 
 	    // [crispy] play a sound if the menu is activated with a different key than ESC
-	    if (crispy->soundfix)
-		S_StartSound(NULL,sfx_swtchn);
+	    if (!menuactive && crispy->soundfix)
+		S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    M_StartControlPanel (); 
 	    return true; 
 	} 
 	return false; 
@@ -1185,6 +1231,13 @@ void G_Ticker (void)
 	} 
     }
     
+    // [crispy] demo sync of revenant tracers and RNG (from prboom-plus)
+    if (paused & 2 || (!demoplayback && menuactive && !netgame))
+    {
+        demostarttic++;
+    }
+    else
+    {     
     // get commands, check consistancy,
     // and build new consistancy check
     buf = (gametic/ticdup)%BACKUPTICS; 
@@ -1244,6 +1297,12 @@ void G_Ticker (void)
 	}
     }
     
+    // [crispy] increase demo tics counter
+    if (demoplayback || demorecording)
+    {
+	    defdemotics++;
+    }
+
     // check for special buttons
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
@@ -1285,6 +1344,7 @@ void G_Ticker (void)
 	    } 
 	}
     }
+    }
 
     // Have we just finished displaying an intermission screen?
 
@@ -1295,6 +1355,14 @@ void G_Ticker (void)
 
     oldgamestate = gamestate;
     oldleveltime = leveltime;
+
+    // [crispy] no pause at intermission screen during demo playback 
+    // to avoid desyncs (from prboom-plus)
+    if ((paused & 2 || (!demoplayback && menuactive && !netgame)) 
+        && gamestate != GS_LEVEL)
+    {
+    return;
+    }
     
     // do main actions
     switch (gamestate) 
@@ -1362,7 +1430,6 @@ void G_PlayerFinishLevel (int player)
     p->centering =
     p->jumpTics =
     p->recoilpitch = p->oldrecoilpitch =
-    p->psp_dy_max =
     p->btuse = p->btuse_tics = 0;
 } 
  
@@ -2118,19 +2185,17 @@ void G_DoLoadGame (void)
     }
     gameaction = ga_nothing; 
 	 
-    save_stream = fopen(savename, "rb");
+    save_stream = M_fopen(savename, "rb");
 
     if (save_stream == NULL)
     {
         I_Error("Could not load savegame %s", savename);
     }
 
-    // [crispy] read extended savegame data
-    if (crispy->extsaveg)
-    {
-        // [crispy] first pass, read "savewadfilename"
-        P_ReadExtendedSaveGameData(0);
-    }
+    // [crispy] read extended savegame data,
+    //          first pass: read "savewadfilename"
+    P_ReadExtendedSaveGameData(0);
+
     // [crispy] check if WAD file is valid to restore saved map
     if (savewadfilename)
     {
@@ -2182,10 +2247,7 @@ void G_DoLoadGame (void)
 	I_Error ("Bad savegame");
 
     // [crispy] read more extended savegame data
-    if (crispy->extsaveg)
-    {
-        P_ReadExtendedSaveGameData(1);
-    }
+    P_ReadExtendedSaveGameData(1);
 
     fclose(save_stream);
     
@@ -2235,14 +2297,14 @@ void G_DoSaveGame (void)
     // and then rename it at the end if it was successfully written.
     // This prevents an existing savegame from being overwritten by
     // a corrupted one, or if a savegame buffer overrun occurs.
-    save_stream = fopen(temp_savegame_file, "wb");
+    save_stream = M_fopen(temp_savegame_file, "wb");
 
     if (save_stream == NULL)
     {
         // Failed to save the game, so we're going to have to abort. But
         // to be nice, save to somewhere else before we call I_Error().
         recovery_savegame_file = M_TempFile("recovery.dsg");
-        save_stream = fopen(recovery_savegame_file, "wb");
+        save_stream = M_fopen(recovery_savegame_file, "wb");
         if (save_stream == NULL)
         {
             I_Error("Failed to open either '%s' or '%s' to write savegame.",
@@ -2273,10 +2335,7 @@ void G_DoSaveGame (void)
 
     P_WriteSaveGameEOF();
     // [crispy] write extended savegame data
-    if (crispy->extsaveg)
-    {
-        P_WriteExtendedSaveGameData();
-    }
+    P_WriteExtendedSaveGameData();
 
     // [crispy] unconditionally disable savegame and demo limits
     /*
@@ -2306,8 +2365,8 @@ void G_DoSaveGame (void)
     // Now rename the temporary savegame file to the actual savegame
     // file, overwriting the old savegame if there was one there.
 
-    remove(savegame_file);
-    rename(temp_savegame_file, savegame_file);
+    M_remove(savegame_file);
+    M_rename(temp_savegame_file, savegame_file);
 
     gameaction = ga_nothing;
     M_StringCopy(savedescription, "", sizeof(savedescription));
@@ -2363,6 +2422,8 @@ void G_DoNewGame (void)
     netdemo = false;
     netgame = false;
     deathmatch = false;
+    // [crispy] reset game speed after demo fast-forward
+    singletics = false;
     playeringame[1] = playeringame[2] = playeringame[3] = 0;
     // [crispy] do not reset -respawn, -fast and -nomonsters parameters
     /*
@@ -2641,11 +2702,6 @@ void G_ReadDemoTiccmd (ticcmd_t* cmd)
     }
 
     cmd->buttons = (unsigned char)*demo_p++; 
-
-    // [crispy] increase demo tics counter
-    // applies to both recording and playback,
-    // because G_WriteDemoTiccmd() calls G_ReadDemoTiccmd() once
-    defdemotics++;
 } 
 
 // Increase the size of the demo buffer to allow unlimited demos

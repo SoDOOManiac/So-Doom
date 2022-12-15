@@ -41,6 +41,24 @@
 
 #include "doomtype.h"
 
+
+// [crispy] values 3 and higher might reproduce DOOM.EXE more accurately,
+// but 1 is closer to "use_libsamplerate = 0" which is the default in Choco
+// and causes only a short delay at startup
+int use_libsamplerate = 1;
+
+// Scale factor used when converting libsamplerate floating point numbers
+// to integers. Too high means the sounds can clip; too low means they
+// will be too quiet. This is an amount that should avoid clipping most
+// of the time: with all the Doom IWAD sound effects, at least. If a PWAD
+// is used, clipping might occur.
+
+float libsamplerate_scale = 0.65f;
+
+
+#ifndef DISABLE_SDL2MIXER
+
+
 #define LOW_PASS_FILTER
 //#define DEBUG_DUMP_WAVS
 #define NUM_CHANNELS 16*2 // [crispy] support up to 32 sound channels
@@ -78,18 +96,6 @@ static allocated_sound_t *allocated_sounds_head = NULL;
 static allocated_sound_t *allocated_sounds_tail = NULL;
 static int allocated_sounds_size = 0;
 
-// [crispy] values 3 and higher might reproduce DOOM.EXE more accurately,
-// but 1 is closer to "use_libsamplerate = 0" which is the default in Choco
-// and causes only a short delay at startup
-int use_libsamplerate = 1;
-
-// Scale factor used when converting libsamplerate floating point numbers
-// to integers. Too high means the sounds can clip; too low means they
-// will be too quiet. This is an amount that should avoid clipping most
-// of the time: with all the Doom IWAD sound effects, at least. If a PWAD
-// is used, clipping might occur.
-
-float libsamplerate_scale = 0.65f;
 
 // Hook a sound into the linked list at the head.
 
@@ -569,7 +575,7 @@ static void WriteWAV(char *filename, byte *data,
     unsigned int i;
     unsigned short s;
 
-    wav = fopen(filename, "wb");
+    wav = M_fopen(filename, "wb");
 
     // Header
 
@@ -876,21 +882,12 @@ static void GetSfxLumpName(sfxinfo_t *sfx, char *buf, size_t buf_len)
     }
 }
 
-#ifdef HAVE_LIBSAMPLERATE
-
 // Preload all the sound effects - stops nasty ingame freezes
 
 static void I_SDL_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
 {
     char namebuf[9];
     int i;
-
-    // Don't need to precache the sounds unless we are using libsamplerate.
-
-    if (use_libsamplerate == 0)
-    {
-	return;
-    }
 
     printf("I_SDL_PrecacheSounds: Precaching all sound effects..");
 
@@ -914,15 +911,6 @@ static void I_SDL_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
 
     printf("\n");
 }
-
-#else
-
-static void I_SDL_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
-{
-    // no-op
-}
-
-#endif
 
 // Load a SFX chunk into memory and ensure that it is locked.
 
@@ -1222,3 +1210,5 @@ sound_module_t sound_sdl_module =
     I_SDL_PrecacheSounds,
 };
 
+
+#endif // DISABLE_SDL2MIXER

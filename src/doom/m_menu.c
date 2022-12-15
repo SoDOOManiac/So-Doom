@@ -141,6 +141,10 @@ boolean			menuactive;
 extern boolean		sendpause;
 char			savegamestrings[10][SAVESTRINGSIZE];
 
+// [FG] support up to 8 pages of savegames
+int savepage = 0;
+static const int savepage_max = 7;
+
 char	endstring[160];
 
 static boolean opldev;
@@ -505,7 +509,11 @@ enum
     crispness_extautomap,
     crispness_smoothmap,
     crispness_automapstats,
+<<<<<<< HEAD
     crispness_smarttotals,
+=======
+    crispness_statsformat,
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
@@ -529,7 +537,11 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispyToggleExtAutomap,'e'},
     {1,"",	M_CrispyToggleSmoothMap,'m'},
     {1,"",	M_CrispyToggleAutomapstats,'s'},
+<<<<<<< HEAD
     {1,"",	M_CrispyToggleSmartTotals,'t'},
+=======
+    {1,"",	M_CrispyToggleStatsFormat,'f'},
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
     {1,"",	M_CrispyToggleSecretmessage,'s'},
@@ -556,7 +568,6 @@ enum
     crispness_mouselook,
     crispness_bobfactor,
     crispness_centerweapon,
-    crispness_weaponsquat,
     crispness_pitch,
     crispness_neghealth,
     crispness_sep_tactical_,
@@ -580,9 +591,14 @@ static menuitem_t Crispness3Menu[]=
     {1,"",	M_CrispyToggleMouseLook,'m'},
     {1,"",	M_CrispyToggleBobfactor,'b'},
     {1,"",	M_CrispyToggleCenterweapon,'c'},
+<<<<<<< HEAD
     {1,"",	M_CrispyToggleWeaponSquat,'w'},
     {1,"",	M_CrispyTogglePitch,'i'},
     {1,"",	M_CrispyToggleNeghealth,'g'},
+=======
+    {1,"",	M_CrispyTogglePitch,'w'},
+    {1,"",	M_CrispyToggleNeghealth,'n'},
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleCrosshair,'d'},
@@ -610,7 +626,6 @@ enum
     crispness_freeaim,
     crispness_jumping,
     crispness_overunder,
-    crispness_recoil,
     crispness_sep_physical_,
 
     crispness_sep_interover,
@@ -635,11 +650,15 @@ static menuitem_t Crispness4Menu[]=
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleFreeaim,'v'},
     {1,"",	M_CrispyToggleJumping,'a'},
+<<<<<<< HEAD
     {1,"",	M_CrispyToggleOverunder,'o'},
     {1,"",	M_CrispyToggleRecoil,'r'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleEvadingInterOver,'i'},
+=======
+    {1,"",	M_CrispyToggleOverunder,'w'},
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleDemoTimer,'t'},
@@ -825,7 +844,7 @@ void M_ReadSaveStrings(void)
         int retval;
         M_StringCopy(name, P_SaveGameFile(i), sizeof(name));
 
-	handle = fopen(name, "rb");
+	handle = M_fopen(name, "rb");
         if (handle == NULL)
         {
             M_StringCopy(savegamestrings[i], EMPTYSTRING, SAVESTRINGSIZE);
@@ -836,6 +855,30 @@ void M_ReadSaveStrings(void)
 	fclose(handle);
         LoadMenu[i].status = retval == SAVESTRINGSIZE;
     }
+}
+
+// [FG] support up to 8 pages of savegames
+void M_DrawSaveLoadBottomLine(void)
+{
+  char pagestr[16];
+  const int y = LoadDef.y+LINEHEIGHT*load_end;
+
+  // [crispy] force status bar refresh
+  inhelpscreens = true;
+
+  M_DrawSaveLoadBorder(LoadDef.x,y);
+
+  dp_translation = cr[CR_GOLD];
+
+  if (savepage > 0)
+    M_WriteText(LoadDef.x, y, "< PGUP");
+  if (savepage < savepage_max)
+    M_WriteText(LoadDef.x+(SAVESTRINGSIZE-6)*8, y, "PGDN >");
+
+  M_snprintf(pagestr, sizeof(pagestr), "page %d/%d", savepage + 1, savepage_max + 1);
+  M_WriteText(ORIGWIDTH/2-M_StringWidth(pagestr)/2, y, pagestr);
+
+  dp_translation = NULL;
 }
 
 
@@ -855,6 +898,8 @@ void M_DrawLoad(void)
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
 	M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
     }
+
+  M_DrawSaveLoadBottomLine();
 }
 
 
@@ -938,6 +983,8 @@ void M_DrawSave(void)
 	i = M_StringWidth(savegamestrings[saveSlot]);
 	M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
     }
+
+  M_DrawSaveLoadBottomLine();
 }
 
 //
@@ -1063,14 +1110,13 @@ void M_SaveGame (int choice)
 //
 //      M_QuickSave
 //
-static char tempstring[90];
 
 void M_QuickSaveResponse(int key)
 {
     if (key == key_menu_confirm)
     {
 	M_DoSave(quickSaveSlot);
-	S_StartSound(NULL,sfx_swtchx);
+	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
     }
 }
 
@@ -1078,7 +1124,7 @@ void M_QuickSave(void)
 {
     if (!usergame)
     {
-	S_StartSound(NULL,sfx_oof);
+	S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	return;
     }
 
@@ -1093,9 +1139,7 @@ void M_QuickSave(void)
 	quickSaveSlot = -2;	// means to pick a slot now
 	return;
     }
-    DEH_snprintf(tempstring, sizeof(tempstring),
-                 QSPROMPT, savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring, M_QuickSaveResponse, true);
+    M_QuickSaveResponse(key_menu_confirm);
 }
 
 
@@ -1108,7 +1152,7 @@ void M_QuickLoadResponse(int key)
     if (key == key_menu_confirm)
     {
 	M_LoadSelect(quickSaveSlot);
-	S_StartSound(NULL,sfx_swtchx);
+	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
     }
 }
 
@@ -1131,9 +1175,7 @@ void M_QuickLoad(void)
 	quickSaveSlot = -2;
 	return;
     }
-    DEH_snprintf(tempstring, sizeof(tempstring),
-                 QLPROMPT, savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring, M_QuickLoadResponse, true);
+    M_QuickLoadResponse(key_menu_confirm);
 }
 
 
@@ -1291,7 +1333,13 @@ void M_DrawEpisode(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
+    if (W_CheckNumForName(DEH_String("M_EPISOD")) != -1)
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
+    else
+    {
+      M_WriteText(54, 38, "Which Episode?");
+      EpiDef.lumps_missing = 1;
+    }
 }
 
 void M_VerifyNightmare(int key)
@@ -1435,11 +1483,25 @@ static void M_DrawMouse(void)
 #include "m_background.h"
 static void M_DrawCrispnessBackground(void)
 {
+<<<<<<< HEAD
 	//const byte *const src = crispness_background;
 	//pixel_t *dest;
 	//int x, y;
 
 	//dest = I_VideoBuffer;
+=======
+	const byte *src = crispness_background;
+	pixel_t *dest;
+	int x, y;
+
+	// [NS] Try to load the background from a lump.
+	int lump = W_CheckNumForName("CRISPYBG");
+	if (lump != -1 && W_LumpLength(lump) >= 64*64)
+	{
+		src = W_CacheLumpNum(lump, PU_STATIC);
+	}
+	dest = I_VideoBuffer;
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
     /*for (y = 0; y < SCREENHEIGHT; y++)  // [crispy] tiling 64x64 background crisps texture
 	{
@@ -1532,7 +1594,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
     M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
-    M_DrawCrispnessItem(crispness_coloredblood, "Colored Blood and Corpses", crispy->coloredblood, gameversion != exe_chex);
+    M_DrawCrispnessItem(crispness_coloredblood, "Colored Blood", crispy->coloredblood, gameversion != exe_chex);
     M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
 
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
@@ -1557,7 +1619,11 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessItem(crispness_extautomap, "Extended Automap colors", crispy->extautomap, true);
     M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
     M_DrawCrispnessMultiItem(crispness_automapstats, "Show Level Stats", multiitem_widgets, crispy->automapstats, true);
+<<<<<<< HEAD
     M_DrawCrispnessItem(crispness_smarttotals, "Smart Totals", crispy->smarttotals, true);
+=======
+    M_DrawCrispnessMultiItem(crispness_statsformat, "Level Stats Format", multiitem_statsformat, crispy->statsformat, crispy->automapstats);
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);
@@ -1581,10 +1647,8 @@ static void M_DrawCrispness3(void)
     M_DrawCrispnessItem(crispness_mouselook, "Permanent Mouse Look", crispy->mouselook, true);
     M_DrawCrispnessMultiItem(crispness_bobfactor, "Player View/Weapon Bobbing", multiitem_bobfactor, crispy->bobfactor, true);
     M_DrawCrispnessMultiItem(crispness_centerweapon, "Weapon Attack Alignment", multiitem_centerweapon, crispy->centerweapon, crispy->bobfactor != BOBFACTOR_OFF);
-    M_DrawCrispnessItem(crispness_weaponsquat, "Squat weapon down on impact", crispy->weaponsquat, true);
     M_DrawCrispnessItem(crispness_pitch, "Weapon Recoil Pitch", crispy->pitch, true);
     M_DrawCrispnessItem(crispness_neghealth, "Negative Player Health", crispy->neghealth, true);
-//  M_DrawCrispnessItem(crispness_extsaveg, "Extended Savegames", crispy->extsaveg, true);
 
     M_DrawCrispnessSeparator(crispness_sep_crosshair, "Crosshair");
 
@@ -1610,7 +1674,6 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_freeaim, "Vertical Aiming", multiitem_freeaim, crispy->freeaim, crispy->singleplayer);
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
@@ -1740,7 +1803,7 @@ void M_EndGame(int choice)
     choice = 0;
     if (!usergame)
     {
-	S_StartSound(NULL,sfx_oof);
+	S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	return;
     }
 	
@@ -2340,7 +2403,7 @@ boolean M_Responder (event_t* ev)
         }
         else
         {
-            S_StartSound(NULL,sfx_swtchn);
+            S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
             M_QuitDOOM(0);
         }
 
@@ -2596,7 +2659,7 @@ boolean M_Responder (event_t* ev)
 	menuactive = false;
 	}
 	messageToPrint = 0; // [crispy] moved here
-	S_StartSound(NULL,sfx_swtchx);
+	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
 	return true;
     }
 
@@ -2653,7 +2716,7 @@ boolean M_Responder (event_t* ev)
 	    if (automapactive || chat_on)
 		return false;
 	    M_SizeDisplay(0);
-	    S_StartSound(NULL,sfx_stnmov);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_incscreen) // Screen size up
@@ -2661,7 +2724,7 @@ boolean M_Responder (event_t* ev)
 	    if (automapactive || chat_on)
 		return false;
 	    M_SizeDisplay(1);
-	    S_StartSound(NULL,sfx_stnmov);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_help)     // Help key
@@ -2674,20 +2737,20 @@ boolean M_Responder (event_t* ev)
 	      currentMenu = &ReadDef1;
 
 	    itemOn = 0;
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_save)     // Save
         {
 	    M_StartControlPanel();
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_SaveGame(0);
 	    return true;
         }
         else if (key == key_menu_load)     // Load
         {
 	    M_StartControlPanel();
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_LoadGame(0);
 	    return true;
         }
@@ -2696,42 +2759,42 @@ boolean M_Responder (event_t* ev)
 	    M_StartControlPanel ();
 	    currentMenu = &SoundDef;
 	    itemOn = sfx_vol;
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_detail)   // Detail toggle
         {
 	    M_ChangeDetail(0);
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
         }
         else if (key == key_menu_qsave)    // Quicksave
         {
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuickSave();
 	    return true;
         }
         else if (key == key_menu_endgame)  // End game
         {
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_EndGame(0);
 	    return true;
         }
         else if (key == key_menu_messages) // Toggle messages
         {
 	    M_ChangeMessages(0);
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
         }
         else if (key == key_menu_qload)    // Quickload
         {
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuickLoad();
 	    return true;
         }
         else if (key == key_menu_quit)     // Quit DOOM
         {
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuitDOOM(0);
 	    return true;
         }
@@ -2893,7 +2956,7 @@ boolean M_Responder (event_t* ev)
 	if (key == key_menu_activate)
 	{
 	    M_StartControlPanel ();
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
 	return false;
@@ -2910,7 +2973,7 @@ boolean M_Responder (event_t* ev)
 	    if (itemOn+1 > currentMenu->numitems-1)
 		itemOn = 0;
 	    else itemOn++;
-	    S_StartSound(NULL,sfx_pstop);
+	    S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
 	return true;
@@ -2924,7 +2987,7 @@ boolean M_Responder (event_t* ev)
 	    if (!itemOn)
 		itemOn = currentMenu->numitems-1;
 	    else itemOn--;
-	    S_StartSound(NULL,sfx_pstop);
+	    S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
 	return true;
@@ -2936,7 +2999,7 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu->menuitems[itemOn].routine &&
 	    currentMenu->menuitems[itemOn].status == 2)
 	{
-	    S_StartSound(NULL,sfx_stnmov);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    currentMenu->menuitems[itemOn].routine(0);
 	}
 	return true;
@@ -2948,7 +3011,7 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu->menuitems[itemOn].routine &&
 	    currentMenu->menuitems[itemOn].status == 2)
 	{
-	    S_StartSound(NULL,sfx_stnmov);
+	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    currentMenu->menuitems[itemOn].routine(1);
 	}
 	return true;
@@ -2964,12 +3027,12 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[itemOn].status == 2)
 	    {
 		currentMenu->menuitems[itemOn].routine(1);      // right arrow
-		S_StartSound(NULL,sfx_stnmov);
+		S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    }
 	    else
 	    {
 		currentMenu->menuitems[itemOn].routine(itemOn);
-		S_StartSound(NULL,sfx_pistol);
+		S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
 	    }
 	}
 	return true;
@@ -2980,7 +3043,7 @@ boolean M_Responder (event_t* ev)
 
 	currentMenu->lastOn = itemOn;
 	M_ClearMenus ();
-	S_StartSound(NULL,sfx_swtchx);
+	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
 	return true;
     }
     else if (key == key_menu_back)
@@ -2992,7 +3055,7 @@ boolean M_Responder (event_t* ev)
 	{
 	    currentMenu = currentMenu->prevMenu;
 	    itemOn = currentMenu->lastOn;
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnubak, sfx_swtchn); // [NS] Optional menu sounds.
 	}
 	return true;
     }
@@ -3009,7 +3072,7 @@ boolean M_Responder (event_t* ev)
 	    }
 	    else
 	    {
-		S_StartSound(NULL,sfx_oof);
+		S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	    }
 	}
     }
@@ -3020,7 +3083,18 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu == CrispnessMenus[crispness_cur])
 	{
 	    M_CrispnessPrev(0);
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
+	    return true;
+	}
+	else if (currentMenu == &LoadDef || currentMenu == &SaveDef)
+	{
+	    if (savepage > 0)
+	    {
+		savepage--;
+		quickSaveSlot = -1;
+		M_ReadSaveStrings();
+		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop);
+	    }
 	    return true;
 	}
     }
@@ -3030,7 +3104,18 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu == CrispnessMenus[crispness_cur])
 	{
 	    M_CrispnessNext(0);
-	    S_StartSound(NULL,sfx_swtchn);
+	    S_StartSoundOptional(NULL, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
+	    return true;
+	}
+	else if (currentMenu == &LoadDef || currentMenu == &SaveDef)
+	{
+	    if (savepage < savepage_max)
+	    {
+		savepage++;
+		quickSaveSlot = -1;
+		M_ReadSaveStrings();
+		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop);
+	    }
 	    return true;
 	}
     }
@@ -3046,7 +3131,7 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[i].alphaKey == ch)
 	    {
 		itemOn = i;
-		S_StartSound(NULL,sfx_pstop);
+		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 		return true;
 	    }
         }
@@ -3056,7 +3141,7 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[i].alphaKey == ch)
 	    {
 		itemOn = i;
-		S_StartSound(NULL,sfx_pstop);
+		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 		return true;
 	    }
         }
@@ -3531,7 +3616,7 @@ void M_ForceLoadGame()
 
 	M_StartMessage(savegwarning, M_ForceLoadGameResponse, savemaplumpinfo != NULL);
 	messageToPrint = 2;
-	S_StartSound(NULL,sfx_swtchn);
+	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }
 
 static void M_ConfirmDeleteGameResponse (int key)
@@ -3544,6 +3629,9 @@ static void M_ConfirmDeleteGameResponse (int key)
 
 		M_StringCopy(name, P_SaveGameFile(itemOn), sizeof(name));
 		remove(name);
+
+		if (itemOn == quickSaveSlot)
+			quickSaveSlot = -1;
 
 		M_ReadSaveStrings();
 	}
@@ -3558,7 +3646,7 @@ void M_ConfirmDeleteGame ()
 
 	M_StartMessage(savegwarning, M_ConfirmDeleteGameResponse, true);
 	messageToPrint = 2;
-	S_StartSound(NULL,sfx_swtchn);
+	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }
 
 // [crispy] indicate game version mismatch
@@ -3566,5 +3654,5 @@ void M_LoadGameVerMismatch ()
 {
 	M_StartMessage("Game Version Mismatch\n\n"PRESSKEY, NULL, false);
 	messageToPrint = 2;
-	S_StartSound(NULL,sfx_swtchn);
+	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }

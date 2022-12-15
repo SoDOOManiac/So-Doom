@@ -343,7 +343,7 @@ static patch_t*		keys[NUMCARDS+3]; // [crispy] support combined card and skull k
 static patch_t*		faces[ST_NUMFACES];
 
 // face background
-static patch_t*		faceback;
+static patch_t*		faceback[MAXPLAYERS]; // [crispy] killough 3/7/98: make array
 
 // [So Doom] face background for So Doomy HUD, the STPB lumps with bottom border not trimmed
 static patch_t*		faceback_sd;
@@ -504,6 +504,7 @@ cheatseq_t cheat_showfps3 = CHEAT("sfps", 0); // [So Doom] shorter version of sh
 cheatseq_t cheat_goobers = CHEAT("goobers", 0);
 cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] Russian Doom
 cheatseq_t cheat_skill = CHEAT("skill", 0);
+<<<<<<< HEAD
 
 cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
 {
@@ -516,6 +517,9 @@ cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
     CHEAT("ta", 0),
 };
 
+=======
+cheatseq_t cheat_snow = CHEAT("letitsnow", 0);
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 static char msg[ST_MSGWIDTH];
 
 // [crispy] restrict cheat usage
@@ -590,13 +594,19 @@ void ST_refreshBackground(boolean force)
 	if (!deathmatch)
 	    V_DrawPatch(ST_ARMSBGX, 0, armsbg);
 
+	// [crispy] killough 3/7/98: make face background change with displayplayer
 	if (netgame)
+<<<<<<< HEAD
     {
         if (screenblocks == CRISPY_HUD)
         V_DrawPatch(ST_FX, 0, faceback_sd);
         else
 	    V_DrawPatch(ST_FX, 0, faceback);
     }
+=======
+	    V_DrawPatch(ST_FX, 0, faceback[displayplayer]);
+
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
         V_RestoreBuffer();
 
 	// [crispy] copy entire SCREENWIDTH, to preserve the pattern
@@ -1121,6 +1131,8 @@ ST_Responder (event_t* ev)
 
 	EV_DoGoobers();
 
+	R_SetGoobers(true);
+
 	M_snprintf(msg, sizeof(msg), "Get Psyched!");
 	plyr->message = msg;
       }
@@ -1228,6 +1240,7 @@ ST_Responder (event_t* ev)
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD]);
 	plyr->message = msg;
 	}
+<<<<<<< HEAD
     
     for (i=0;i<6;i++)
     {
@@ -1244,6 +1257,14 @@ ST_Responder (event_t* ev)
     GiveBackpack (false);
     plyr->powers[pw_strength] = 0;
     plyr->message = "All ammo removed!";
+=======
+      }
+      // [crispy] snow
+      else if (cht_CheckCheatSP(&cheat_snow, ev->data2))
+      {
+    crispy->snowflakes = !crispy->snowflakes;
+      }
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     }
 	// [So Doom] let ammo for the fist be the berserk pack, why not?
 	else if (i == 1)
@@ -1906,7 +1927,7 @@ void ST_updateWidgets(void)
 
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
-	if (i != consoleplayer)
+	if (i != displayplayer)
 	    st_fragscount += plyr->frags[i];
 	else
 	    st_fragscount -= plyr->frags[i];
@@ -2232,7 +2253,7 @@ void ST_drawWidgets(boolean refresh)
     // [crispy] draw the actual face widget background
     if (st_crispyhud && screenblocks == CRISPY_HUD)
     {
-	V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
+	V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback[0]->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
     }
     // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
     if (st_crispyhud && screenblocks == CRISPY_HUD+1)
@@ -2365,6 +2386,7 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     }
 
     // face backgrounds for different color players
+<<<<<<< HEAD
     // [So Doom] Use STPB instead of STFB for So Doomy HUD
 
     DEH_snprintf(namebuf, 9, "STFB%d", consoleplayer);
@@ -2372,6 +2394,15 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     
     DEH_snprintf(namebuf, 9, "STPB%d", consoleplayer);
     callback(namebuf, &faceback_sd);
+=======
+    // [crispy] killough 3/7/98: add better support for spy mode by loading
+    // all player face backgrounds and using displayplayer to choose them:
+    for (i=0; i<MAXPLAYERS; i++)
+    {
+    DEH_snprintf(namebuf, 9, "STFB%d", i);
+    callback(namebuf, &faceback[i]);
+    }
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
     // status bar background bits
     if (W_CheckNumForName("STBAR") >= 0)
@@ -2471,7 +2502,7 @@ void ST_initData(void)
     int		i;
 
     st_firsttime = true;
-    plyr = &players[consoleplayer];
+    plyr = &players[displayplayer];
 
     st_clock = 0;
     st_chatstate = StartChatState;
@@ -2689,6 +2720,7 @@ void ST_Start (void)
     ST_createWidgets();
     st_stopped = false;
 
+<<<<<<< HEAD
     // [crispy] correctly color the status bar face background in multiplayer
     // demos recorded by another player than player 1
     if (netgame && consoleplayer)
@@ -2701,6 +2733,8 @@ void ST_Start (void)
 	DEH_snprintf(namebuf, 7, "STFB%d", consoleplayer);
 	faceback = W_CacheLumpName(namebuf, PU_STATIC);
     }
+=======
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 }
 
 void ST_Stop (void)

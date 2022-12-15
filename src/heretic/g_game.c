@@ -37,6 +37,9 @@
 
 #define AM_STARTKEY     9
 
+#define MLOOKUNIT 8 // [crispy] for mouselook
+#define MLOOKUNITLOWRES 16 // [crispy] for mouselook when recording
+
 // Functions
 
 boolean G_CheckDemoStatus(void);
@@ -111,9 +114,9 @@ int totalleveltimes; // [crispy] total time for all completed levels
 
 boolean finalintermission; // [crispy] track intermission at end of episode
 
-int mouseSensitivity;
-int mouseSensitivity_x2;
-int mouseSensitivity_y;
+int mouseSensitivity = 5;
+int mouseSensitivity_x2 = 5;
+int mouseSensitivity_y = 5;
 
 char *demoname;
 static const char *orig_demoname = NULL; // [crispy] the name originally chosen for the demo, i.e. without "-00000"
@@ -293,6 +296,13 @@ extern int inv_ptr;
 
 boolean usearti = true;
 
+boolean speedkeydown (void)
+{
+    return (key_speed < NUMKEYS && gamekeydown[key_speed]) ||
+           (joybspeed < MAX_JOY_BUTTONS && joybuttons[joybspeed]) ||
+           (mousebspeed < MAX_MOUSE_BUTTONS && mousebuttons[mousebspeed]);
+}
+
 void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 {
     int i;
@@ -301,6 +311,9 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     int forward, side;
     int look, arti;
     int flyheight;
+
+    static unsigned int mbmlookctrl = 0; // [crispy]
+    static unsigned int kbdlookctrl = 0; // [crispy]
 
     extern boolean noartiskip;
 
@@ -318,9 +331,9 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 
     // [crispy] when "always run" is active,
     // pressing the "run" key will result in walking
-    speed = (joybspeed >= MAX_JOY_BUTTONS)
-        ^ (gamekeydown[key_speed]
-            || (joybspeed < MAX_JOY_BUTTONS && joybuttons[joybspeed]));
+    speed = (key_speed >= NUMKEYS
+         || joybspeed >= MAX_JOY_BUTTONS);
+    speed ^= speedkeydown();
 
     // haleyjd: removed externdriver crap
     
@@ -369,7 +382,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         else
         {
             joybspeed_old = joybspeed;
-            joybspeed = 29;
+            joybspeed = MAX_JOY_BUTTONS;
         }
 
         P_SetMessage(&players[consoleplayer], (joybspeed >= MAX_JOY_BUTTONS) ?
@@ -437,18 +450,40 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         side -= sidemove[speed];
 
     // Look up/down/center keys
-    if (gamekeydown[key_lookup] || joylook < 0)
+    // [crispy] Keyboard lookspring
+    if (crispy->freelook_hh == FREELOOK_HH_SPRING)
     {
-        look = lspeed;
+        if (gamekeydown[key_lookup] || joylook < 0)
+        {
+            look = lspeed;
+            kbdlookctrl += ticdup;
+        }
+        else if (gamekeydown[key_lookdown] || joylook > 0)
+        {
+            look = -lspeed;
+            kbdlookctrl += ticdup;
+        }
+        else if (gamekeydown[key_lookcenter] || kbdlookctrl)
+        {
+            look = TOCENTER;
+            kbdlookctrl = 0;
+        }
     }
-    if (gamekeydown[key_lookdown] || joylook > 0)
+    else
     {
-        look = -lspeed;
-    }
-    // haleyjd: removed externdriver crap
-    if (gamekeydown[key_lookcenter])
-    {
-        look = TOCENTER;
+        if (gamekeydown[key_lookup] || joylook < 0)
+        {
+            look = lspeed;
+        }
+        if (gamekeydown[key_lookdown] || joylook > 0)
+        {
+            look = -lspeed;
+        }
+        // haleyjd: removed externdriver crap
+        if (gamekeydown[key_lookcenter])
+        {
+            look = TOCENTER;
+        }
     }
 
     // haleyjd: removed externdriver crap
@@ -470,13 +505,14 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     }
 
     // Use artifact key
-    if (gamekeydown[key_useartifact])
+    if (gamekeydown[key_useartifact] || mousebuttons[mousebuseartifact])
     {
         if (gamekeydown[key_speed] && !noartiskip)
         {
             if (players[consoleplayer].inventory[inv_ptr].type != arti_none)
             {
                 gamekeydown[key_useartifact] = false;
+                mousebuttons[mousebuseartifact] = false;
                 cmd->arti = 0xff;       // skip artifact code
             }
         }
@@ -682,8 +718,46 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         testcontrols_mousespeed = 0;
     }
 
-    if (!novert)
+    if (crispy->mouselook || mousebuttons[mousebmouselook])
+    {
+        if (demorecording || lowres_turn)
+        {
+            // [crispy] Map mouse movement to look variable when recording
+            look += mouse_y_invert ? -mousey / MLOOKUNITLOWRES
+                                        : mousey / MLOOKUNITLOWRES;
+
+            // [crispy] Limit to max speed of keyboard look up/down
+            if (look > 2)
+                look = 2;
+            else if (look < -2)
+                look = -2;
+        }
+        else
+        {
+            cmd->lookdir = mouse_y_invert ? -mousey : mousey;
+            cmd->lookdir /= MLOOKUNIT;
+        }
+    }
+    else if (!novert)
+    {
         forward += mousey;
+    }
+
+    // [crispy] single click on mouse look button centers view
+    if (mousebuttons[mousebmouselook]) // [crispy] clicked
+    {
+        mbmlookctrl += ticdup;
+    }
+    else if (mbmlookctrl) // [crispy] released
+    {
+        if (crispy->freelook_hh == FREELOOK_HH_SPRING ||
+                mbmlookctrl < SLOWTURNTICS) // [crispy] short click
+        {
+            look = TOCENTER;
+        }
+        mbmlookctrl = 0;
+    }
+
     mousex = mousex2 = mousey = 0;
 
     if (forward > MAXPLMOVE)
@@ -777,9 +851,6 @@ void G_DoLoadLevel(void)
         memset(players[i].frags, 0, sizeof(players[i].frags));
     }
 
-    // [crispy] update the "singleplayer" variable
-    CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
-
     // [crispy] wand start
     if (crispy->pistolstart)
     {
@@ -851,6 +922,11 @@ static void SetJoyButtons(unsigned int buttons_mask)
     }
 }
 
+// If an InventoryMove*() function is called when the inventory is not active,
+// it will instead activate the inventory without attempting to change the
+// selected item. This action is indicated by a return value of false.
+// Otherwise, it attempts to change items and will return a value of true.
+
 static boolean InventoryMoveLeft()
 {
     inventoryTics = 5 * 35;
@@ -907,6 +983,9 @@ static boolean InventoryMoveRight()
 static void SetMouseButtons(unsigned int buttons_mask)
 {
     int i;
+    player_t *plr;
+
+    plr = &players[consoleplayer];
 
     for (i=0; i<MAX_MOUSE_BUTTONS; ++i)
     {
@@ -931,6 +1010,14 @@ static void SetMouseButtons(unsigned int buttons_mask)
             else if (i == mousebinvright)
             {
                 InventoryMoveRight();
+            }
+            else if (i == mousebuseartifact)
+            {
+                if (!inventory)
+                {
+                    plr->readyArtifact = plr->inventory[inv_ptr].type;
+                }
+                usearti = true;
             }
         }
 
@@ -1101,6 +1188,8 @@ void G_Ticker(void)
 //
     while (gameaction != ga_nothing)
     {
+        // [crispy] check if we are in the demo reel
+        CheckCrispySingleplayer(!demorecording && gameaction != ga_playdemo && !netgame);
         switch (gameaction)
         {
             case ga_loadlevel:
@@ -1325,7 +1414,7 @@ void G_PlayerFinishLevel(int player)
     }
     p->messageTics = 0;
     p->centerMessageTics = 0;
-    p->lookdir = 0;
+    p->lookdir = p->oldlookdir = 0;
     p->mo->flags &= ~MF_SHADOW; // Remove invisibility
     p->extralight = 0;          // Remove weapon flashes
     p->fixedcolormap = 0;       // Remove torch
@@ -1490,7 +1579,7 @@ void G_DoReborn(int playernum)
     int i;
 
     // quit demo unless -demoextend
-    if ((!demoextend || !singledemo) && G_CheckDemoStatus())
+    if (!demoextend && G_CheckDemoStatus())
         return;
     if (!netgame)
         gameaction = ga_loadlevel;      // reload the level from scratch
@@ -1640,7 +1729,7 @@ void G_DoCompleted(void)
     gameaction = ga_nothing;
 
     // quit demo unless -demoextend
-    if ((!demoextend || !singledemo) && G_CheckDemoStatus())
+    if (!demoextend && G_CheckDemoStatus())
     {
         return;
     }
@@ -1780,6 +1869,7 @@ void G_DoLoadGame(void)
     P_UnArchiveWorld();
     P_UnArchiveThinkers();
     P_UnArchiveSpecials();
+    P_RestoreTargets();
 
     if (SV_ReadByte() != SAVE_GAME_TERMINATOR)
     {                           // Missing savegame termination marker
@@ -1860,7 +1950,7 @@ void G_InitNew(skill_t skill, int episode, int map)
         respawnmonsters = false;
     }
     // Set monster missile speeds
-    speed = skill == sk_nightmare;
+    speed = skill == sk_nightmare || critical->fast;
     for (i = 0; MonsterMissileInfo[i].type != -1; i++)
     {
         mobjinfo[MonsterMissileInfo[i].type].speed

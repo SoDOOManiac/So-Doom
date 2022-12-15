@@ -47,6 +47,9 @@
 #define NUMCOLORMAPS            32      // number of diminishing
 #define INVERSECOLORMAP         32
 
+#define LOOKDIRMIN 110 // [crispy] -110, actually
+#define LOOKDIRMAX 90
+#define LOOKDIRS (LOOKDIRMIN + 1 + LOOKDIRMAX) // [crispy] lookdir range: -110..0..90
 /*
 ==============================================================================
 
@@ -82,6 +85,24 @@ typedef struct
     void *specialdata;          // thinker_t for reversable actions
     int linecount;
     struct line_s **lines;      // [linecount] size
+
+    // [AM] Previous position of floor and ceiling before
+    //      think.  Used to interpolate between positions.
+    fixed_t	oldfloorheight;
+    fixed_t	oldceilingheight;
+
+    // [AM] Gametic when the old positions were recorded.
+    //      Has a dual purpose; it prevents movement thinkers
+    //      from storing old positions twice in a tic, and
+    //      prevents the renderer from attempting to interpolate
+    //      if old values were not updated recently.
+    int         oldgametic;
+
+    // [AM] Interpolated floor and ceiling height.
+    //      Calculated once per tic and used inside
+    //      the renderer.
+    fixed_t	interpfloorheight;
+    fixed_t	interpceilingheight;
 } sector_t;
 
 typedef struct
@@ -90,6 +111,8 @@ typedef struct
     fixed_t rowoffset;          // add this to the calculated texture top
     short toptexture, bottomtexture, midtexture;
     sector_t *sector;
+    fixed_t basetextureoffset;  // [crispy] smooth texture scrolling
+    fixed_t baserowoffset;  // [crispy] smooth texture scrolling
 } side_t;
 
 typedef enum
@@ -165,6 +188,10 @@ typedef struct
     int seqType;
     fixed_t size;               // polyobj size (area of POLY_AREAUNIT == size of FRACUNIT)
     void *specialdata;          // pointer a thinker, if the poly is moving
+    fixed_t rx, ry;             // [crispy] remaining poly movement this tic
+    fixed_t dx, dy;             // [crispy] total poly movement this tic
+    angle_t rtheta;             // [crispy] remaining poly rotation this tic
+    angle_t dtheta;             // [crispy] total poly rotation this tic
 } polyobj_t;
 
 typedef struct polyblock_s
@@ -251,7 +278,9 @@ typedef struct vissprite_s
     fixed_t xiscale;            // negative if flipped
     fixed_t texturemid;
     int patch;
-    lighttable_t *colormap;
+    // [crispy] brightmaps for select sprites
+    lighttable_t *colormap[2];
+    const byte *brightmap;
     int mobjflags;              // for color translation and shadow draw
     boolean psprite;            // true if psprite
     int class;                  // player class (used in translation)
@@ -360,6 +389,7 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y);
 angle_t R_PointToAngle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2);
 fixed_t R_PointToDist(fixed_t x, fixed_t y);
 fixed_t R_ScaleFromGlobalAngle(angle_t visangle);
+angle_t R_InterpolateAngle(angle_t oangle, angle_t nangle, fixed_t scale);
 subsector_t *R_PointInSubsector(fixed_t x, fixed_t y);
 //void R_AddPointToBox (int x, int y, fixed_t *box);
 
@@ -413,7 +443,8 @@ extern short openings[MAXOPENINGS], *lastopening;
 extern short floorclip[MAXWIDTH];
 extern short ceilingclip[MAXWIDTH];
 
-extern fixed_t yslope[MAXHEIGHT];
+extern fixed_t *yslope;
+extern fixed_t yslopes[LOOKDIRS][MAXHEIGHT]; // [crispy]
 extern fixed_t distscale[MAXWIDTH];
 
 void R_InitPlanes(void);
@@ -504,13 +535,15 @@ void R_ClipVisSprite(vissprite_t * vis, int xl, int xh);
 //
 //=============================================================================
 
-extern lighttable_t *dc_colormap;
+extern lighttable_t *dc_colormap[2];
 extern int dc_x;
 extern int dc_yl;
 extern int dc_yh;
 extern fixed_t dc_iscale;
 extern fixed_t dc_texturemid;
+extern int dc_texheight; // [crispy]
 extern byte *dc_source;         // first pixel in a column
+extern const byte *dc_brightmap;
 
 void R_DrawColumn(void);
 void R_DrawColumnLow(void);

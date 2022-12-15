@@ -859,7 +859,7 @@ void R_ExecuteSetViewSize (void)
 	fuzzcolfunc = R_DrawFuzzColumn;
 	transcolfunc = R_DrawTranslatedColumn;
 	tlcolfunc = R_DrawTLColumn;
-	spanfunc = R_DrawSpan;
+	spanfunc = goobers_mode ? R_DrawSpanSolid : R_DrawSpan;
     }
     else
     {
@@ -867,7 +867,7 @@ void R_ExecuteSetViewSize (void)
 	fuzzcolfunc = R_DrawFuzzColumnLow;
 	transcolfunc = R_DrawTranslatedColumnLow;
 	tlcolfunc = R_DrawTLColumnLow;
-	spanfunc = R_DrawSpanLow;
+	spanfunc = goobers_mode ? R_DrawSpanSolidLow : R_DrawSpanLow;
     }
 
     R_InitBuffer (scaledviewwidth, viewheight);
@@ -936,6 +936,16 @@ void R_ExecuteSetViewSize (void)
     ST_refreshBackground(true);
 }
 
+boolean goobers_mode = false;
+
+void R_SetGoobers (boolean mode)
+{
+    if (goobers_mode != mode)
+    {
+        goobers_mode = mode;
+        R_ExecuteSetViewSize();
+    }
+}
 
 
 //
@@ -1046,6 +1056,8 @@ void R_SetupFrame (player_t* player)
     }
     else
         extralight = 0;
+    // [crispy] A11Y
+    extralight += a11y_extra_lighting;
 
     if (pitch > LOOKDIRMAX)
 	pitch = LOOKDIRMAX;
@@ -1109,13 +1121,16 @@ void R_RenderPlayerView (player_t* player)
     }
     
     // [crispy] flashing HOM indicator
-    V_DrawFilledBox(viewwindowx, viewwindowy,
-        scaledviewwidth, viewheight,
+    if (crispy->flashinghom)
+    {
+        V_DrawFilledBox(viewwindowx, viewwindowy,
+            scaledviewwidth, viewheight,
 #ifndef CRISPY_TRUECOLOR
-        crispy->flashinghom ? (176 + (gametic % 16)) : 0);
+            176 + (gametic % 16));
 #else
-        colormaps[crispy->flashinghom ? (176 + (gametic % 16)) : 0]);
+            colormaps[176 + (gametic % 16)]);
 #endif
+    }
 
     // check for new console commands.
     NetUpdate ();

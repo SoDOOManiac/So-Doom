@@ -780,7 +780,7 @@ void R_ProjectSprite (mobj_t* thing)
 
 	// [crispy] brightmaps for select sprites
 	vis->colormap[0] = spritelights[index];
-	vis->colormap[1] = scalelight[LIGHTLEVELS-1][MAXLIGHTSCALE-1];
+	vis->colormap[1] = colormaps;
     }	
     vis->brightmap = R_BrightmapForSprite(thing->sprite);
 
@@ -1026,7 +1026,7 @@ void R_DrawPSprite (pspdef_t* psp, psprnum_t psprnum) // [crispy] differentiate 
     vis->translation = NULL; // [crispy] no color translation
     vis->mobjflags = 0;
     // [crispy] weapons drawn 1 pixel too high when player is idle
-    vis->texturemid = (BASEYCENTER<<FRACBITS)+FRACUNIT/4-(psp->sy2+abs(psp->dy)-spritetopoffset[lump]);
+    vis->texturemid = (BASEYCENTER<<FRACBITS)+FRACUNIT/4-(psp->sy2-spritetopoffset[lump]);
     vis->x1 = x1 < 0 ? 0 : x1;
     vis->x2 = x2 >= viewwidth ? viewwidth-1 : x2;	
     vis->scale = pspritescale<<detailshift;
@@ -1070,7 +1070,7 @@ void R_DrawPSprite (pspdef_t* psp, psprnum_t psprnum) // [crispy] differentiate 
     {
 	// local light
 	vis->colormap[0] = spritelights[MAXLIGHTSCALE-1];
-	vis->colormap[1] = scalelight[LIGHTLEVELS-1][MAXLIGHTSCALE-1];
+	vis->colormap[1] = colormaps;
     }
     vis->brightmap = R_BrightmapForState(psp->state - states);
 	

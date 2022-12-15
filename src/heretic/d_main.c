@@ -47,6 +47,8 @@
 #include "v_video.h"
 #include "v_trans.h" // [crispy] dp_translation
 
+#include "heretic_icon.c"
+
 #define CT_KEY_GREEN    'g'
 #define CT_KEY_YELLOW   'y'
 #define CT_KEY_RED      'r'
@@ -162,72 +164,87 @@ void DrawCenterMessage(void)
 //
 //---------------------------------------------------------------------------
 
+int left_widget_w, right_widget_w; // [crispy]
+extern int screenblocks; // [crispy]
+
 static void CrispyDrawStats (void)
 {
-    static short height, coord_x;
+    static short height, coord_x, coord_w;
     char str[32];
     player_t *const player = &players[consoleplayer];
+    int left_widget_x, right_widget_x;
 
-    if (!height || !coord_x)
+    if (!height || !coord_x || !coord_w)
     {
-	const int FontABaseLump = W_GetNumForName(DEH_String("FONTA_S")) + 1;
-	const patch_t *const p = W_CacheLumpNum(FontABaseLump + 'A' - 33, PU_CACHE);
+        const int FontABaseLump = W_GetNumForName(DEH_String("FONTA_S")) + 1;
+        const patch_t *const p = W_CacheLumpNum(FontABaseLump + 'A' - 33, PU_CACHE);
 
-	height = SHORT(p->height) + 1;
-	coord_x = ORIGWIDTH - 7 * SHORT(p->width);
+        height = SHORT(p->height) + 1;
+        coord_w = 7 * SHORT(p->width);
+        coord_x = ORIGWIDTH - coord_w;
     }
 
-    if (crispy->automapstats == WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    left_widget_w = right_widget_w = 0;
+    left_widget_x = 0 - WIDESCREENDELTA;
+    right_widget_x = coord_x + WIDESCREENDELTA;
+
+    if (crispy->automapstats == WIDGETS_ALWAYS
+            || (automapactive && (crispy->automapstats == WIDGETS_AUTOMAP
+                                || crispy->automapstats == WIDGETS_STBAR))
+            || (screenblocks > 10 && crispy->automapstats == WIDGETS_STBAR))
     {
-	M_snprintf(str, sizeof(str), "K %d/%d", player->killcount, totalkills);
-	MN_DrTextA(str, 0, 1*height);
+        M_snprintf(str, sizeof(str), "K %d/%d", player->killcount, totalkills);
+        MN_DrTextA(str, left_widget_x, 1*height);
+        left_widget_w = MN_TextAWidth(str); // Assume that kills is longest string
 
-	M_snprintf(str, sizeof(str), "I %d/%d", player->itemcount, totalitems);
-	MN_DrTextA(str, 0, 2*height);
+        M_snprintf(str, sizeof(str), "I %d/%d", player->itemcount, totalitems);
+        MN_DrTextA(str, left_widget_x, 2*height);
 
-	M_snprintf(str, sizeof(str), "S %d/%d", player->secretcount, totalsecret);
-	MN_DrTextA(str, 0, 3*height);
+        M_snprintf(str, sizeof(str), "S %d/%d", player->secretcount, totalsecret);
+        MN_DrTextA(str, left_widget_x, 3*height);
+    }
+    else if (crispy->automapstats == WIDGETS_STBAR)
+    {
+        M_snprintf(str, sizeof(str), "K %d/%d I %d/%d S %d/%d",
+                    player->killcount, totalkills,
+                    player->itemcount, totalitems,
+                    player->secretcount, totalsecret);
+        MN_DrTextA(str, 20, 145); // same location as level name in automap
     }
 
     if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))
     {
-	const int time = leveltime / TICRATE;
+        const int time = leveltime / TICRATE;
 
-	M_snprintf(str, sizeof(str), "%02d:%02d", time/60, time%60);
-	MN_DrTextA(str, 0, 4*height);
+        M_snprintf(str, sizeof(str), "%02d:%02d", time/60, time%60);
+        MN_DrTextA(str, left_widget_x, 4*height);
     }
 
     if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
-	M_snprintf(str, sizeof(str), "X %-5d", player->mo->x>>FRACBITS);
-	MN_DrTextA(str, coord_x, 1*height);
+        right_widget_w = coord_w;
 
-	M_snprintf(str, sizeof(str), "Y %-5d", player->mo->y>>FRACBITS);
-	MN_DrTextA(str, coord_x, 2*height);
+        M_snprintf(str, sizeof(str), "X %-5d", player->mo->x>>FRACBITS);
+        MN_DrTextA(str, right_widget_x, 1*height);
 
-	M_snprintf(str, sizeof(str), "A %-5d", player->mo->angle/ANG1);
-	MN_DrTextA(str, coord_x, 3*height);
+        M_snprintf(str, sizeof(str), "Y %-5d", player->mo->y>>FRACBITS);
+        MN_DrTextA(str, right_widget_x, 2*height);
+
+        M_snprintf(str, sizeof(str), "A %-5d", player->mo->angle/ANG1);
+        MN_DrTextA(str, right_widget_x, 3*height);
+
+        if (player->cheats & CF_SHOWFPS)
+        {
+            M_snprintf(str, sizeof(str), "%d FPS", crispy->fps);
+            MN_DrTextA(str, right_widget_x, 4*height + 1);
+        }
     }
-}
-
-// [crispy] Draw the current FPS if show fps cheat is active
-static void CrispyDrawFps(void)
-{
-    short coord_x, height;
-    char str[32];
-    player_t* const player = &players[consoleplayer];
-
-    const int FontABaseLump = W_GetNumForName(DEH_String("FONTA_S")) + 1;
-    const patch_t* const p = W_CacheLumpNum(FontABaseLump + 'A' - 33, PU_CACHE);
-
-    height = SHORT(p->height) + 1;
-    coord_x = ORIGWIDTH - 6 * SHORT(p->width);
-
-    // [crispy] Only show FPS outside automap as it could obscure level coords
-    if (player->cheats & CF_SHOWFPS && !automapactive)
+    else if (player->cheats & CF_SHOWFPS)
     {
-        M_snprintf(str, sizeof(str), "%d F", crispy->fps);
-        MN_DrTextA(str, coord_x, height);
+        right_widget_w = coord_w;
+
+        M_snprintf(str, sizeof(str), "%d FPS", crispy->fps);
+        MN_DrTextA(str, right_widget_x, 1*height);
     }
 }
 
@@ -270,7 +287,6 @@ void D_Display(void)
             UpdateState |= I_FULLVIEW;
             SB_Drawer();
             CrispyDrawStats();
-            CrispyDrawFps();
             break;
         case GS_INTERMISSION:
             IN_Drawer();
@@ -342,14 +358,43 @@ boolean D_GrabMouseCallback(void)
 
 void D_DoomLoop(void)
 {
+    // [crispy] update the "singleplayer" variable
+    CheckCrispySingleplayer(!demorecording && gameaction != ga_playdemo && !netgame);
+
+    if (!crispy->singleplayer)
+    {
+        int i;
+
+        const struct {
+            boolean feature;
+            const char *option;
+        } custom_options[] = {
+            {crispy->moreammo,   "-moreammo"},
+            {crispy->fast,       "-fast"},
+            {crispy->pistolstart, "-wandstart"},
+            {crispy->autohealth, "-autohealth"},
+        };
+
+        for (i = 0; i < arrlen(custom_options); i++)
+        {
+            if (custom_options[i].feature)
+            {
+                I_Error("The %s option is not supported\n"
+                        "for demos and network play.",
+                        custom_options[i].option);
+            }
+        }
+    }
+
     if (M_CheckParm("-debugfile"))
     {
         char filename[20];
         M_snprintf(filename, sizeof(filename), "debug%i.txt", consoleplayer);
-        debugfile = fopen(filename, "w");
+        debugfile = M_fopen(filename, "w");
     }
     I_GraphicsCheckCommandLine();
     I_SetGrabMouseCallback(D_GrabMouseCallback);
+    I_RegisterWindowIcon(heretic_icon_data, heretic_icon_w, heretic_icon_h);
     I_InitGraphics();
 
     main_loop_started = true;
@@ -418,7 +463,7 @@ void D_PageTicker(void)
 
 void D_PageDrawer(void)
 {
-    V_DrawRawScreen(W_CacheLumpName(pagename, PU_CACHE));
+    V_DrawFullscreenRawOrPatch(W_GetNumForName(pagename));
     if (demosequence == 1)
     {
         V_DrawPatch(4, 160, W_CacheLumpName(DEH_String("ADVISOR"), PU_CACHE));
@@ -770,7 +815,6 @@ void InitThermo(int max)
 
 void D_BindVariables(void)
 {
-    extern int screenblocks;
     extern int snd_Channels;
     int i;
 
@@ -819,12 +863,18 @@ void D_BindVariables(void)
     // [crispy] bind "crispness" config variables
     M_BindIntVariable("crispy_hires",           &crispy->hires);
     M_BindIntVariable("crispy_smoothscaling",   &crispy->smoothscaling);
+    M_BindIntVariable("crispy_automapoverlay",  &crispy->automapoverlay);
+    M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
     M_BindIntVariable("crispy_automapstats",    &crispy->automapstats);
+    M_BindIntVariable("crispy_brightmaps",      &crispy->brightmaps);
+    M_BindIntVariable("crispy_freelook",        &crispy->freelook_hh);
     M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
+    M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
     M_BindIntVariable("crispy_playercoords",    &crispy->playercoords);
     M_BindIntVariable("crispy_secretmessage",   &crispy->secretmessage);
     M_BindIntVariable("crispy_uncapped",        &crispy->uncapped);
     M_BindIntVariable("crispy_vsync",           &crispy->vsync);
+    M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
 }
 
 // 
@@ -846,6 +896,8 @@ static void D_Endoom(void)
 
     I_Endoom(endoom_data);
 }
+
+static const char *const loadparms[] = {"-file", "-merge", NULL}; // [crispy]
 
 //---------------------------------------------------------------------------
 //
@@ -905,6 +957,7 @@ void D_DoomMain(void)
     startmap = 1;
     autostart = false;
 
+    crispy->freelook = FREELOOK_LOCK;
 //
 // get skill / episode / map from parms
 //
@@ -1046,6 +1099,44 @@ void D_DoomMain(void)
     crispy->pistolstart = M_ParmExists("-wandstart");
 
     //!
+    // @category game
+    // @category mod
+    //
+    // Ammo pickups give 50% more ammo. This option is not allowed when recording a
+    // demo, playing back a demo or when starting a network game.
+    //
+
+    crispy->moreammo = M_ParmExists("-moreammo");
+
+    //!
+    // @category game
+    // @category mod
+    //
+    // Fast monsters. This option is not allowed when recording a demo,
+    // playing back a demo or when starting a network game.
+    //
+
+    crispy->fast = M_ParmExists("-fast");
+
+    //!
+    // @category game
+    // @category mod
+    //
+    // Automatic use of Quartz flasks and Mystic urns.
+    //
+
+    crispy->autohealth = M_ParmExists("-autohealth");
+
+    //!
+    // @category game
+    // @category mod
+    //
+    // Show the location of keys on the automap.
+    //
+
+    crispy->keysloc = M_ParmExists("-keysloc");
+
+    //!
     // @category mod
     //
     // Disable auto-loading of .wad files.
@@ -1054,9 +1145,12 @@ void D_DoomMain(void)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("heretic.wad", true);
-        DEH_AutoLoadPatches(autoload_dir);
-        W_AutoLoadWADs(autoload_dir);
-        free(autoload_dir);
+        if (autoload_dir != NULL)
+        {
+            DEH_AutoLoadPatches(autoload_dir);
+            W_AutoLoadWADs(autoload_dir);
+            free(autoload_dir);
+        }
     }
 
     // Load dehacked patches specified on the command line.
@@ -1064,6 +1158,31 @@ void D_DoomMain(void)
 
     // Load PWAD files.
     W_ParseCommandLine();
+
+    // [crispy] add wad files from autoload PWAD directories
+
+    if (!M_ParmExists("-noautoload"))
+    {
+        int i;
+
+        for (i = 0; loadparms[i]; i++)
+        {
+            int p;
+            p = M_CheckParmWithArgs(loadparms[i], 1);
+            if (p)
+            {
+                while (++p != myargc && myargv[p][0] != '-')
+                {
+                    char *autoload_dir;
+                    if ((autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false)))
+                    {
+                        W_AutoLoadWADs(autoload_dir);
+                        free(autoload_dir);
+                    }
+                }
+            }
+        }
+    }
 
     //!
     // @arg <demo>
@@ -1123,6 +1242,31 @@ void D_DoomMain(void)
 
     // Generate the WAD hash table.  Speed things up a bit.
     W_GenerateHashTable();
+
+    // [crispy] process .deh files from PWADs autoload directories
+
+    if (!M_ParmExists("-noautoload"))
+    {
+        int i;
+
+        for (i = 0; loadparms[i]; i++)
+        {
+            int p;
+            p = M_CheckParmWithArgs(loadparms[i], 1);
+            if (p)
+            {
+                while (++p != myargc && myargv[p][0] != '-')
+                {
+                    char *autoload_dir;
+                    if ((autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false)))
+                    {
+                        DEH_AutoLoadPatches(autoload_dir);
+                        free(autoload_dir);
+                    }
+                }
+            }
+        }
+    }
 
     //!
     // @category demo

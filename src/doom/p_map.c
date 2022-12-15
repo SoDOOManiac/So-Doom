@@ -1530,10 +1530,8 @@ boolean PIT_ChangeSector (mobj_t*	thing)
 	P_SetMobjState (thing, S_GIBS);
 
 	// [crispy] no blood, no giblets
-	if (crispy->coloredblood && (thing->flags & MF_NOBLOOD))
-	{
+	if (thing->flags & MF_NOBLOOD)
 		thing->sprite = SPR_TNT1;
-	}
 
     if (gameversion > exe_doom_1_2)
 	    thing->flags &= ~MF_SOLID;
@@ -1571,7 +1569,7 @@ boolean PIT_ChangeSector (mobj_t*	thing)
 	// spray blood in a random direction
 	mo = P_SpawnMobj (thing->x,
 			  thing->y,
-			  // [crispy] Lost Souls and Barrels bleed Puffs
+			  // [crispy] no blood, no.. well.. blood
 			  thing->z + thing->height/2, (thing->flags & MF_NOBLOOD) ? MT_PUFF : MT_BLOOD);
 	
 	mo->momx = P_SubRandom() << 12;
@@ -1579,10 +1577,6 @@ boolean PIT_ChangeSector (mobj_t*	thing)
 
 	// [crispy] connect blood object with the monster that bleeds it
 	mo->target = thing;
-
-	// [crispy] Spectres bleed spectre blood
-	if (crispy->coloredblood)
-	    mo->flags |= (thing->flags & MF_SHADOW);
     }
 
     // keep checking (crush other things)	

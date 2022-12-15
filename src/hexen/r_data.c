@@ -19,8 +19,10 @@
 #include "i_system.h"
 #include "i_swap.h"
 #include "m_misc.h"
+#include "r_bmaps.h"
 #include "r_local.h"
 #include "p_local.h"
+#include "v_trans.h" // [crispy] color translation and color string tables
 
 typedef struct
 {
@@ -55,6 +57,7 @@ int *texturecompositesize;
 short **texturecolumnlump;
 unsigned short **texturecolumnofs;
 byte **texturecomposite;
+const byte **texturebrightmap;  // [crispy] brightmaps
 
 int *flattranslation;           // for global animation
 int *texturetranslation;        // for global animation
@@ -295,7 +298,6 @@ void R_InitTextures(void)
     int *maptex, *maptex2, *maptex1;
     char name[9], *names, *name_p;
     int *patchlookup;
-    int totalwidth;
     int nummappatches;
     int offset, maxoff, maxoff2;
     int numtextures1, numtextures2;
@@ -344,8 +346,7 @@ void R_InitTextures(void)
     texturecompositesize = Z_Malloc(numtextures * sizeof(int), PU_STATIC, 0);
     texturewidthmask = Z_Malloc(numtextures * sizeof(int), PU_STATIC, 0);
     textureheight = Z_Malloc(numtextures * sizeof(fixed_t), PU_STATIC, 0);
-
-    totalwidth = 0;
+    texturebrightmap = Z_Malloc (numtextures * sizeof(*texturebrightmap), PU_STATIC, 0);
 
     for (i = 0; i < numtextures; i++, directory++)
     {
@@ -371,6 +372,8 @@ void R_InitTextures(void)
         memcpy(texture->name, mtexture->name, sizeof(texture->name));
         mpatch = &mtexture->patches[0];
         patch = &texture->patches[0];
+        // [crispy] initialize brightmaps
+        texturebrightmap[i] = R_BrightmapForTexName(texture->name);
         for (j = 0; j < texture->patchcount; j++, mpatch++, patch++)
         {
             patch->originx = SHORT(mpatch->originx);
@@ -387,8 +390,6 @@ void R_InitTextures(void)
             j <<= 1;
         texturewidthmask[i] = j - 1;
         textureheight[i] = texture->height << FRACBITS;
-
-        totalwidth += texture->width;
     }
 
     Z_Free(patchlookup);
@@ -492,6 +493,30 @@ void R_InitColormaps(void)
     length = W_LumpLength(lump);
     colormaps = Z_Malloc(length, PU_STATIC, 0);
     W_ReadLump(lump, colormaps);
+
+    // [crispy] initialize color translation and color string tables
+    {
+	byte *playpal = W_CacheLumpName("PLAYPAL", PU_STATIC);
+	char c[3];
+	int i, j;
+
+	if (!crstr)
+	    crstr = I_Realloc(NULL, CRMAX * sizeof(*crstr));
+
+	// [crispy] CRMAX - 2: don't override the original GREN and BLUE2 Boom tables
+	for (i = 0; i < CRMAX - 2; i++)
+	{
+	    for (j = 0; j < 256; j++)
+	    {
+		cr[i][j] = V_Colorize(playpal, i, j, false);
+	    }
+
+	    M_snprintf(c, sizeof(c), "%c%c", cr_esc, '0' + i);
+	    crstr[i] = M_StringDuplicate(c);
+	}
+
+	W_ReleaseLumpName("PLAYPAL");
+    }
 }
 
 

@@ -238,11 +238,18 @@ void P_MovePlayer(player_t * player)
         else
         {
             player->lookdir += 5 * look;
-            if (player->lookdir > 90 || player->lookdir < -110)
+            if (player->lookdir > 90 ||
+                    player->lookdir < -110)
             {
                 player->lookdir -= 5 * look;
             }
         }
+    }
+    // [crispy] Handle mouselook
+    if (!demoplayback)
+    {
+        player->lookdir = BETWEEN(-110, 90,
+                                     player->lookdir + cmd->lookdir);
     }
     if (player->centering)
     {
@@ -545,7 +552,7 @@ void P_PlayerThink(player_t * player)
     player->mo->oldz = player->mo->z;
     player->mo->oldangle = player->mo->angle;
     player->oldviewz = player->viewz;
-    // player->oldlookdir = player->lookdir;
+    player->oldlookdir = player->lookdir;
     // player->oldrecoilpitch = player->recoilpitch;
 
     // No-clip cheat

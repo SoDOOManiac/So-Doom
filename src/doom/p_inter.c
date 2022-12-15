@@ -86,7 +86,8 @@ P_GiveAmmo
 	num = clipammo[ammo]/2;
     
     if (gameskill == sk_baby
-	|| gameskill == sk_nightmare)
+	|| gameskill == sk_nightmare
+	|| critical->moreammo)
     {
 	// give double ammo in trainer mode,
 	// you'll need in nightmare
@@ -207,7 +208,7 @@ P_GiveWeapon
 	// [crispy] show weapon pickup messages in multiplayer games
 	player->message = DEH_String(WeaponPickupMessages[weapon]);
 
-	if (player == &players[consoleplayer])
+	if (player == &players[displayplayer])
 	    S_StartSound (NULL, sfx_wpnup);
 	return false;
     }
@@ -450,6 +451,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_bluecard])
 	    player->message = DEH_String(GOTBLUECARD);
 	P_GiveCard (player, it_bluecard);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -458,6 +460,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_yellowcard])
 	    player->message = DEH_String(GOTYELWCARD);
 	P_GiveCard (player, it_yellowcard);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -466,6 +469,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_redcard])
 	    player->message = DEH_String(GOTREDCARD);
 	P_GiveCard (player, it_redcard);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -474,6 +478,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_blueskull])
 	    player->message = DEH_String(GOTBLUESKUL);
 	P_GiveCard (player, it_blueskull);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -482,6 +487,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_yellowskull])
 	    player->message = DEH_String(GOTYELWSKUL);
 	P_GiveCard (player, it_yellowskull);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -490,6 +496,7 @@ P_TouchSpecialThing
 	if (!player->cards[it_redskull])
 	    player->message = DEH_String(GOTREDSKULL);
 	P_GiveCard (player, it_redskull);
+	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
@@ -692,6 +699,15 @@ P_TouchSpecialThing
 	sound = sfx_wpnup;	
 	break;
 		
+	// [NS] Beta pickups.
+      case SPR_BON3:
+	player->message = DEH_String(BETA_BONUS3);
+	break;
+
+      case SPR_BON4:
+	player->message = DEH_String(BETA_BONUS4);
+	break;
+
       default:
 	I_Error ("P_SpecialThing: Unknown gettable thing");
     }
@@ -700,8 +716,8 @@ P_TouchSpecialThing
 	player->itemcount++;
     P_RemoveMobj (special);
     player->bonuscount += BONUSADD;
-    if (player == &players[consoleplayer])
-	S_StartSound (NULL, sound);
+    if (player == &players[displayplayer])
+	S_StartSoundOptional (NULL, sound, sfx_itemup); // [NS] Fallback to itemup.
 }
 
 
@@ -765,7 +781,8 @@ P_KillMobj
 	target->player->fixedcolormap = target->player->powers[pw_infrared] ? 1 : 0;
 
 	if (target->player == &players[consoleplayer]
-	    && automapactive)
+	    && automapactive
+	    && !demoplayback) // [crispy] killough 11/98: don't switch out in demos, though
 	{
 	    // don't die in auto map,
 	    // switch view prior to dying

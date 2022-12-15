@@ -222,6 +222,16 @@ typedef struct mobj_s
     short tid;                  // thing identifier
     byte special;               // special
     byte args[5];               // special arguments
+
+    // [AM] If true, ok to interpolate this tic.
+    int                 interp;
+
+    // [AM] Previous position of mobj before think.
+    //      Used to interpolate between positions.
+    fixed_t		oldx;
+    fixed_t		oldy;
+    fixed_t		oldz;
+    angle_t		oldangle;
 } mobj_t;
 
 // each sector has a degenmobj_t in it's center for sound origin purposes
@@ -528,7 +538,7 @@ typedef struct player_s
     fixed_t bob;                // bounded/scaled total momentum
 
     int flyheight;
-    int lookdir;
+    int lookdir, oldlookdir;
     boolean centering;
     int health;                 // only used between levels, mo->health
     // is used during levels
@@ -567,13 +577,18 @@ typedef struct player_s
     int morphTics;              // player is a pig if > 0
     unsigned int jumpTics;      // delay the next jump for a moment
     unsigned int worldTimer;    // total time the player's been playing
+
+    // [AM] Previous position of viewz before think.
+    //      Used to interpolate between camera positions.
+    angle_t		oldviewz;
 } player_t;
 
 #define CF_NOCLIP		1
 #define	CF_GODMODE		2
 #define	CF_NOMOMENTUM	4       // not really a cheat, just a debug aid
 
-#define	SBARHEIGHT	(39 << crispy->hires)      // status bar height at bottom of screen
+#define ORIGSBARHEIGHT          39 // [crispy]
+#define	SBARHEIGHT	(ORIGSBARHEIGHT << crispy->hires)      // status bar height at bottom of screen
 
 void NET_SendFrags(player_t * player);
 
@@ -618,6 +633,8 @@ extern boolean netgame;         // only true if >1 player
 
 extern boolean cmdfrag;         // true if a CMD_FRAG packet should be sent out every
                                                 // kill
+
+extern boolean demorecording;
 
 extern boolean playeringame[MAXPLAYERS];
 extern pclass_t PlayerClass[MAXPLAYERS];
@@ -666,6 +683,8 @@ extern mapthing_t playerstarts[MAX_PLAYER_STARTS][MAXPLAYERS];
 extern int maxplayers;
 
 extern int mouseSensitivity;
+extern int mouseSensitivity_x2; // [crispy]
+extern int mouseSensitivity_y; // [crispy]
 
 extern boolean precache;        // if true, load all graphics at level load
 

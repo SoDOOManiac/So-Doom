@@ -149,12 +149,21 @@ multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
     {SECRETMESSAGE_COUNT, "count"},
 };
 
+<<<<<<< HEAD
 multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS] =
 {
     {MAPSECRETS_DEFAULT, "default"},
     {MAPSECRETS_DEFAULT_AND_COLOR, "default + color revealed"},
     {MAPSECRETS_FORCE, "force"},
     {MAPSECRETS_FORCE_AND_COLOR, "force + color revealed"},
+=======
+multiitem_t multiitem_statsformat[NUM_STATSFORMATS] =
+{
+    {STATSFORMAT_RATIO, "ratio"},
+    {STATSFORMAT_REMAINING, "remaining"},
+    {STATSFORMAT_PERCENT, "percent"},
+    {STATSFORMAT_BOOLEAN, "boolean"},
+>>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =
@@ -185,6 +194,7 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
     {WIDGETS_OFF, "never"},
     {WIDGETS_AUTOMAP, "in Automap"},
     {WIDGETS_ALWAYS, "always"},
+    {WIDGETS_STBAR, "status bar"},
 };
 
 extern void AM_LevelInit (boolean reinit);
@@ -407,12 +417,6 @@ void M_CrispyToggleExtAutomap(int choice)
     crispy->extautomap = !crispy->extautomap;
 }
 
-void M_CrispyToggleExtsaveg(int choice)
-{
-    choice = 0;
-    crispy->extsaveg = !crispy->extsaveg;
-}
-
 void M_CrispyToggleFlipcorpses(int choice)
 {
     if (gameversion == exe_chex)
@@ -509,7 +513,7 @@ void M_CrispyToggleJumping(int choice)
 void M_CrispyToggleLeveltime(int choice)
 {
     choice = 0;
-    crispy->leveltime = (crispy->leveltime + 1) % NUM_WIDGETS;
+    crispy->leveltime = (crispy->leveltime + 1) % (NUM_WIDGETS - 1);
 }
 
 void M_CrispyToggleLogo(int choice)
@@ -557,21 +561,7 @@ void M_CrispyTogglePitch(int choice)
 void M_CrispyTogglePlayerCoords(int choice)
 {
     choice = 0;
-    crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 1); // [crispy] disable "always" setting
-}
-
-void M_CrispyToggleRecoil(int choice)
-{
-    if (!crispy->singleplayer)
-    {
-	return;
-    }
-
-    choice = 0;
-    crispy->recoil = !crispy->recoil;
-
-    // [crispy] update the "critical" struct
-    CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
+    crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 2); // [crispy] disable "always" setting
 }
 
 void M_CrispyToggleSecretmessage(int choice)
@@ -647,6 +637,12 @@ void M_CrispyToggleSoundMono(int choice)
     S_UpdateStereoSeparation();
 }
 
+void M_CrispyToggleStatsFormat(int choice)
+{
+    choice = 0;
+    crispy->statsformat = (crispy->statsformat + 1) % NUM_STATSFORMATS;
+}
+
 void M_CrispyToggleTranslucency(int choice)
 {
     choice = 0;
@@ -678,12 +674,6 @@ void M_CrispyToggleVsync(int choice)
     }
 
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
-}
-
-void M_CrispyToggleWeaponSquat(int choice)
-{
-    choice = 0;
-    crispy->weaponsquat = !crispy->weaponsquat;
 }
 
 static void M_CrispyToggleWidescreenHook (void)

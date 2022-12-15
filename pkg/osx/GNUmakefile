@@ -37,12 +37,14 @@ SRC_INFO_PLIST=Info.plist
 APP_DOC_DIR=$(APP_BIN_DIR)/Documentation
 APP_DOC_RELDIR=$(patsubst $(STAGING_DIR)/%,%,$(APP_DOC_DIR))
 
-$(STAGING_DIR): launcher $(TOPLEVEL_DOCS)
+$(STAGING_DIR): launcher $(TOPLEVEL_DOCS) app.icns wadfile.icns
 	rm -rf $(STAGING_DIR)
 	mkdir $(STAGING_DIR)
 
 	mkdir -p "$(APP_TOP_DIR)"
 	cp -R Resources "$(APP_TOP_DIR)"
+	cp app.icns wadfile.icns "$(APP_TOP_DIR)/Resources"
+	cp $(TOPLEVEL)/data/doom.png "$(APP_TOP_DIR)/Resources/128x128.png"
 	cp PkgInfo "$(APP_TOP_DIR)"
 	cp $(SRC_INFO_PLIST) "$(APP_TOP_DIR)"
 
@@ -66,29 +68,40 @@ $(STAGING_DIR): launcher $(TOPLEVEL_DOCS)
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)heretic"
 	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)hexen "$(APP_BIN_DIR)"
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)hexen"
-	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)strife "$(APP_BIN_DIR)"
-	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)strife"
+	#./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)strife "$(APP_BIN_DIR)"
+	#$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)strife"
 	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)setup "$(APP_BIN_DIR)"
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)setup"
 
 	$(TOPLEVEL)/man/simplecpp -DPRECOMPILED -D__MACOSX__  \
-	                -DDOOM -DHERETIC -DHEXEN -DSTRIFE     \
+	                -DDOOM -DHERETIC -DHEXEN              \
 	             < $(TOPLEVEL)/man/INSTALL.template       \
 	             > "$(APP_DOC_DIR)/INSTALL"
 
 	mkdir -p "$(APP_BIN_DIR)/man/man5" "$(APP_BIN_DIR)/man/man6"
 	cp $(TOPLEVEL)/man/*.5 "$(APP_BIN_DIR)/man/man5"
 	cp $(TOPLEVEL)/man/*.6 "$(APP_BIN_DIR)/man/man6"
-	for game in doom heretic hexen strife; do       \
+	for game in doom heretic hexen; do          \
 		cp $(TOPLEVEL)/man/CMDLINE.$$game       \
 		   "$(APP_DOC_DIR)/CMDLINE-$$game";     \
 	done
 	cp disk/dir.DS_Store $(STAGING_DIR)/.DS_Store
 	cp disk/background.png $(STAGING_DIR)/background.png
 
+app.icns: $(TOPLEVEL)/data/doom.png
+	mkdir -p app.iconset
+	sips -z 64 64 $< --out app.iconset/icon_32x32@2x.png
+	iconutil -c icns app.iconset
+
+wadfile.icns: $(TOPLEVEL)/data/wadfile.png
+	mkdir -p wadfile.iconset
+	sips -z 64 64 $< --out wadfile.iconset/icon_32x32@2x.png
+	iconutil -c icns wadfile.iconset
+
 clean : launcher_clean
 	rm -f $(DMG)
 	rm -rf $(STAGING_DIR)
+	rm -rf app.icns app.iconset wadfile.icns wadfile.iconset
 
 # Launcher build:
 CFLAGS = -Wall -I$(TOPLEVEL)

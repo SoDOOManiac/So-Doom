@@ -366,8 +366,6 @@ void R_DrawFuzzColumn (void)
 { 
     int			count; 
     pixel_t*		dest;
-    fixed_t		frac;
-    fixed_t		fracstep;	 
     boolean		cutoff = false;
 
     // Adjust borders. Low... 
@@ -398,10 +396,6 @@ void R_DrawFuzzColumn (void)
     
     dest = ylookup[dc_yl] + columnofs[flipviewwidth[dc_x]];
 
-    // Looks familiar.
-    fracstep = dc_iscale; 
-    frac = dc_texturemid + (dc_yl-centery)*fracstep; 
-
     // Looks like an attempt at dithering,
     //  using the colormap #6 (of 0-31, a bit
     //  brighter than average).
@@ -422,8 +416,6 @@ void R_DrawFuzzColumn (void)
 	    fuzzpos = 0;
 	
 	dest += SCREENWIDTH;
-
-	frac += fracstep; 
     } while (count--); 
 
     // [crispy] if the line at the bottom had to be cut off,
@@ -443,10 +435,8 @@ void R_DrawFuzzColumn (void)
 void R_DrawFuzzColumnLow (void) 
 { 
     int			count; 
-    pixel_t*		dest; 
-    pixel_t*		dest2; 
-    fixed_t		frac;
-    fixed_t		fracstep;	 
+    pixel_t*		dest;
+    pixel_t*		dest2;
     int x;
     boolean		cutoff = false;
 
@@ -483,10 +473,6 @@ void R_DrawFuzzColumnLow (void)
     dest = ylookup[dc_yl] + columnofs[flipviewwidth[x]];
     dest2 = ylookup[dc_yl] + columnofs[flipviewwidth[x+1]];
 
-    // Looks familiar.
-    fracstep = dc_iscale; 
-    frac = dc_texturemid + (dc_yl-centery)*fracstep; 
-
     // Looks like an attempt at dithering,
     //  using the colormap #6 (of 0-31, a bit
     //  brighter than average).
@@ -510,8 +496,6 @@ void R_DrawFuzzColumnLow (void)
 	
 	dest += SCREENWIDTH;
 	dest2 += SCREENWIDTH;
-
-	frac += fracstep; 
     } while (count--); 
 
     // [crispy] if the line at the bottom had to be cut off,
@@ -782,7 +766,7 @@ int			ds_x1;
 int			ds_x2;
 
 lighttable_t*		ds_colormap[2];
-byte*			ds_brightmap;
+const byte*			ds_brightmap;
 
 fixed_t			ds_xfrac; 
 fixed_t			ds_yfrac; 
@@ -992,6 +976,64 @@ void R_DrawSpanLow (void)
 	ds_yfrac += ds_ystep;
 
 
+    } while (count--);
+}
+
+void R_DrawSpanSolid (void)
+{
+    const byte source = *ds_source;
+    pixel_t *dest;
+    int count;
+
+#ifdef RANGECHECK
+    if (ds_x2 < ds_x1
+	|| ds_x1<0
+	|| ds_x2>=SCREENWIDTH
+	|| (unsigned)ds_y>SCREENHEIGHT)
+    {
+	I_Error( "R_DrawSpanSolid: %i to %i at %i",
+		 ds_x1,ds_x2,ds_y);
+    }
+#endif
+
+    count = ds_x2 - ds_x1;
+
+    do
+    {
+	dest = ylookup[ds_y] + columnofs[flipviewwidth[ds_x1++]];
+	*dest = ds_colormap[ds_brightmap[source]][source];
+    } while (count--);
+}
+
+void R_DrawSpanSolidLow (void)
+{
+    const byte source = *ds_source;
+    pixel_t *dest;
+    int count;
+
+#ifdef RANGECHECK
+    if (ds_x2 < ds_x1
+	|| ds_x1<0
+	|| ds_x2>=SCREENWIDTH
+	|| (unsigned)ds_y>SCREENHEIGHT)
+    {
+	I_Error( "R_DrawSpanSolidLow: %i to %i at %i",
+		 ds_x1,ds_x2,ds_y);
+    }
+#endif
+
+    count = ds_x2 - ds_x1;
+
+    // Blocky mode, need to multiply by 2.
+    ds_x1 <<= 1;
+    ds_x2 <<= 1;
+
+    do
+    {
+	dest = ylookup[ds_y] + columnofs[flipviewwidth[ds_x1++]];
+	*dest = ds_colormap[ds_brightmap[source]][source];
+	dest = ylookup[ds_y] + columnofs[flipviewwidth[ds_x1++]];
+	*dest = ds_colormap[ds_brightmap[source]][source];
     } while (count--);
 }
 

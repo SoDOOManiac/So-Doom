@@ -19,6 +19,7 @@
 #include "doomdef.h"
 #include "deh_str.h"
 #include "i_system.h"
+#include "r_bmaps.h" // [crispy] R_BrightmapForTexName()
 #include "r_local.h"
 
 planefunction_t floorfunc, ceilingfunc;
@@ -62,7 +63,8 @@ int spanstop[MAXHEIGHT];
 lighttable_t **planezlight;
 fixed_t planeheight;
 
-fixed_t yslope[MAXHEIGHT];
+fixed_t *yslope;
+fixed_t yslopes[LOOKDIRS][MAXHEIGHT]; // [crispy]
 fixed_t distscale[MAXWIDTH];
 fixed_t basexscale, baseyscale;
 
@@ -124,22 +126,30 @@ BASIC PRIMITIVE
 
 void R_MapPlane(int y, int x1, int x2)
 {
-    angle_t angle;
-    fixed_t distance, length;
+    fixed_t distance;
     unsigned index;
+    int dx, dy;
 
 #ifdef RANGECHECK
     if (x2 < x1 || x1 < 0 || x2 >= viewwidth || (unsigned) y > viewheight)
         I_Error("R_MapPlane: %i, %i at %i", x1, x2, y);
 #endif
 
+// [crispy] visplanes with the same flats now match up far better than before
+// adapted from prboom-plus/src/r_plane.c:191-239, translated to fixed-point math
+
+    if (!(dy = abs(centery - y)))
+    {
+	return;
+    }
+
     if (planeheight != cachedheight[y])
     {
         cachedheight[y] = planeheight;
         distance = cacheddistance[y] = FixedMul(planeheight, yslope[y]);
 
-        ds_xstep = cachedxstep[y] = FixedMul(distance, basexscale);
-        ds_ystep = cachedystep[y] = FixedMul(distance, baseyscale);
+        ds_xstep = cachedxstep[y] = (FixedMul(viewsin, planeheight) / dy) << detailshift;
+        ds_ystep = cachedystep[y] = (FixedMul(viewcos, planeheight) / dy) << detailshift;
     }
     else
     {
@@ -148,19 +158,19 @@ void R_MapPlane(int y, int x1, int x2)
         ds_ystep = cachedystep[y];
     }
 
-    length = FixedMul(distance, distscale[x1]);
-    angle = (viewangle + xtoviewangle[x1]) >> ANGLETOFINESHIFT;
-    ds_xfrac = viewx + FixedMul(finecosine[angle], length);
-    ds_yfrac = -viewy - FixedMul(finesine[angle], length);
+    dx = x1 - centerx;
+    ds_xfrac = viewx + FixedMul(viewcos, distance) + dx * ds_xstep;
+    ds_yfrac = -viewy - FixedMul(viewsin, distance) + dx * ds_ystep;
 
     if (fixedcolormap)
-        ds_colormap = fixedcolormap;
+        ds_colormap[0] = ds_colormap[1] = fixedcolormap;
     else
     {
         index = distance >> LIGHTZSHIFT;
         if (index >= MAXLIGHTZ)
             index = MAXLIGHTZ - 1;
-        ds_colormap = planezlight[index];
+        ds_colormap[0] = planezlight[index];
+        ds_colormap[1] = colormaps;
     }
 
     ds_y = y;
@@ -391,6 +401,8 @@ void R_MakeSpans(int x, unsigned int t1, unsigned int b1, unsigned int t2, unsig
 ================
 */
 
+#define SKYTEXTUREMIDSHIFTED 200 // [crispy]
+
 void R_DrawPlanes(void)
 {
     visplane_t *pl;
@@ -403,19 +415,20 @@ void R_DrawPlanes(void)
     byte *dest;
     int count;
     fixed_t frac, fracstep;
+    int heightmask; // [crispy]
 
     extern byte *ylookup[MAXHEIGHT];
     extern int columnofs[MAXWIDTH];
 
 #ifdef RANGECHECK
     if (ds_p - drawsegs > numdrawsegs)
-        I_Error("R_DrawPlanes: drawsegs overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: drawsegs overflow (%td)",
                 ds_p - drawsegs);
     if (lastvisplane - visplanes > numvisplanes)
-        I_Error("R_DrawPlanes: visplane overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: visplane overflow (%td)",
                 lastvisplane - visplanes);
     if (lastopening - openings > MAXOPENINGS)
-        I_Error("R_DrawPlanes: opening overflow (%" PRIiPTR ")",
+        I_Error("R_DrawPlanes: opening overflow (%td)",
                 lastopening - openings);
 #endif
 
@@ -429,7 +442,8 @@ void R_DrawPlanes(void)
         if (pl->picnum == skyflatnum)
         {
             dc_iscale = skyiscale;
-            dc_colormap = colormaps;    // sky is allways drawn full bright
+            // [crispy] no brightmaps for sky
+            dc_colormap[0] = dc_colormap[1] = colormaps;    // sky is allways drawn full bright
             dc_texturemid = skytexturemid;
             dc_texheight = textureheight[skytexture]>>FRACBITS;
             for (x = pl->minx; x <= pl->maxx; x++)
@@ -457,15 +471,41 @@ void R_DrawPlanes(void)
 
                     fracstep = dc_iscale;
                     frac = dc_texturemid + (dc_yl - centery) * fracstep;
-                    do
+                    heightmask = SKYTEXTUREMIDSHIFTED - 1; // [crispy]
+                    // not a power of 2 -- killough
+                    if (SKYTEXTUREMIDSHIFTED & heightmask)
                     {
-                        *dest = dc_source[frac >> FRACBITS];
-                        dest += SCREENWIDTH;
-                        frac += fracstep;
-                    }
-                    while (count--);
+                        heightmask++;
+                        heightmask <<= FRACBITS;
+
+                        if (frac < 0)
+                            while ((frac += heightmask) < 0);
+                        else
+                            while (frac >= heightmask)
+                                frac -= heightmask;
+                        do
+                        {
+                            *dest = dc_source[frac >> FRACBITS];
+                            dest += SCREENWIDTH;
+
+                            if ((frac += fracstep) >= heightmask)
+                            {
+                                frac -= heightmask;
+                            }
+                        } while (count--);
 
 //                                      colfunc ();
+                    }
+                    // texture height is a power of 2 -- killough
+                    else
+                    {
+                        do
+                        {
+                            *dest = dc_source[(frac >> FRACBITS) & heightmask];
+                            dest += SCREENWIDTH;
+                            frac += fracstep;
+                        } while (count--);
+                    }
                 }
             }
             continue;
@@ -517,6 +557,7 @@ void R_DrawPlanes(void)
             default:
                 ds_source = tempSource;
         }
+        ds_brightmap = R_BrightmapForFlatNum(lumpnum-firstflat);
         planeheight = abs(pl->height - viewz);
         light = (pl->lightlevel >> LIGHTSEGSHIFT) + extralight;
         if (light >= LIGHTLEVELS)
