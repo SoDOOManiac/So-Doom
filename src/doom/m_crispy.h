@@ -80,11 +80,8 @@ extern void M_CrispyToggleNeghealth(int choice);
 extern void M_CrispyToggleOverunder(int choice);
 extern void M_CrispyTogglePitch(int choice);
 extern void M_CrispyTogglePlayerCoords(int choice);
-<<<<<<< HEAD
 extern void M_CrispyToggleRecoil(int choice);
 extern void M_CrispyToggleMapSecrets(int choice);
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 extern void M_CrispyToggleSecretmessage(int choice);
 extern void M_CrispyToggleSmartTotals(int choice);
 extern void M_CrispyToggleSmoothLighting(int choice);

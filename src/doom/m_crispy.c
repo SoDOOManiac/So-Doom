@@ -149,21 +149,12 @@ multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
     {SECRETMESSAGE_COUNT, "count"},
 };
 
-<<<<<<< HEAD
 multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS] =
 {
     {MAPSECRETS_DEFAULT, "default"},
     {MAPSECRETS_DEFAULT_AND_COLOR, "default + color revealed"},
     {MAPSECRETS_FORCE, "force"},
     {MAPSECRETS_FORCE_AND_COLOR, "force + color revealed"},
-=======
-multiitem_t multiitem_statsformat[NUM_STATSFORMATS] =
-{
-    {STATSFORMAT_RATIO, "ratio"},
-    {STATSFORMAT_REMAINING, "remaining"},
-    {STATSFORMAT_PERCENT, "percent"},
-    {STATSFORMAT_BOOLEAN, "boolean"},
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =

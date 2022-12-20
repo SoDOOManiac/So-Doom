@@ -2270,7 +2270,6 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-<<<<<<< HEAD
     // Enable weapon recoil thrust.
     //
 
@@ -2288,8 +2287,7 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
+
     // Show a centered message and play a sound when a secret is found.
     //
 

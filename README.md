@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 # So Doom
 [![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/SoDOOManiac/so-doom)
 
-<<<<<<< HEAD
 [![Top Language](https://img.shields.io/github/languages/top/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
 [![Code Size](https://img.shields.io/github/languages/code-size/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
 [![License](https://img.shields.io/github/license/SoDOOManiac/so-doom.svg?style=flat&logo=gnu)](https://github.com/SoDOOManiac/so-doom/blob/master/COPYING.md)
@@ -12,22 +10,6 @@
 [![Commits](https://img.shields.io/github/commits-since/SoDOOManiac/so-doom/latest.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
 [![Last Commit](https://img.shields.io/github/last-commit/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom/commits/master)
 [![Travis Build Status](https://img.shields.io/travis/com/SoDOOManiac/so-doom.svg?style=flat&logo=travis)](https://travis-ci.com/SoDOOManiac/so-doom/)
-=======
-=======
-# Crispy Doom
-[![Crispy Doom Icon](https://github.com/fabiangreffrath/crispy-doom/blob/master/data/doom.png)](https://github.com/fabiangreffrath/crispy-doom)
-
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
-[![Top Language](https://img.shields.io/github/languages/top/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom)
-[![Code Size](https://img.shields.io/github/languages/code-size/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom)
-[![License](https://img.shields.io/github/license/fabiangreffrath/crispy-doom.svg?logo=gnu)](https://github.com/fabiangreffrath/crispy-doom/blob/master/COPYING.md)
-[![Release](https://img.shields.io/github/release/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
-[![Release Date](https://img.shields.io/github/release-date/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
-[![Downloads](https://img.shields.io/github/downloads/fabiangreffrath/crispy-doom/latest/total.svg)](https://github.com/fabiangreffrath/crispy-doom/releases)
-[![Commits](https://img.shields.io/github/commits-since/fabiangreffrath/crispy-doom/latest.svg)](https://github.com/fabiangreffrath/crispy-doom/commits/master)
-[![Last Commit](https://img.shields.io/github/last-commit/fabiangreffrath/crispy-doom.svg)](https://github.com/fabiangreffrath/crispy-doom/commits/master)
-[![Build Status](https://github.com/fabiangreffrath/crispy-doom/actions/workflows/main.yml/badge.svg)](https://github.com/fabiangreffrath/crispy-doom/actions/workflows/main.yml)
->>>>>>> 2857014c96c5f2f0c9784ae43ec024ad8d398fd0
 
 So Doom is a limit-removing enhanced-resolution Doom source port based on [Crispy Doom](https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom).
 

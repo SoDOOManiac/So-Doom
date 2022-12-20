@@ -70,11 +70,8 @@ typedef struct
 	int overunder;
 	int pitch;
 	int playercoords;
-<<<<<<< HEAD
 	int recoil;
 	int mapsecrets;
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 	int secretmessage;
 	int smarttotals;
 	int smoothlight;
@@ -281,53 +278,28 @@ enum
 
 enum
 {
-<<<<<<< HEAD
     MAPSECRETS_DEFAULT,
     MAPSECRETS_DEFAULT_AND_COLOR,
     MAPSECRETS_FORCE,
     MAPSECRETS_FORCE_AND_COLOR,
     NUM_MAPSECRETS
-=======
-    WIDGETS_OFF,
-    WIDGETS_AUTOMAP,
-    WIDGETS_ALWAYS,
-    WIDGETS_STBAR,
-    NUM_WIDGETS
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 enum
 {
-<<<<<<< HEAD
     WIDESCREEN_OFF,
     WIDESCREEN_WIDE,
     WIDESCREEN_COMPACT,
     WIDESCREEN_COCKPIT,
     NUM_WIDESCREEN
-=======
-    STATSFORMAT_RATIO,
-    STATSFORMAT_REMAINING,
-    STATSFORMAT_PERCENT,
-    STATSFORMAT_BOOLEAN,
-    NUM_STATSFORMATS
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 enum
 {
-<<<<<<< HEAD
     WIDGETS_OFF,
     WIDGETS_AUTOMAP,
     WIDGETS_ALWAYS,
     NUM_WIDGETS
-=======
-    RATIO_4_3,
-    RATIO_MATCH_SCREEN,
-    RATIO_16_10,
-    RATIO_16_9,
-    RATIO_21_9,
-    NUM_RATIOS
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 };
 
 #endif

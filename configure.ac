@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-AC_INIT(So Doom, 5.10.3,
+AC_INIT(So Doom, 5.12.0,
         zodomaniac@gmail.com, so-doom)
-=======
-AC_INIT(Crispy Doom, 5.12.0,
-        fabian@greffrath.com, crispy-doom)
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"

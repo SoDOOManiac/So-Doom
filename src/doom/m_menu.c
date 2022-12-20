@@ -537,11 +537,7 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispyToggleExtAutomap,'e'},
     {1,"",	M_CrispyToggleSmoothMap,'m'},
     {1,"",	M_CrispyToggleAutomapstats,'s'},
-<<<<<<< HEAD
     {1,"",	M_CrispyToggleSmartTotals,'t'},
-=======
-    {1,"",	M_CrispyToggleStatsFormat,'f'},
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {1,"",	M_CrispyToggleLeveltime,'l'},
     {1,"",	M_CrispyTogglePlayerCoords,'p'},
     {1,"",	M_CrispyToggleSecretmessage,'s'},

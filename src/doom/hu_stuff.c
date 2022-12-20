@@ -1072,7 +1072,6 @@ void HU_Ticker(void)
 
     if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
     {
-<<<<<<< HEAD
 	// [crispy] count spawned monsters
 	if (crispy->smarttotals || extraspawns == 0)
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
@@ -1080,36 +1079,7 @@ void HU_Ticker(void)
 	else
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d+%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount, totalkills, extraspawns);
-=======
-	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
 
-	w_kills.y = HU_TITLEY;
-
-	crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills);
-	HUlib_clearTextLine(&w_kills);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
-
-	crispy_statsline(str, sizeof(str), "I ", plr->itemcount, totalitems, 0);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
-
-	crispy_statsline(str, sizeof(str), "S ", plr->secretcount, totalsecret, 0);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
-    }
-    else
-    if ((crispy->automapstats & WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
-    {
-	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
-
-	w_kills.y = HU_MSGY + 1 * 8;
-
-	crispy_statsline(str, sizeof(str), kills, plr->killcount, totalkills, extrakills);
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 	HUlib_clearTextLine(&w_kills);
 	s = str;
 	while (*s)

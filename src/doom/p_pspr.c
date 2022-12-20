@@ -1031,7 +1031,6 @@ void P_MovePsprites (player_t* player)
 
 	}
 
-<<<<<<< HEAD
 	// [crispy] squat down weapon sprite a bit after hitting the ground
 	if (player->psp_dy_max)
 	{
@@ -1050,8 +1049,6 @@ void P_MovePsprites (player_t* player)
     
 
 	player->psprites[ps_flash].dy = psp->dy;
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 	player->psprites[ps_flash].sx2 = psp->sx2;
 	player->psprites[ps_flash].sy2 = psp->sy2;
 }

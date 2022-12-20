@@ -476,11 +476,8 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_overunder",       &crispy->overunder);
     M_BindIntVariable("crispy_pitch",           &crispy->pitch);
     M_BindIntVariable("crispy_playercoords",    &crispy->playercoords);
-<<<<<<< HEAD
     M_BindIntVariable("crispy_recoil",          &crispy->recoil);
     M_BindIntVariable("crispy_mapsecrets",      &crispy->mapsecrets);
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     M_BindIntVariable("crispy_secretmessage",   &crispy->secretmessage);
     M_BindIntVariable("crispy_smarttotals",   	&crispy->smarttotals);
     M_BindIntVariable("crispy_smoothlight",     &crispy->smoothlight);
