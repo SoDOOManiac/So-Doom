@@ -1430,6 +1430,7 @@ void G_PlayerFinishLevel (int player)
     p->centering =
     p->jumpTics =
     p->recoilpitch = p->oldrecoilpitch =
+    p->psp_dy_max =
     p->btuse = p->btuse_tics = 0;
 } 
  

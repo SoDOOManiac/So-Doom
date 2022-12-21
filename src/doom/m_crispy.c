@@ -185,7 +185,6 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
     {WIDGETS_OFF, "never"},
     {WIDGETS_AUTOMAP, "in Automap"},
     {WIDGETS_ALWAYS, "always"},
-    {WIDGETS_STBAR, "status bar"},
 };
 
 extern void AM_LevelInit (boolean reinit);
@@ -626,12 +625,6 @@ void M_CrispyToggleSoundMono(int choice)
     crispy->soundmono = !crispy->soundmono;
 
     S_UpdateStereoSeparation();
-}
-
-void M_CrispyToggleStatsFormat(int choice)
-{
-    choice = 0;
-    crispy->statsformat = (crispy->statsformat + 1) % NUM_STATSFORMATS;
 }
 
 void M_CrispyToggleTranslucency(int choice)

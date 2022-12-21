@@ -4869,8 +4869,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
 	100,		// mass
 	4,		// damage
 	sfx_None,		// activesound
-	// [NS] Beta projectile bouncing.
-	MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_BOUNCES,
+	MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
 	S_NULL		// raisestate
     },
 
@@ -4896,8 +4895,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
 	100,		// mass
 	4,		// damage
 	sfx_None,		// activesound
-	// [NS] Beta projectile bouncing.
-	MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_BOUNCES,
+	MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
 	S_NULL		// raisestate
     },
 

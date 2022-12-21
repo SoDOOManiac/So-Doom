@@ -509,11 +509,7 @@ enum
     crispness_extautomap,
     crispness_smoothmap,
     crispness_automapstats,
-<<<<<<< HEAD
     crispness_smarttotals,
-=======
-    crispness_statsformat,
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
@@ -587,14 +583,9 @@ static menuitem_t Crispness3Menu[]=
     {1,"",	M_CrispyToggleMouseLook,'m'},
     {1,"",	M_CrispyToggleBobfactor,'b'},
     {1,"",	M_CrispyToggleCenterweapon,'c'},
-<<<<<<< HEAD
     {1,"",	M_CrispyToggleWeaponSquat,'w'},
     {1,"",	M_CrispyTogglePitch,'i'},
     {1,"",	M_CrispyToggleNeghealth,'g'},
-=======
-    {1,"",	M_CrispyTogglePitch,'w'},
-    {1,"",	M_CrispyToggleNeghealth,'n'},
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleCrosshair,'d'},
@@ -646,15 +637,11 @@ static menuitem_t Crispness4Menu[]=
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleFreeaim,'v'},
     {1,"",	M_CrispyToggleJumping,'a'},
-<<<<<<< HEAD
     {1,"",	M_CrispyToggleOverunder,'o'},
     {1,"",	M_CrispyToggleRecoil,'r'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleEvadingInterOver,'i'},
-=======
-    {1,"",	M_CrispyToggleOverunder,'w'},
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispyToggleDemoTimer,'t'},
@@ -1479,14 +1466,15 @@ static void M_DrawMouse(void)
 #include "m_background.h"
 static void M_DrawCrispnessBackground(void)
 {
-<<<<<<< HEAD
 	//const byte *const src = crispness_background;
 	//pixel_t *dest;
 	//int x, y;
 
 	//dest = I_VideoBuffer;
-=======
-	const byte *src = crispness_background;
+
+	//new crispness background, kept & commented
+
+	/*const byte *src = crispness_background;
 	pixel_t *dest;
 	int x, y;
 
@@ -1497,7 +1485,7 @@ static void M_DrawCrispnessBackground(void)
 		src = W_CacheLumpNum(lump, PU_STATIC);
 	}
 	dest = I_VideoBuffer;
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
+	*/
 
     /*for (y = 0; y < SCREENHEIGHT; y++)  // [crispy] tiling 64x64 background crisps texture
 	{
@@ -1615,11 +1603,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessItem(crispness_extautomap, "Extended Automap colors", crispy->extautomap, true);
     M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
     M_DrawCrispnessMultiItem(crispness_automapstats, "Show Level Stats", multiitem_widgets, crispy->automapstats, true);
-<<<<<<< HEAD
     M_DrawCrispnessItem(crispness_smarttotals, "Smart Totals", crispy->smarttotals, true);
-=======
-    M_DrawCrispnessMultiItem(crispness_statsformat, "Level Stats Format", multiitem_statsformat, crispy->statsformat, crispy->automapstats);
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);
