@@ -554,6 +554,20 @@ void M_CrispyTogglePlayerCoords(int choice)
     crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 2); // [crispy] disable "always" setting
 }
 
+void M_CrispyToggleRecoil(int choice)
+{
+    if (!crispy->singleplayer)
+    {
+	return;
+    }
+
+    choice = 0;
+    crispy->recoil = !crispy->recoil;
+
+    // [crispy] update the "critical" struct
+    CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
+}
+
 void M_CrispyToggleSecretmessage(int choice)
 {
     choice = 0;
@@ -658,6 +672,12 @@ void M_CrispyToggleVsync(int choice)
     }
 
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
+}
+
+void M_CrispyToggleWeaponSquat(int choice)
+{
+    choice = 0;
+    crispy->weaponsquat = !crispy->weaponsquat;
 }
 
 static void M_CrispyToggleWidescreenHook (void)
