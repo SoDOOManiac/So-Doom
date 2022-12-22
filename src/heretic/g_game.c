@@ -42,7 +42,6 @@
 
 // Functions
 
-boolean G_CheckDemoStatus(void);
 void G_ReadDemoTiccmd(ticcmd_t * cmd);
 void G_WriteDemoTiccmd(ticcmd_t * cmd);
 void G_PlayerReborn(int player);
@@ -290,9 +289,6 @@ static int G_NextWeapon(int direction)
 ====================
 */
 
-extern boolean inventory;
-extern int curpos;
-extern int inv_ptr;
 
 boolean usearti = true;
 
@@ -314,8 +310,6 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 
     static unsigned int mbmlookctrl = 0; // [crispy]
     static unsigned int kbdlookctrl = 0; // [crispy]
-
-    extern boolean noartiskip;
 
     // haleyjd: removed externdriver crap
 
@@ -1377,7 +1371,6 @@ void G_InitPlayer(int player)
 = Can when a player completes a level
 ====================
 */
-extern int playerkeys;
 
 void G_PlayerFinishLevel(int player)
 {

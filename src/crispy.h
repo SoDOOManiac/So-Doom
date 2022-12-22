@@ -50,6 +50,7 @@ typedef struct
 	int crosshairhealth;
 	int crosshairtarget;
 	int crosshairtype;
+	int defaultskill;
 	int demotimer;
 	int demotimerdir;
 	int demobar;

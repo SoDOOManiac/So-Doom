@@ -1039,6 +1039,26 @@ static default_t extra_defaults_list[] =
 
     CONFIG_VARIABLE_INT(gus_ram_kb),
 
+#ifdef _WIN32
+    //!
+    // MIDI device for native Windows MIDI.
+    //
+
+    CONFIG_VARIABLE_STRING(winmm_midi_device),
+
+    //!
+    // Reverb level for native Windows MIDI, default 40, range 0-127.
+    //
+
+    CONFIG_VARIABLE_INT(winmm_reverb_level),
+
+    //!
+    // Chorus level for native Windows MIDI, default 0, range 0-127.
+    //
+
+    CONFIG_VARIABLE_INT(winmm_chorus_level),
+#endif
+
     //!
     // @game doom strife
     //
@@ -2116,6 +2136,14 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(crispy_crosshairtype),
 
     //!
+    // @game doom heretic hexen
+    //
+    // Default difficulty when starting a new game.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_defaultskill),
+
+    //!
     // @game doom
     //
     // Show a progress bar when playing back a demo.
@@ -2179,6 +2207,14 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_flipweapons),
+
+    //!
+    // @game doom heretic hexen
+    //
+    // Limit framerate to this value in frames per second.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_fpslimit),
 
     //!
     // @game doom

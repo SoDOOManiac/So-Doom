@@ -64,12 +64,6 @@
 
 #include "v_trans.h" // [crispy] colored "invert mouse" message and [So Doom] flipped levels and weapons messages
 
-extern patch_t*		hu_font[HU_FONTSIZE];
-extern boolean		message_dontfuckwithme;
-
-extern boolean		chat_on;		// in heads-up code
-
-extern void R_ExecuteSetViewSize();
 //
 // defaulted values
 //
@@ -138,7 +132,6 @@ boolean			menuactive;
 #define LINEHEIGHT		16
 #define CRISPY_LINEHEIGHT	10 // [crispy] Crispness menu
 
-extern boolean		sendpause;
 char			savegamestrings[10][SAVESTRINGSIZE];
 
 // [FG] support up to 8 pages of savegames
@@ -1570,7 +1563,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Uncapped Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessItem(crispness_vsync, "Enable VSync", crispy->vsync, !force_software_renderer);
-    M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, true);
+    M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, !force_software_renderer);
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
@@ -3154,7 +3147,6 @@ void M_StartControlPanel (void)
 
 static void M_DrawOPLDev(void)
 {
-    extern void I_OPL_DevMessages(char *, size_t);
     char debug[1024];
     char *curr, *p;
     int line;
@@ -3346,7 +3338,6 @@ void M_Ticker (void)
 	skullAnimCounter = 8;
     }
 }
-
 
 //
 // M_Init

@@ -455,8 +455,6 @@ static void I_ToggleFullScreen(void)
 
 void I_GetEvent(void)
 {
-    extern void I_HandleKeyboardEvent(SDL_Event *sdlevent);
-    extern void I_HandleMouseEvent(SDL_Event *sdlevent);
     SDL_Event sdlevent;
 
     SDL_PumpEvents();
@@ -865,7 +863,7 @@ void I_FinishUpdate (void)
 
     SDL_RenderClear(renderer);
 
-    if (crispy->smoothscaling)
+    if (crispy->smoothscaling && !force_software_renderer)
     {
     // Render this intermediate texture into the upscaled texture
     // using "nearest" integer scaling.
@@ -899,7 +897,7 @@ void I_FinishUpdate (void)
     // [AM] Figure out how far into the current tic we're in as a fixed_t.
     if (crispy->uncapped)
     {
-	fractionaltic = I_GetFracRealTime();
+        fractionaltic = I_GetFracRealTime();
     }
 
     // Restore background and undo the disk indicator, if it was drawn.
@@ -1076,8 +1074,8 @@ void I_InitWindowIcon(void)
 
     surface = SDL_CreateRGBSurfaceFrom((void *) icon_data, icon_w, icon_h,
                                        32, icon_w * 4,
-                                       0xff << 24, 0xff << 16,
-                                       0xff << 8, 0xff << 0);
+                                       0xffu << 24, 0xffu << 16,
+                                       0xffu << 8, 0xffu << 0);
 
     SDL_SetWindowIcon(screen, surface);
     SDL_FreeSurface(surface);

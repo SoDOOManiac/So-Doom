@@ -56,7 +56,6 @@ int			validcount = 1;
 
 
 lighttable_t*		fixedcolormap;
-extern lighttable_t**	walllights;
 
 int			centerx;
 int			centery;
@@ -934,6 +933,8 @@ void R_ExecuteSetViewSize (void)
 
     // [crispy] forcefully initialize the status bar backing screen
     ST_refreshBackground(true);
+
+    pspr_interp = false; // interpolate weapon bobbing
 }
 
 boolean goobers_mode = false;

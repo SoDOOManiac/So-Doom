@@ -328,6 +328,9 @@ extern fixed_t viewcos, viewsin;
 
 extern int detailshift;         // 0 = high, 1 = low
 
+extern int detailLevel;
+extern int screenblocks;
+
 extern void (*colfunc) (void);
 extern void (*basecolfunc) (void);
 extern void (*tlcolfunc) (void);
@@ -342,6 +345,7 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle);
 angle_t R_InterpolateAngle(angle_t oangle, angle_t nangle, fixed_t scale);
 subsector_t *R_PointInSubsector(fixed_t x, fixed_t y);
 void R_AddPointToBox(int x, int y, fixed_t * box);
+void R_ExecuteSetViewSize(void);
 
 
 //
@@ -376,6 +380,8 @@ void R_RenderBSPNode(int bspnum);
 // R_segs.c
 //
 extern int rw_angle1;           // angle to line origin
+extern lighttable_t **walllights;
+
 
 void R_RenderMaskedSegRange(drawseg_t * ds, int x1, int x2);
 
@@ -428,6 +434,9 @@ extern int *flattranslation;    // for global animation
 extern int *texturetranslation; // for global animation
 
 extern int firstspritelump, lastspritelump, numspritelumps;
+
+extern int columnofs[MAXWIDTH];
+
 
 byte *R_GetColumn(int tex, int col);
 void R_InitData(void);
@@ -484,6 +493,7 @@ extern fixed_t dc_texturemid;
 extern int dc_texheight;
 extern byte *dc_source;         // first pixel in a column
 extern const byte *dc_brightmap;  // [crispy] brightmaps
+extern byte *ylookup[MAXHEIGHT];
 
 void R_DrawColumn(void);
 void R_DrawColumnLow(void);

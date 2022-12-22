@@ -23,6 +23,8 @@
 #include "m_random.h"
 #include "p_local.h"
 #include "s_sound.h"
+#include "am_map.h"
+
 
 #define BONUSADD 6
 
@@ -120,7 +122,6 @@ static boolean GetAmmoChangePL2[NUMWEAPONS][NUMAMMO] =
 //--------------------------------------------------------------------------
 
 boolean ultimatemsg;
-extern boolean messageson;
 
 void P_SetMessage(player_t * player, const char *message, boolean ultmsg)
 {
@@ -351,8 +352,6 @@ boolean P_GiveArmor(player_t * player, int armortype)
 
 void P_GiveKey(player_t * player, keytype_t key)
 {
-    extern int playerkeys;
-    extern vertex_t KeyPoints[];
 
     if (player->keys[key])
     {
@@ -524,7 +523,7 @@ void P_SetDormantArtifact(mobj_t * arti)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreArtifact(mobj_t * arti)
+void A_RestoreArtifact(mobj_t * arti, player_t *player, pspdef_t *psp)
 {
     arti->flags |= MF_SPECIAL;
     P_SetMobjState(arti, arti->info->spawnstate);
@@ -552,7 +551,7 @@ void P_HideSpecialThing(mobj_t * thing)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreSpecialThing1(mobj_t * thing)
+void A_RestoreSpecialThing1(mobj_t * thing, player_t *player, pspdef_t *psp)
 {
     if (thing->type == MT_WMACE)
     {                           // Do random mace placement
@@ -568,7 +567,7 @@ void A_RestoreSpecialThing1(mobj_t * thing)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreSpecialThing2(mobj_t * thing)
+void A_RestoreSpecialThing2(mobj_t * thing, player_t *player, pspdef_t *psp)
 {
     thing->flags |= MF_SPECIAL;
     P_SetMobjState(thing, thing->info->spawnstate);
@@ -1386,7 +1385,12 @@ void P_DamageMobj
         ang = R_PointToAngle2(inflictor->x, inflictor->y,
                               target->x, target->y);
         //thrust = damage*(FRACUNIT>>3)*100/target->info->mass;
-        thrust = damage * (FRACUNIT >> 3) * 150 / target->info->mass;
+        // We do this multiplication in unsigned because it might overflow
+        // and signed overflow is undefined behavior
+        // but then we must cast it back to signed for the division
+        // to match original behavior
+        // unsigned to signed cast is implementation defined behavior at worst
+        thrust = ((int) (damage * (FRACUNIT >> 3) * 150u)) / target->info->mass;
         // make fall forwards sometimes
         if ((damage < 40) && (damage > target->health)
             && (target->z - inflictor->z > 64 * FRACUNIT) && (P_Random() & 1))

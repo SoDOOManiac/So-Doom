@@ -41,6 +41,7 @@
 #include "p_local.h"
 #include "v_video.h"
 #include "w_main.h"
+#include "am_map.h"
 
 #include "hexen_icon.c"
 
@@ -70,10 +71,7 @@ void S_InitScript(void);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
-void H2_ProcessEvents(void);
-void H2_DoAdvanceDemo(void);
 void H2_AdvanceDemo(void);
-void H2_StartTitle(void);
 void H2_PageTicker(void);
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
@@ -88,9 +86,6 @@ static void WarpCheck(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern boolean automapactive;
-extern boolean MenuActive;
-extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -200,6 +195,8 @@ void D_BindVariables(void)
     // [crispy] bind "crispness" config variables
     M_BindIntVariable("crispy_automapoverlay",  &crispy->automapoverlay);
     M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
+    M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
+    M_BindIntVariable("crispy_fpslimit",        &crispy->fpslimit);
     M_BindIntVariable("crispy_freelook",        &crispy->freelook_hh);
     M_BindIntVariable("crispy_hires",           &crispy->hires);
     M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
@@ -388,7 +385,6 @@ void D_DoomMain(void)
     I_AtExit(D_HexenQuitMessage, false);
     startepisode = 1;
     autostart = false;
-    startskill = sk_medium;
     startmap = 1;
     gamemode = commercial;
 
@@ -432,6 +428,9 @@ void D_DoomMain(void)
     D_SetDefaultSavePath();
 
     I_AtExit(M_SaveDefaults, false);
+
+    // [crispy] set defaultskill after loading config
+    startskill = (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS;
 
     // Now that the savedir is loaded, make sure it exists
     CreateSavePath();
@@ -491,7 +490,7 @@ void D_DoomMain(void)
     //
     // Disable auto-loading of .wad files.
     //
-    if (!M_ParmExists("-noautoload"))
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("hexen.wad", true);
@@ -739,7 +738,7 @@ static void HandleArgs(void)
 
     // [crispy] add wad files from autoload PWAD directories
 
-    if (!M_ParmExists("-noautoload"))
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
     {
         int i;
 

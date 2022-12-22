@@ -23,6 +23,7 @@
 #include "i_video.h"
 #include "s_sound.h"
 #include "v_video.h"
+#include "am_map.h"
 
 static int finalestage;                // 0 = text, 1 = art screen
 static int finalecount;
@@ -35,10 +36,6 @@ static const char *finaleflat;
 
 static int FontABaseLump;
 
-extern boolean automapactive;
-extern boolean viewactive;
-
-extern void D_StartTitle(void);
 
 /*
 =======================
@@ -149,8 +146,6 @@ void F_Ticker(void)
 =======================
 */
 
-//#include "hu_stuff.h"
-//extern        patch_t *hu_font[HU_FONTSIZE];
 
 void F_TextWrite(void)
 {
@@ -330,7 +325,6 @@ void F_DemonScroll(void)
 void F_DrawUnderwater(void)
 {
     static boolean underwawa = false;
-    extern boolean askforquit;
     const char *lumpname;
     byte *palette;
 

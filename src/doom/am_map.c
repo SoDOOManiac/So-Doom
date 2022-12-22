@@ -333,6 +333,8 @@ static void AM_rotatePoint (mpoint_t *pt);
 static mpoint_t mapcenter;
 static angle_t mapangle;
 
+static void AM_drawCrosshair(int color, boolean force);
+
 // Calculates the slope and slope according to the x-axis of a line
 // segment in map coordinates (with the upright y-axis n' all) so
 // that it can be used with the brain-dead drawing stuff.
@@ -638,6 +640,7 @@ void AM_LevelInit(boolean reinit)
     if (reinit && f_h_old)
     {
 	scale_mtof = scale_mtof * f_h / f_h_old;
+	AM_drawCrosshair(XHAIRCOLORS, true);
     }
     else
     {
@@ -1029,9 +1032,19 @@ void AM_changeWindowScale(void)
 //
 void AM_doFollowPlayer(void)
 {
-
-	next_m_x = m_x = (viewx >> FRACTOMAPBITS) - m_w/2;
-	next_m_y = m_y = (viewy >> FRACTOMAPBITS) - m_h/2;
+    // [crispy] FTOM(MTOF()) is needed to fix map line jitter in follow mode.
+    if (crispy->hires)
+    {
+        m_x = (viewx >> FRACTOMAPBITS) - m_w/2;
+        m_y = (viewy >> FRACTOMAPBITS) - m_h/2;
+    }
+    else
+    {
+        m_x = FTOM(MTOF(viewx >> FRACTOMAPBITS)) - m_w/2;
+        m_y = FTOM(MTOF(viewy >> FRACTOMAPBITS)) - m_h/2;
+    }
+        next_m_x = m_x;
+        next_m_y = m_y;
 	m_x2 = m_x + m_w;
 	m_y2 = m_y + m_h;
 
@@ -2066,14 +2079,14 @@ void AM_drawMarks(void)
 
 }
 
-void AM_drawCrosshair(int color)
+static void AM_drawCrosshair(int color, boolean force)
 {
     // [crispy] draw an actual crosshair
-    if (!followplayer)
+    if (!followplayer || force)
     {
 	static fline_t h, v;
 
-	if (!h.a.x)
+	if (!h.a.x || force)
 	{
 	    h.a.x = h.b.x = v.a.x = v.b.x = f_x + f_w / 2;
 	    h.a.y = h.b.y = v.a.y = v.b.y = f_y + f_h / 2;
@@ -2126,14 +2139,17 @@ void AM_Drawer (void)
     }
 
     if (!crispy->automapoverlay)
-    AM_clearFB(BACKGROUND);
+    {
+        AM_clearFB(BACKGROUND);
+        pspr_interp = false; // interpolate weapon bobbing
+    }
     if (grid)
 	AM_drawGrid(GRIDCOLORS);
     AM_drawWalls();
     AM_drawPlayers();
     if (cheating==2)
 	AM_drawThings(THINGCOLORS, THINGRANGE);
-    AM_drawCrosshair(XHAIRCOLORS);
+    AM_drawCrosshair(XHAIRCOLORS, false);
 
     AM_drawMarks();
 

@@ -45,7 +45,6 @@ static void PlayerLandedOnThing(mobj_t * mo, mobj_t * onmobj);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern mobj_t LavaInflictor;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -103,7 +102,7 @@ boolean P_SetMobjState(mobj_t * mobj, statenum_t state)
     mobj->frame = st->frame;
     if (st->action)
     {                           // Call action function
-        st->action(mobj);
+        st->action(mobj, NULL, NULL);
     }
     return (true);
 }
@@ -923,8 +922,9 @@ void P_ZMovement(mobj_t * mo)
 //
 //----------------------------------------------------------------------------
 
-void P_BlasterMobjThinker(mobj_t * mobj)
+void P_BlasterMobjThinker(thinker_t *thinker)
 {
+    mobj_t *mobj = (mobj_t *) thinker;
     int i;
     fixed_t xfrac;
     fixed_t yfrac;
@@ -1052,8 +1052,9 @@ static void PlayerLandedOnThing(mobj_t * mo, mobj_t * onmobj)
 //
 //----------------------------------------------------------------------------
 
-void P_MobjThinker(mobj_t * mobj)
+void P_MobjThinker(thinker_t *thinker)
 {
+    mobj_t *mobj = (mobj_t *) thinker;
     mobj_t *onmo;
 
     // [crispy] suppress interpolation of player missiles for the first tic
@@ -1779,7 +1780,6 @@ mobj_t *P_FindMobjFromTID(int tid, int *searchPosition)
 //
 //---------------------------------------------------------------------------
 
-extern fixed_t attackrange;
 
 void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 {

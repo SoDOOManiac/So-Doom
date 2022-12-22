@@ -95,18 +95,6 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
  * `-dm3` specifies the Deathmatch 3.0 rules (weapons stay, items respawn) for netgames.
  * `-episode 1` launches Hell on Earth and `-episode 2` launches No Rest for the Living episode if the Doom 2 IWAD shipped with the Doom 3: BFG Edition is used.
-<<<<<<< HEAD
- * `-warp 1a` warps to the secret level E1M10: Sewers of XBox Doom IWAD.
- * `-mergedump <file>` merges the PWAD file(s) given on the command line with the IWAD file and writes the resulting data into the `<file>` given as argument. May be considered as a replacement for the `DEUSF.EXE` tool.
- * `-lumpdump` dumps raw content of a lump into a file (since 5.6.10).
- * `-blockmap` forces a (re-)building of the BLOCKMAP lumps for loaded maps.
- * `-playdemo demoname -warp N` plays back fast-forward up to the requested map.
- * `-loadgame N -record demoname` and `-loadgame N -playdemo demoname` allow to record and play demos starting from a savegame instead of the level start.
- * `-playdemo demoname1 -record demoname2` plays back fast-forward until the end of demoname1 and continues recording as demoname2.
- * `-fliplevels` loads mirrored versions of the maps.
- * `-flipweapons` flips the player's weapons.
- * `-levelstat` prints a levelstat.txt file with statistics for each completed level (new in 5.9.2).
-=======
  * `-warp 1a` warps to the secret level E1M10: Sewers of XBox Doom IWAD (since 2.3).
  * `-mergedump <file>` merges the PWAD file(s) given on the command line with the IWAD file and writes the resulting data into the `<file>` given as argument. May be considered as a replacement for the `DEUSF.EXE` tool (since 2.3).
  * `-lumpdump` dumps raw content of a lump into a file (since 5.7).
@@ -118,14 +106,8 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `-flipweapons` flips the player's weapons (new in 5.3).
  * `-levelstat` prints a levelstat.txt file with statistics for each completed level (new in 5.9.0).
  * `-pistolstart` reset health, armor and inventory at start of each level in Doom (new in 5.9.2)
- * `-wandstart` reset health, armor and inventory at start of each level in Heretic (new in 5.9.2)
- * `-doubleammo` doubles ammo pickup rate in Doom and Strife (new in 5.11).
- * `-moreammo` increases ammo pickup rate by 50% in Heretic (new in 5.11).
- * `-moremana` increases mana pickup rate by 50% in Hexen (new in 5.11).
- * `-fast` enables fast monsters in Heretic and Hexen (new in 5.11).
- * `-autohealth` enables automatic use of Quartz flasks and Mystic urns in Heretic and Hexen (new in 5.11).
- * `-keysloc` enables display of keys on the automap in Heretic (new in 5.11).
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
+ * `-doubleammo` doubles ammo pickup rate in Doom and (Crispy) Strife (new in 5.11).
+ * `-fast` enables fast monsters
 
 ### New cheat codes
 
@@ -148,31 +130,10 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ## Download
 
-<<<<<<< HEAD
 Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/SoDOOManiac/So-Doom/releases/download/so-doom-5.8.0/so-doom-5.8.0-win32.zip
+https://github.com/SoDOOManiac/So-Doom/releases/download/so-doom-5.12.0/so-doom-5.12.0-win32.zip
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
-=======
-Source code and Windows binaries (compatible with both x86 and x64 editions) for the latest release can be found on the [Release](https://github.com/fabiangreffrath/crispy-doom/releases/latest) page.
-
-The most recent list of changes can be found in the [Changelog](https://github.com/fabiangreffrath/crispy-doom/blob/master/CHANGELOG.md).
-
-A complete history of changes and releases can be found in the [Wiki](https://github.com/fabiangreffrath/crispy-doom/wiki/Changelog) or on the [Releases](https://github.com/fabiangreffrath/crispy-doom/releases) page.
-
-
-To install on Ubuntu ("Eoan Ermine" 19.10 and later)/Debian ("Buster" 10 and later) based systems:
-```bash
-sudo apt-get install crispy-doom
-```
-
-
-Daily builds of Crispy Doom can be found here:
-http://latest.chocolate-doom.org/
-
-
-Crispy Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your Crispy Doom directory. Alternatively, you may want to play Crispy Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 
 ### Sources
 
@@ -204,10 +165,8 @@ to install the prerequisites and then
 
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
-<<<<<<< HEAD
 ## News
 
-=======
 ### So Doom 5.10.3
 
 So Doom 5.10.3 has been released on Sep 1, 2022.
@@ -636,7 +595,7 @@ as well as flipped levels and weapons swappable on the run.
  * [No music and high-pitched sound effects](https://github.com/fabiangreffrath/crispy-doom/issues/454) occur with SDL2.dll v2.0.10 and SDL2_mixer.dll v2.0.4 on Windows in case of 5.1 speaker configuration, according to investigation by StasBFG. Here is [the DLL pack fixing this and providing fluidsynth soundfont support](https://github.com/fabiangreffrath/crispy-doom/files/3616050/crispy-doom-DLL-fix-pack.zip).
 
 So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Crispy Doom master branch up to commit [`af14e55d`](https://github.com/fabiangreffrath/crispy-doom/commit/af14e55dc45a846e28d7b0e99851f1548a9c6b1b).
-=======
+
  * The sky in NRFTL Maps 04-08 is now fixed if loaded from command line (thanks @Zodomaniac).
  * HUD texts are now printed up to the right screen edge again (thanks Grizzly).
  * The DSSECRET fallback sound is now checked for availability. This fixes a crash when playing with a v1.2 or earlier IWAD (thanks @zx64).
@@ -682,8 +641,6 @@ So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Cr
 
  * Users who insist on the pure Vanilla experience that was formerly applied to the No Rest for the Living and The Masterlevels expansions or who need it to properly play back demos recorded with a previous release will have to rename their PWAD files and explicitly load them on the command line.
 
-=======
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13
 ## More documentation
 
  * **[Changelog](https://github.com/fabiangreffrath/crispy-doom/wiki/Changelog)**
@@ -735,8 +692,4 @@ Secret Rabbit Code (libsamplerate) is © 2002-2011 Erik de Castro Lopo and is re
 Libpng is © 1998-2014 Glenn Randers-Pehrson, © 1996-1997 Andreas Dilger, © 1995-1996 Guy Eric Schalnat, Group 42, Inc. and is released under the [libpng license](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt).
 Zlib is © 1995-2013 Jean-loup Gailly and Mark Adler and is released under the [zlib license](http://www.zlib.net/zlib_license.html).
 
-<<<<<<< HEAD
 The Crispy Doom icon (as shown at the top of this page) is composed of the [Chocolate Doom icon](https://www.chocolate-doom.org/wiki/images/7/77/Chocolate-logo.png) and a [photo](https://en.wikipedia.org/wiki/File:Potato-Chips.jpg) of potato crisps (Utz-brand, grandma's kettle-cooked style) by [Evan-Amos](https://commons.wikimedia.org/wiki/User:Evan-Amos) who kindly released it into the [public domain](https://en.wikipedia.org/wiki/Public_domain). The current high-resolution version of this icon has been contributed by JNechaevsky (formerly by SoDOOManiac).
-=======
-The Crispy Doom icon (as shown at the top of this page) has been contributed by [Philip](https://github.com/kiwaph).
->>>>>>> 4d416c7ffac8ef42f539652c29dc24e6b1012d13

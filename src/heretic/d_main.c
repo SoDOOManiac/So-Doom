@@ -45,6 +45,7 @@
 #include "s_sound.h"
 #include "w_main.h"
 #include "v_video.h"
+#include "am_map.h"
 #include "v_trans.h" // [crispy] dp_translation
 
 #include "heretic_icon.c"
@@ -75,7 +76,6 @@ static int graphical_startup = 0;
 static boolean using_graphical_startup;
 static boolean main_loop_started = false;
 boolean autostart;
-extern boolean automapactive;
 
 boolean advancedemo;
 
@@ -165,7 +165,6 @@ void DrawCenterMessage(void)
 //---------------------------------------------------------------------------
 
 int left_widget_w, right_widget_w; // [crispy]
-extern int screenblocks; // [crispy]
 
 static void CrispyDrawStats (void)
 {
@@ -248,14 +247,8 @@ static void CrispyDrawStats (void)
     }
 }
 
-void R_ExecuteSetViewSize(void);
-
-extern boolean finalestage;
-
 void D_Display(void)
 {
-    extern boolean askforquit;
-
     // Change the view size if needed
     if (setsizeneeded)
     {
@@ -815,7 +808,6 @@ void InitThermo(int max)
 
 void D_BindVariables(void)
 {
-    extern int snd_Channels;
     int i;
 
     M_ApplyPlatformDefaults();
@@ -867,6 +859,8 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
     M_BindIntVariable("crispy_automapstats",    &crispy->automapstats);
     M_BindIntVariable("crispy_brightmaps",      &crispy->brightmaps);
+    M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
+    M_BindIntVariable("crispy_fpslimit",        &crispy->fpslimit);
     M_BindIntVariable("crispy_freelook",        &crispy->freelook_hh);
     M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
     M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
@@ -952,7 +946,6 @@ void D_DoomMain(void)
     noartiskip = M_ParmExists("-noartiskip");
 
     debugmode = M_ParmExists("-debug");
-    startskill = sk_medium;
     startepisode = 1;
     startmap = 1;
     autostart = false;
@@ -972,22 +965,6 @@ void D_DoomMain(void)
     if (M_ParmExists("-deathmatch"))
     {
         deathmatch = true;
-    }
-
-    //!
-    // @category game
-    // @arg <skill>
-    // @vanilla
-    //
-    // Set the game skill, 1-5 (1: easiest, 5: hardest).  A skill of
-    // 0 disables all monsters.
-    //
-
-    p = M_CheckParmWithArgs("-skill", 1);
-    if (p)
-    {
-        startskill = myargv[p + 1][0] - '1';
-        autostart = true;
     }
 
     //!
@@ -1069,6 +1046,25 @@ void D_DoomMain(void)
 
     I_AtExit(M_SaveDefaults, false);
 
+    // [crispy] Set startskill after loading config to account for defaultskill
+    startskill = (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS; // [crispy]
+
+    //!
+    // @category game
+    // @arg <skill>
+    // @vanilla
+    //
+    // Set the game skill, 1-5 (1: easiest, 5: hardest).  A skill of
+    // 0 disables all monsters.
+    //
+
+    p = M_CheckParmWithArgs("-skill", 1);
+    if (p)
+    {
+        startskill = myargv[p + 1][0] - '1';
+        autostart = true;
+    }
+
     DEH_printf("Z_Init: Init zone memory allocation daemon.\n");
     Z_Init();
 
@@ -1141,7 +1137,7 @@ void D_DoomMain(void)
     //
     // Disable auto-loading of .wad files.
     //
-    if (!M_ParmExists("-noautoload"))
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("heretic.wad", true);
@@ -1161,7 +1157,7 @@ void D_DoomMain(void)
 
     // [crispy] add wad files from autoload PWAD directories
 
-    if (!M_ParmExists("-noautoload"))
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
     {
         int i;
 
@@ -1245,7 +1241,7 @@ void D_DoomMain(void)
 
     // [crispy] process .deh files from PWADs autoload directories
 
-    if (!M_ParmExists("-noautoload"))
+    if (!M_ParmExists("-noautoload") && gamemode != shareware)
     {
         int i;
 

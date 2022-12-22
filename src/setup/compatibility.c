@@ -74,6 +74,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_crosshairhealth", &crispy->crosshairhealth);
         M_BindIntVariable("crispy_crosshairtarget", &crispy->crosshairtarget);
         M_BindIntVariable("crispy_crosshairtype",   &crispy->crosshairtype);
+        M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
         M_BindIntVariable("crispy_demobar",         &crispy->demobar);
         M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
         M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
@@ -114,6 +115,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
         M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
         M_BindIntVariable("crispy_automapstats",    &crispy->automapstats);
+        M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
         M_BindIntVariable("crispy_freelook",        &crispy->freelook_hh);
         M_BindIntVariable("crispy_hires",           &crispy->hires);
         M_BindIntVariable("crispy_brightmaps",      &crispy->brightmaps);
@@ -129,6 +131,7 @@ void BindCompatibilityVariables(void)
     {
         M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
         M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
+        M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
         M_BindIntVariable("crispy_freelook",        &crispy->freelook_hh);
         M_BindIntVariable("crispy_hires",           &crispy->hires);
         M_BindIntVariable("crispy_smoothscaling",   &crispy->smoothscaling);

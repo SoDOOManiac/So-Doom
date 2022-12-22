@@ -47,7 +47,6 @@ extern multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE];
 extern multiitem_t multiitem_translucency[NUM_TRANSLUCENCY];
 extern multiitem_t multiitem_widescreen[NUM_WIDESCREEN];
 extern multiitem_t multiitem_widgets[NUM_WIDGETS];
-
 extern void M_CrispyTogglePixelAspectRatio(int choice);
 extern void M_CrispyToggleAspectRatioLimit(int choice);
 extern void M_CrispyToggleAutomapstats(int choice);
@@ -76,6 +75,7 @@ extern void M_CrispyToggleLeveltime(int choice);
 extern void M_CrispyToggleLogo(int choice);
 extern void M_CrispyToggleMouseLook(int choice);
 extern void M_CrispyToggleNeghealth(int choice);
+extern void M_CrispyToggleDefaultSkill(int choice);
 extern void M_CrispyToggleOverunder(int choice);
 extern void M_CrispyTogglePitch(int choice);
 extern void M_CrispyTogglePlayerCoords(int choice);

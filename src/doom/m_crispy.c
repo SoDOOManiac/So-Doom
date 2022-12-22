@@ -17,7 +17,9 @@
 //	[crispy] Crispness menu
 //
 
+#include "crispy.h"
 #include "doomstat.h"
+#include "m_menu.h" // [crispy] M_SetDefaultDifficulty()
 #include "p_local.h" // [crispy] thinkercap
 #include "s_sound.h"
 #include "r_defs.h" // [crispy] laserpatch
@@ -190,7 +192,6 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
 extern void AM_LevelInit (boolean reinit);
 extern void EnableLoadingDisk (void);
 extern void P_SegLengths (boolean contrast_only);
-extern void R_ExecuteSetViewSize (void);
 extern void R_InitLightTables (void);
 extern void I_ReInitGraphics (int reinit);
 extern void ST_createWidgets(void);

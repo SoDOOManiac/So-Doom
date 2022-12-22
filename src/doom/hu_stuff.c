@@ -33,6 +33,7 @@
 #include "hu_lib.h"
 #include "m_controls.h"
 #include "m_misc.h"
+#include "m_menu.h"
 #include "w_wad.h"
 #include "m_argv.h" // [crispy] M_ParmExists()
 #include "st_stuff.h" // [crispy] ST_HEIGHT
@@ -112,11 +113,8 @@ static int		message_counter;
 static hu_stext_t	w_secret;
 static int		secret_counter;
 
-extern int		showMessages;
 
 static boolean		headsupactive = false;
-
-extern int		screenblocks; // [crispy]
 
 //
 // Builtin map names.
@@ -716,10 +714,10 @@ void HU_Start(void)
 
     // [crispy] explicitely display (episode and) map if the
     // map is from a PWAD or if the map title string has been dehacked
-    if (DEH_HasStringReplacement(s) ||
-        (!W_IsIWADLump(maplumpinfo) &&
-        !(crispy->havenerve && gamemission == pack_nerve) &&
-        !(crispy->havemaster && gamemission == pack_master)))
+    if (!W_IsIWADLump(maplumpinfo) &&
+        (DEH_HasStringReplacement(s) ||
+        (!(crispy->havenerve && gamemission == pack_nerve) &&
+        !(crispy->havemaster && gamemission == pack_master))))
     {
 	char *m;
 
@@ -934,6 +932,8 @@ void HU_Ticker(void)
     char c;
     char str[32], *s;
 
+    const int chat_line = chat_on ? 8 : 0; // [So Doom] moved as there is no if condition anymore
+
     // tick down message counter if message is up
     if (message_counter && !--message_counter)
     {
@@ -1016,6 +1016,22 @@ void HU_Ticker(void)
 		players[i].cmd.chatchar = 0;
 	    }
 	}
+    // [crispy] shift widgets one line down so chat typing line may appear
+
+    // [So Doom] commented out if conditon as So Doom doesn't have WIDGETS_STBAR
+
+    // if (crispy->automapstats != WIDGETS_STBAR)
+    //{
+
+        w_kills.y = HU_MSGY + 1 * 8 + chat_line;
+        w_items.y = HU_MSGY + 2 * 8 + chat_line;
+        w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
+        // [crispy] do not shift level time widget if no stats widget is used
+        w_ltime.y = HU_MSGY + 4 * 8 + (crispy->automapstats ? chat_line : 0);
+        w_coordx.y = HU_MSGY + 1 * 8 + chat_line;
+        w_coordy.y = HU_MSGY + 2 * 8 + chat_line;
+        w_coorda.y = HU_MSGY + 3 * 8 + chat_line;
+    //}
     }
 
     if (automapactive)
@@ -1029,6 +1045,7 @@ void HU_Ticker(void)
 
     if (crispy->automapstats == WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
+
 	// [crispy] count spawned monsters
 	if (crispy->smarttotals || extraspawns == 0)
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
@@ -1036,6 +1053,7 @@ void HU_Ticker(void)
 	else
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d+%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount, totalkills, extraspawns);
+
     }
 
     if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))

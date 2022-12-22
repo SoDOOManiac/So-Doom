@@ -917,6 +917,8 @@ void P_SpawnPlayer (mapthing_t* mthing)
     // [crispy] weapon sound source
     p->so = Crispy_PlayerSO(mthing->type-1);
 
+    pspr_interp = false; // interpolate weapon bobbing
+
     // setup gun psprite
     P_SetupPsprites (p);
     
@@ -1099,7 +1101,6 @@ void P_SpawnMapThing (mapthing_t* mthing)
 //
 // P_SpawnPuff
 //
-extern fixed_t attackrange;
 
 void
 P_SpawnPuff

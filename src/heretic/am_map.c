@@ -30,7 +30,7 @@
 #include "doomkeys.h"
 #include "v_video.h"
 
-vertex_t KeyPoints[NUMKEYS];
+vertex_t KeyPoints[NUM_KEY_TYPES];
 
 #define NUMALIAS 3              // Number of antialiased lines.
 
@@ -153,8 +153,6 @@ static int followplayer = 1;    // specifies whether to follow the player around
 static char cheat_amap[] = { 'r', 'a', 'v', 'm', 'a', 'p' };
 
 static byte cheatcount = 0;
-
-extern boolean viewactive;
 
 // [crispy] gradient table for map normal mode
 static byte antialias_normal[NUMALIAS][8] = {
@@ -928,8 +926,19 @@ void AM_changeWindowScale(void)
 
 void AM_doFollowPlayer(void)
 {
-    next_m_x = m_x = (viewx >> FRACTOMAPBITS) - m_w/2;
-    next_m_y = m_y = (viewy >> FRACTOMAPBITS) - m_h/2;
+    // [crispy] FTOM(MTOF()) is needed to fix map line jitter in follow mode.
+    if (crispy->hires)
+    {
+        m_x = (viewx >> FRACTOMAPBITS) - m_w/2;
+        m_y = (viewy >> FRACTOMAPBITS) - m_h/2;
+    }
+    else
+    {
+        m_x = FTOM(MTOF(viewx >> FRACTOMAPBITS)) - m_w/2;
+        m_y = FTOM(MTOF(viewy >> FRACTOMAPBITS)) - m_h/2;
+    }
+    next_m_x = m_x;
+    next_m_y = m_y;
     m_x2 = m_x + m_w;
     m_y2 = m_y + m_h;
 
@@ -1015,7 +1024,7 @@ void AM_clearFB(int color)
     int dmapy;
     int x1, x2, x3;
 
-    if (followplayer)
+    if (followplayer && !paused)
     {
         dmapx = (MTOF(plr->mo->x) >> FRACTOMAPBITS) - (MTOF(plr->mo->oldx) >> FRACTOMAPBITS);
         dmapy = (MTOF(plr->mo->oldy) >> FRACTOMAPBITS) - (MTOF(plr->mo->y) >> FRACTOMAPBITS);

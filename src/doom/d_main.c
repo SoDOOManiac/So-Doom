@@ -108,11 +108,7 @@ boolean         nomonsters;	// checkparm of -nomonsters
 boolean         respawnparm;	// checkparm of -respawn
 boolean         fastparm;	// checkparm of -fast
 
-//extern int soundVolume;
-//extern  int	sfxVolume;
-//extern  int	musicVolume;
 
-extern  boolean	inhelpscreens;
 
 skill_t		startskill;
 int             startepisode;
@@ -169,9 +165,6 @@ void D_ProcessEvents (void)
 
 // wipegamestate can be set to -1 to force a wipe on the next draw
 gamestate_t     wipegamestate = GS_DEMOSCREEN;
-extern  boolean setsizeneeded;
-extern  int             showMessages;
-void R_ExecuteSetViewSize (void);
 
 boolean D_Display (void)
 {
@@ -457,6 +450,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_crosshairhealth", &crispy->crosshairhealth);
     M_BindIntVariable("crispy_crosshairtarget", &crispy->crosshairtarget);
     M_BindIntVariable("crispy_crosshairtype",   &crispy->crosshairtype);
+    M_BindIntVariable("crispy_defaultskill",    &crispy->defaultskill);
     M_BindIntVariable("crispy_demobar",         &crispy->demobar);
     M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
     M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
@@ -1629,8 +1623,6 @@ void D_DoomMain (void)
     if ( (p=M_CheckParm ("-turbo")) )
     {
 	int     scale = 200;
-	extern int forwardmove[2];
-	extern int sidemove[2];
 	
 	if (p<myargc-1)
 	    scale = atoi (myargv[p+1]);
@@ -2157,7 +2149,9 @@ void D_DoomMain (void)
     D_ConnectNetGame();
 
     // get skill / episode / map from parms
+
     startskill = sk_medium;
+
     startepisode = 1;
     startmap = 1;
     autostart = false;
