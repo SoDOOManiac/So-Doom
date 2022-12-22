@@ -504,7 +504,7 @@ void M_CrispyToggleJumping(int choice)
 void M_CrispyToggleLeveltime(int choice)
 {
     choice = 0;
-    crispy->leveltime = (crispy->leveltime + 1) % (NUM_WIDGETS - 1);
+    crispy->leveltime = (crispy->leveltime + 1) % NUM_WIDGETS;
 }
 
 void M_CrispyToggleLogo(int choice)
@@ -552,7 +552,7 @@ void M_CrispyTogglePitch(int choice)
 void M_CrispyTogglePlayerCoords(int choice)
 {
     choice = 0;
-    crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 2); // [crispy] disable "always" setting
+    crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 1); // [crispy] disable "always" setting
 }
 
 void M_CrispyToggleRecoil(int choice)

@@ -553,6 +553,7 @@ enum
     crispness_mouselook,
     crispness_bobfactor,
     crispness_centerweapon,
+    crispness_weaponsquat,
     crispness_pitch,
     crispness_neghealth,
     crispness_sep_tactical_,
@@ -606,6 +607,7 @@ enum
     crispness_freeaim,
     crispness_jumping,
     crispness_overunder,
+    crispness_recoil,
     crispness_sep_physical_,
 
     crispness_sep_interover,
@@ -1620,6 +1622,7 @@ static void M_DrawCrispness3(void)
     M_DrawCrispnessItem(crispness_mouselook, "Permanent Mouse Look", crispy->mouselook, true);
     M_DrawCrispnessMultiItem(crispness_bobfactor, "Player View/Weapon Bobbing", multiitem_bobfactor, crispy->bobfactor, true);
     M_DrawCrispnessMultiItem(crispness_centerweapon, "Weapon Attack Alignment", multiitem_centerweapon, crispy->centerweapon, crispy->bobfactor != BOBFACTOR_OFF);
+    M_DrawCrispnessItem(crispness_weaponsquat, "Squat weapon down on impact", crispy->weaponsquat, true);
     M_DrawCrispnessItem(crispness_pitch, "Weapon Recoil Pitch", crispy->pitch, true);
     M_DrawCrispnessItem(crispness_neghealth, "Negative Player Health", crispy->neghealth, true);
 
@@ -1647,6 +1650,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_freeaim, "Vertical Aiming", multiitem_freeaim, crispy->freeaim, crispy->singleplayer);
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
