@@ -167,6 +167,19 @@ After successful compilation the resulting binaries can be found in the `src/` d
 
 ## News
 
+### So Doom 5.12.0
+
+So Doom 5.12.0 has been released on Dec 22, 2022.
+
+The aim of this release is to update the port with all the improvements of Crispy Doom code base while keeping the features that were removed from Crispy
+(squat weapon down on landing from height, weapon recoil thrust, aspect ratio limitation option for pixel aspect ratio = 1, i.e. square pixels).
+
+#### Changes pulled from Crispy Doom (most notable ones)
+
+ * Support of REKKRSA.wad and REKKRSL.wad (Sunken Land, Steam edition) IWADs has been implemented, now Crispy and So Doom always attempt to load the DEHACKED lump from the IWADs.
+ * By hitting Multiplayer spy key you now get full point of view of the player whose gameplay you're watching, i.e. produced and heard sound positions and status bar with respective status face background color.
+ * LETITSNOW cheat code, merry Christmas!
+
 ### So Doom 5.10.3
 
 So Doom 5.10.3 has been released on Sep 1, 2022.
@@ -187,7 +200,7 @@ Free standalone IWAD version of REKKR (REKKRSA.WAD) doesn't run properly with th
 
  * The translucency map is now always recalculated and no more loaded from a file or lump.
  * Autoload directories are now also supported for "sideloaded" PWADs - i.e. nerve.wad, masterlevels.wad and sigil.wad (thanks @Raddatoons).
- * Smooth automap rotation and srolling have been implemented (by @JNechaevsky).
+ * Smooth automap rotation and scrolling have been implemented (by @JNechaevsky).
  * Autoload directories for PWADs are now supported (thanks @OpenRift412 for the suggestion and @rfomin for the prior implementation in Woof!).
  * Basic accessibility features have been added and can be toggled in the Accessibility menu of the setup tool:
  * Flickering Sector Lighting (disables sectors changing their light levels)
