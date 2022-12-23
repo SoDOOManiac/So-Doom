@@ -91,6 +91,9 @@ static sound_module_t *sound_modules[] =
 
 static music_module_t *music_modules[] =
 {
+#ifdef _WIN32
+    &music_win_module,
+#endif
 #ifndef DISABLE_SDL2MIXER
     &music_sdl_module,
 #endif // DISABLE_SDL2MIXER
@@ -151,6 +154,11 @@ static void InitMusicModule(void)
 {
     int i;
 
+    // [crispy] Always initialize SDL music module.
+#ifndef DISABLE_SDL2MIXER
+    music_sdl_module.Init();
+#endif
+
     music_module = NULL;
 
     for (i=0; music_modules[i] != NULL; ++i)
@@ -162,6 +170,18 @@ static void InitMusicModule(void)
                             music_modules[i]->sound_devices,
                             music_modules[i]->num_sound_devices))
         {
+        #ifdef _WIN32
+            // Skip the native Windows MIDI module if using Timidity or
+            // FluidSynth.
+
+            if ((strcmp(timidity_cfg_path, "")
+              || strcmp(fluidsynth_sf_path, ""))
+              && music_modules[i] == &music_win_module)
+            {
+                continue;
+            }
+        #endif
+
             // Initialize the module
 
             if (music_modules[i]->Init())
@@ -268,6 +288,15 @@ void I_ShutdownSound(void)
     {
         music_pack_module.Shutdown();
     }
+
+#ifndef DISABLE_SDL2MIXER
+    music_sdl_module.Shutdown();
+
+    if (music_module == &music_sdl_module)
+    {
+        return;
+    }
+#endif
 
     if (music_module != NULL)
     {
@@ -382,11 +411,11 @@ void I_ShutdownMusic(void)
 
 void I_SetMusicVolume(int volume)
 {
-    if (music_module != NULL)
+    if (active_music_module != NULL)
     {
-        music_module->SetMusicVolume(volume);
+        active_music_module->SetMusicVolume(volume);
 
-        if (music_packs_active && music_module != &music_pack_module)
+        if (music_packs_active && active_music_module != &music_pack_module)
         {
             music_pack_module.SetMusicVolume(volume);
         }
@@ -409,6 +438,20 @@ void I_ResumeSong(void)
     }
 }
 
+// Determine whether memory block is a .mid file
+
+boolean IsMid(byte *mem, int len)
+{
+    return len > 4 && !memcmp(mem, "MThd", 4);
+}
+
+// Determine whether memory block is a .mus file
+
+boolean IsMus(byte *mem, int len)
+{
+    return len > 4 && !memcmp(mem, "MUS\x1a", 4);
+}
+
 void *I_RegisterSong(void *data, int len)
 {
     // If the music pack module is active, check to see if there is a
@@ -425,6 +468,17 @@ void *I_RegisterSong(void *data, int len)
             active_music_module = &music_pack_module;
             return handle;
         }
+    }
+
+
+    if (!IsMid(data, len) && !IsMus(data, len))
+    {
+#ifndef DISABLE_SDL2MIXER
+        active_music_module = &music_sdl_module;
+        return active_music_module->RegisterSong(data, len);
+#else
+        return NULL;
+#endif
     }
 
     // No substitution for this track, so use the main module.
@@ -498,6 +552,8 @@ void I_BindSoundVariables(void)
     M_BindIntVariable("gus_ram_kb",              &gus_ram_kb);
 #ifdef _WIN32
     M_BindStringVariable("winmm_midi_device",    &winmm_midi_device);
+    M_BindIntVariable("winmm_reset_type",        &winmm_reset_type);
+    M_BindIntVariable("winmm_reset_delay",       &winmm_reset_delay);
     M_BindIntVariable("winmm_reverb_level",      &winmm_reverb_level);
     M_BindIntVariable("winmm_chorus_level",      &winmm_chorus_level);
 #endif

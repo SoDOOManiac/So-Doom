@@ -85,8 +85,10 @@ static char **midi_names;
 static int midi_num_devices;
 static int midi_index;
 char *winmm_midi_device = NULL;
-int winmm_reverb_level = 40;
-int winmm_chorus_level = 0;
+int winmm_reset_type = -1;
+int winmm_reset_delay = 0;
+int winmm_reverb_level = -1;
+int winmm_chorus_level = -1;
 #endif
 
 // DOS specific variables: these are unused but should be maintained
@@ -296,12 +298,12 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                                     TXT_DIRECTORY),
                 NULL)),
 
-        TXT_NewRadioButton("MIDI/MP3/OGG/FLAC", &snd_musicdevice, SNDDEVICE_GENMIDI), // [crispy] improve ambigious music backend name
+        TXT_NewRadioButton("Native MIDI", &snd_musicdevice, SNDDEVICE_GENMIDI),
 #ifdef _WIN32
         TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GENMIDI,
             TXT_NewHorizBox(
                 TXT_NewStrut(4, 0),
-                TXT_NewLabel("Native MIDI Device: "),
+                TXT_NewLabel("Device: "),
                 MidiDeviceSelector(),
                 NULL)),
 #endif
@@ -342,6 +344,8 @@ void BindSoundVariables(void)
     M_BindStringVariable("fluidsynth_sf_path",    &fluidsynth_sf_path);
 #ifdef _WIN32
     M_BindStringVariable("winmm_midi_device",     &winmm_midi_device);
+    M_BindIntVariable("winmm_reset_type",         &winmm_reset_type);
+    M_BindIntVariable("winmm_reset_delay",        &winmm_reset_delay);
     M_BindIntVariable("winmm_reverb_level",       &winmm_reverb_level);
     M_BindIntVariable("winmm_chorus_level",       &winmm_chorus_level);
 #endif

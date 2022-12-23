@@ -1197,7 +1197,7 @@ static void ControllerEvent(opl_track_data_t *track, midi_event_t *event)
 
     switch (controller)
     {
-        case MIDI_CONTROLLER_MAIN_VOLUME:
+        case MIDI_CONTROLLER_VOLUME_MSB:
             SetChannelVolume(channel, param, true);
             break;
 
@@ -1603,13 +1603,6 @@ static void I_OPL_UnRegisterSong(void *handle)
     {
         MIDI_FreeFile(handle);
     }
-}
-
-// Determine whether memory block is a .mid file
-
-static boolean IsMid(byte *mem, int len)
-{
-    return len > 4 && !memcmp(mem, "MThd", 4);
 }
 
 static boolean ConvertMus(byte *musdata, int len, char *filename)
