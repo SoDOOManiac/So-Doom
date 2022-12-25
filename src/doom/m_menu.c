@@ -458,22 +458,22 @@ enum
 static menuitem_t Crispness1Menu[]=
 {
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleHires,'h'},
-    {1,"",	M_CrispyToggleWidescreen,'w'},
-    {1,"",  M_CrispyToggleAspectRatioLimit,'a'},
-    {1,"",	M_CrispyTogglePixelAspectRatio,'f'},
-    {1,"",	M_CrispyToggleUncapped,'u'},
-    {1,"",	M_CrispyToggleVsync,'v'},
-    {1,"",	M_CrispyToggleSmoothScaling,'s'},
+    {2,"",	M_CrispyToggleHires,'h'},
+    {2,"",	M_CrispyToggleWidescreen,'w'},
+    {2,"",  M_CrispyToggleAspectRatioLimit,'a'},
+    {2,"",	M_CrispyTogglePixelAspectRatio,'f'},
+    {2,"",	M_CrispyToggleUncapped,'u'},
+    {2,"",	M_CrispyToggleVsync,'v'},
+    {2,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
 //    {-1,"",0,'\0'},
-    {1,"",  M_CrispyToggleLogo,'o'},
-    {1,"",	M_CrispyToggleColoredhud,'c'},
-    {1,"",	M_CrispyToggleTranslucency,'e'},
-    {1,"",	M_CrispyToggleSmoothLighting,'l'},
-    {1,"",	M_CrispyToggleBrightmaps,'b'},
-    {1,"",	M_CrispyToggleColoredblood,'d'},
-    {1,"",	M_CrispyToggleFlipcorpses,'r'},
+    {2,"",  M_CrispyToggleLogo,'o'},
+    {2,"",	M_CrispyToggleColoredhud,'c'},
+    {2,"",	M_CrispyToggleTranslucency,'e'},
+    {2,"",	M_CrispyToggleSmoothLighting,'l'},
+    {2,"",	M_CrispyToggleBrightmaps,'b'},
+    {2,"",	M_CrispyToggleColoredblood,'d'},
+    {2,"",	M_CrispyToggleFlipcorpses,'r'},
 //    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -517,20 +517,20 @@ enum
 static menuitem_t Crispness2Menu[]=
 {
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleFullsounds,'f'},
-    {1,"",	M_CrispyToggleSoundfixes,'x'},
-    {1,"",	M_CrispyToggleSndChannels,'c'},
-    {1,"",	M_CrispyToggleSoundMono,'o'},
+    {2,"",	M_CrispyToggleFullsounds,'f'},
+    {2,"",	M_CrispyToggleSoundfixes,'x'},
+    {2,"",	M_CrispyToggleSndChannels,'c'},
+    {2,"",	M_CrispyToggleSoundMono,'o'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleExtAutomap,'e'},
-    {1,"",	M_CrispyToggleSmoothMap,'m'},
-    {1,"",	M_CrispyToggleAutomapstats,'s'},
-    {1,"",	M_CrispyToggleSmartTotals,'t'},
-    {1,"",	M_CrispyToggleLeveltime,'l'},
-    {1,"",	M_CrispyTogglePlayerCoords,'p'},
-    {1,"",	M_CrispyToggleSecretmessage,'s'},
-    {1,"",	M_CrispyToggleMapSecrets,'r'},
+    {2,"",	M_CrispyToggleExtAutomap,'e'},
+    {2,"",	M_CrispyToggleSmoothMap,'m'},
+    {2,"",	M_CrispyToggleAutomapstats,'s'},
+    {2,"",	M_CrispyToggleSmartTotals,'t'},
+    {2,"",	M_CrispyToggleLeveltime,'l'},
+    {2,"",	M_CrispyTogglePlayerCoords,'p'},
+    {2,"",	M_CrispyToggleSecretmessage,'s'},
+    {2,"",	M_CrispyToggleMapSecrets,'r'},
 //    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -556,6 +556,7 @@ enum
     crispness_weaponsquat,
     crispness_pitch,
     crispness_neghealth,
+    crispness_defaultskill,
     crispness_sep_tactical_,
 
     crispness_sep_crosshair,
@@ -573,19 +574,20 @@ enum
 static menuitem_t Crispness3Menu[]=
 {
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleFreelook,'a'},
-    {1,"",	M_CrispyToggleMouseLook,'m'},
-    {1,"",	M_CrispyToggleBobfactor,'b'},
-    {1,"",	M_CrispyToggleCenterweapon,'c'},
-    {1,"",	M_CrispyToggleWeaponSquat,'w'},
-    {1,"",	M_CrispyTogglePitch,'i'},
-    {1,"",	M_CrispyToggleNeghealth,'g'},
+    {2,"",	M_CrispyToggleFreelook,'a'},
+    {2,"",	M_CrispyToggleMouseLook,'m'},
+    {2,"",	M_CrispyToggleBobfactor,'b'},
+    {2,"",	M_CrispyToggleCenterweapon,'c'},
+    {2,"",	M_CrispyToggleWeaponSquat,'w'},
+    {2,"",	M_CrispyTogglePitch,'i'},
+    {2,"",	M_CrispyToggleNeghealth,'g'},
+    {2,"",	M_CrispyToggleDefaultSkill,'d'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleCrosshair,'d'},
-    {1,"",	M_CrispyToggleCrosshairtype,'s'},
-    {1,"",	M_CrispyToggleCrosshairHealth,'h'},
-    {1,"",	M_CrispyToggleCrosshairTarget,'t'},
+    {2,"",	M_CrispyToggleCrosshair,'d'},
+    {2,"",	M_CrispyToggleCrosshairtype,'s'},
+    {2,"",	M_CrispyToggleCrosshairHealth,'h'},
+    {2,"",	M_CrispyToggleCrosshairTarget,'t'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -630,19 +632,19 @@ enum
 static menuitem_t Crispness4Menu[]=
 {
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleFreeaim,'v'},
-    {1,"",	M_CrispyToggleJumping,'a'},
-    {1,"",	M_CrispyToggleOverunder,'o'},
-    {1,"",	M_CrispyToggleRecoil,'r'},
+    {2,"",	M_CrispyToggleFreeaim,'v'},
+    {2,"",	M_CrispyToggleJumping,'a'},
+    {2,"",	M_CrispyToggleOverunder,'o'},
+    {2,"",	M_CrispyToggleRecoil,'r'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleEvadingInterOver,'i'},
+    {2,"",	M_CrispyToggleEvadingInterOver,'i'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-    {1,"",	M_CrispyToggleDemoTimer,'t'},
-    {1,"",	M_CrispyToggleDemoTimerDir,'d'},
-    {1,"",	M_CrispyToggleDemoBar,'w'},
-    {1,"",	M_CrispyToggleDemoUseTimer,'u'},
+    {2,"",	M_CrispyToggleDemoTimer,'t'},
+    {2,"",	M_CrispyToggleDemoTimerDir,'d'},
+    {2,"",	M_CrispyToggleDemoBar,'w'},
+    {2,"",	M_CrispyToggleDemoUseTimer,'u'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
@@ -1625,6 +1627,7 @@ static void M_DrawCrispness3(void)
     M_DrawCrispnessItem(crispness_weaponsquat, "Squat weapon down on impact", crispy->weaponsquat, true);
     M_DrawCrispnessItem(crispness_pitch, "Weapon Recoil Pitch", crispy->pitch, true);
     M_DrawCrispnessItem(crispness_neghealth, "Negative Player Health", crispy->neghealth, true);
+    M_DrawCrispnessMultiItem(crispness_defaultskill, "Default Difficulty", multiitem_difficulties, crispy->defaultskill, true);
 
     M_DrawCrispnessSeparator(crispness_sep_crosshair, "Crosshair");
 
@@ -3343,6 +3346,15 @@ void M_Ticker (void)
     }
 }
 
+// [crispy]
+void M_SetDefaultDifficulty (void)
+{
+    // HMP (or skill #2) being the default, had to be placed at index 0 when drawn in the menu,
+    // so all difficulties 'real' positions had to be scaled by -2, hence +2 being added
+    // below in order to get the correct skill index when getting it from the skill enum.
+    NewDef.lastOn = ((crispy->defaultskill) + SKILL_HMP ) % NUM_SKILLS;
+}
+
 //
 // M_Init
 //
@@ -3362,6 +3374,8 @@ void M_Init (void)
     messageString = NULL;
     messageLastMenuActive = menuactive;
     quickSaveSlot = -1;
+
+    M_SetDefaultDifficulty(); // [crispy] pre-select default difficulty
 
     // Here we could catch other version dependencies,
     //  like HELP1/2, and four episodes.

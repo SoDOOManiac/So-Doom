@@ -159,6 +159,15 @@ multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS] =
     {MAPSECRETS_FORCE_AND_COLOR, "force + color revealed"},
 };
 
+multiitem_t multiitem_difficulties[NUM_SKILLS] =
+{
+    {SKILL_HMP, "HMP"},
+    {SKILL_UV, "UV"},
+    {SKILL_NIGHTMARE, "NIGHTMARE"},
+    {SKILL_ITYTD, "ITYTD"},
+    {SKILL_HNTR, "HNTR"},
+};
+
 multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =
 {
     {TRANSLUCENCY_OFF, "off"},
@@ -198,9 +207,25 @@ extern void ST_createWidgets(void);
 extern void HU_Start(void);
 extern void M_SizeDisplay(int choice);
 
+static void ChangeSettingEnum(int *setting, int choice, int num_values)
+{
+    if (choice == 1)
+    {
+        *setting += 1;
+    }
+    else
+    {
+        *setting += num_values - 1;
+    }
+
+    *setting %= num_values;
+}
+
+static int hookchoice;
+
 static void M_CrispyToggleAspectRatioLimitHook (void)
 {
-    crispy->arlimit = (crispy->arlimit + 1) % NUM_RATIOS;
+    ChangeSettingEnum(&crispy->arlimit, hookchoice, NUM_RATIOS);
 
     // [crispy] re-set logical rendering resolution
 
@@ -229,7 +254,7 @@ static void M_CrispyToggleAspectRatioLimitHook (void)
 
 static void M_CrispyTogglePixelAspectRatioHook (void)
 {
-    aspect_ratio_correct = (aspect_ratio_correct + 1) % NUM_PIXELASPECTRATIOS;
+    ChangeSettingEnum(&aspect_ratio_correct, hookchoice, NUM_PIXELASPECTRATIOS);
 
     // [crispy] re-set logical rendering resolution
 
@@ -258,39 +283,36 @@ static void M_CrispyTogglePixelAspectRatioHook (void)
 
 void M_CrispyTogglePixelAspectRatio(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyTogglePixelAspectRatioHook;
 }
 
 void M_CrispyToggleAspectRatioLimit(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
+
     crispy->post_rendering_hook = M_CrispyToggleAspectRatioLimitHook;
 }
 
 void M_CrispyToggleAutomapstats(int choice)
 {
-    choice = 0;
-    crispy->automapstats = (crispy->automapstats + 1) % NUM_WIDGETS;
+    ChangeSettingEnum(&crispy->automapstats, choice, NUM_WIDGETS);
 }
 
 void M_CrispyToggleBobfactor(int choice)
 {
-    choice = 0;
-    crispy->bobfactor = (crispy->bobfactor + 1) % NUM_BOBFACTORS;
+    ChangeSettingEnum(&crispy->bobfactor, choice, NUM_BOBFACTORS);
 }
 
 void M_CrispyToggleBrightmaps(int choice)
 {
-    choice = 0;
-    crispy->brightmaps = (crispy->brightmaps + 1) % NUM_BRIGHTMAPS;
+    ChangeSettingEnum(&crispy->brightmaps, choice, NUM_BRIGHTMAPS);
 }
 
 void M_CrispyToggleCenterweapon(int choice)
 {
-    choice = 0;
-    crispy->centerweapon = (crispy->centerweapon + 1) % NUM_CENTERWEAPON;
+    ChangeSettingEnum(&crispy->centerweapon, choice, NUM_CENTERWEAPON);
 }
 
 void M_CrispyToggleColoredblood(int choice)
@@ -329,25 +351,25 @@ void M_CrispyToggleColoredblood(int choice)
 
 void M_CrispyToggleColoredhud(int choice)
 {
-    choice = 0;
-    crispy->coloredhud = (crispy->coloredhud + 1) % NUM_COLOREDHUD;
+    ChangeSettingEnum(&crispy->coloredhud, choice, NUM_COLOREDHUD);
 }
 
 void M_CrispyToggleCrosshair(int choice)
 {
-    choice = 0;
-    crispy->crosshair = (crispy->crosshair + 1) % NUM_CROSSHAIRS;
+    ChangeSettingEnum(&crispy->crosshair, choice, NUM_CROSSHAIRS);
 }
 
 void M_CrispyToggleCrosshairHealth(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
+
     crispy->crosshairhealth = !crispy->crosshairhealth;
 }
 
 void M_CrispyToggleCrosshairTarget(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
+
     crispy->crosshairtarget = !crispy->crosshairtarget;
 }
 
@@ -358,13 +380,7 @@ void M_CrispyToggleCrosshairtype(int choice)
 	return;
     }
 
-    choice = 0;
-    crispy->crosshairtype = crispy->crosshairtype + 1;
-
-    if (!laserpatch[crispy->crosshairtype].c)
-    {
-	crispy->crosshairtype = 0;
-    }
+    ChangeSettingEnum(&crispy->crosshairtype, choice, NUM_CROSSHAIRTYPES);
 }
 
 void M_CrispyToggleDemoBar(int choice)
@@ -375,8 +391,7 @@ void M_CrispyToggleDemoBar(int choice)
 
 void M_CrispyToggleDemoTimer(int choice)
 {
-    choice = 0;
-    crispy->demotimer = (crispy->demotimer + 1) % NUM_DEMOTIMERS;
+    ChangeSettingEnum(&crispy->demotimer, choice, NUM_DEMOTIMERS);
 }
 
 void M_CrispyToggleDemoTimerDir(int choice)
@@ -426,8 +441,7 @@ void M_CrispyToggleFreeaim(int choice)
 	return;
     }
 
-    choice = 0;
-    crispy->freeaim = (crispy->freeaim + 1) % NUM_FREEAIMS;
+    ChangeSettingEnum(&crispy->freeaim, choice, NUM_FREEAIMS);
 
     // [crispy] update the "critical" struct
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
@@ -441,9 +455,7 @@ static void M_CrispyToggleSkyHook (void)
 
 void M_CrispyToggleFreelook(int choice)
 {
-    choice = 0;
-    crispy->freelook = (crispy->freelook + 1) % NUM_FREELOOKS;
-
+    ChangeSettingEnum(&crispy->freelook, choice, NUM_FREELOOKS);
     crispy->post_rendering_hook = M_CrispyToggleSkyHook;
 }
 
@@ -494,8 +506,7 @@ void M_CrispyToggleJumping(int choice)
 	return;
     }
 
-    choice = 0;
-    crispy->jump = (crispy->jump + 1) % NUM_JUMPS;
+    ChangeSettingEnum(&crispy->jump, choice, NUM_JUMPS);
 
     // [crispy] update the "critical" struct
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
@@ -503,14 +514,12 @@ void M_CrispyToggleJumping(int choice)
 
 void M_CrispyToggleLeveltime(int choice)
 {
-    choice = 0;
-    crispy->leveltime = (crispy->leveltime + 1) % NUM_WIDGETS;
+    ChangeSettingEnum(&crispy->leveltime, choice, NUM_WIDGETS);
 }
 
 void M_CrispyToggleLogo(int choice)
 {
-    choice = 0;
-    crispy->logo = (crispy->logo + 1) % NUM_LOGOS;
+    ChangeSettingEnum(&crispy->logo, choice, NUM_LOGOS);
 }
 
 void M_CrispyToggleMouseLook(int choice)
@@ -525,6 +534,12 @@ void M_CrispyToggleNeghealth(int choice)
 {
     choice = 0;
     crispy->neghealth = !crispy->neghealth;
+}
+
+void M_CrispyToggleDefaultSkill(int choice)
+{
+    ChangeSettingEnum(&crispy->defaultskill, choice, NUM_SKILLS);
+    M_SetDefaultDifficulty();
 }
 
 void M_CrispyToggleOverunder(int choice)
@@ -551,8 +566,8 @@ void M_CrispyTogglePitch(int choice)
 
 void M_CrispyTogglePlayerCoords(int choice)
 {
-    choice = 0;
-    crispy->playercoords = (crispy->playercoords + 1) % (NUM_WIDGETS - 1); // [crispy] disable "always" setting
+    // [crispy] disable "always" setting
+    ChangeSettingEnum(&crispy->playercoords, choice, NUM_WIDGETS - 1);
 }
 
 void M_CrispyToggleRecoil(int choice)
@@ -571,14 +586,12 @@ void M_CrispyToggleRecoil(int choice)
 
 void M_CrispyToggleSecretmessage(int choice)
 {
-    choice = 0;
-    crispy->secretmessage = (crispy->secretmessage + 1) % NUM_SECRETMESSAGE;
+    ChangeSettingEnum(&crispy->secretmessage, choice, NUM_SECRETMESSAGE);
 }
 
 void M_CrispyToggleMapSecrets(int choice)
 {
-    choice = 0;
-    crispy->mapsecrets = (crispy->mapsecrets + 1) % NUM_MAPSECRETS;
+    ChangeSettingEnum(&crispy->mapsecrets, choice, NUM_MAPSECRETS);
 }
 
 void M_CrispyToggleSmartTotals(int choice)
@@ -623,9 +636,7 @@ void M_CrispyToggleSmoothMap(int choice)
 
 void M_CrispyToggleSndChannels(int choice)
 {
-    choice = 0;
-
-    S_UpdateSndChannels();
+    S_UpdateSndChannels(choice);
 }
 
 void M_CrispyToggleSoundfixes(int choice)
@@ -644,16 +655,12 @@ void M_CrispyToggleSoundMono(int choice)
 
 void M_CrispyToggleTranslucency(int choice)
 {
-    choice = 0;
-    crispy->translucency = (crispy->translucency + 1) % NUM_TRANSLUCENCY;
+    ChangeSettingEnum(&crispy->translucency, choice, NUM_TRANSLUCENCY);
 }
 
 void M_CrispyToggleUncapped(int choice)
 {
-    choice = 0;
-
-    //crispy->uncapped = !crispy->uncapped;
-    crispy->uncapped = (crispy->uncapped + 1) % NUM_UNCAPPEDFRAMERATES; // [So Doom]
+    ChangeSettingEnum(&crispy->uncapped, choice, NUM_UNCAPPEDFRAMERATES); // [So Doom]
 }
 
 void M_CrispyToggleVsyncHook (void)
@@ -683,7 +690,7 @@ void M_CrispyToggleWeaponSquat(int choice)
 
 static void M_CrispyToggleWidescreenHook (void)
 {
-    crispy->widescreen = (crispy->widescreen + 1) % NUM_WIDESCREEN;
+    ChangeSettingEnum(&crispy->widescreen, hookchoice, NUM_WIDESCREEN);
 
     // [crispy] only re-init when switching from wide to narrow and vice versa
     if (crispy->widescreen == 1 || crispy->widescreen == 0)
@@ -703,7 +710,7 @@ static void M_CrispyToggleWidescreenHook (void)
 
 void M_CrispyToggleWidescreen(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyToggleWidescreenHook;
 }

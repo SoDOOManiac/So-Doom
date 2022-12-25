@@ -304,4 +304,14 @@ enum
     NUM_WIDGETS
 };
 
+enum
+{
+    SKILL_ITYTD,
+    SKILL_HNTR,
+    SKILL_HMP,
+    SKILL_UV,
+    SKILL_NIGHTMARE,
+    NUM_SKILLS
+};
+
 #endif
