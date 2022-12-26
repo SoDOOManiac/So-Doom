@@ -564,7 +564,7 @@ enum
     crispness_crosshairtype,
     crispness_crosshairhealth,
     crispness_crosshairtarget,
-    crispness_sep_crosshair_,
+//    crispness_sep_crosshair_,
 
     crispness3_next,
     crispness3_prev,
@@ -588,7 +588,7 @@ static menuitem_t Crispness3Menu[]=
     {2,"",	M_CrispyToggleCrosshairtype,'s'},
     {2,"",	M_CrispyToggleCrosshairHealth,'h'},
     {2,"",	M_CrispyToggleCrosshairTarget,'t'},
-    {-1,"",0,'\0'},
+//    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
