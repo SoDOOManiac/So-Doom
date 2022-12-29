@@ -30,7 +30,7 @@
 multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
 {
     {UNCAPPEDFRAMERATE_OFF, "off"},
-    {UNCAPPEDFRAMERATE_FULL, "full"},
+    {UNCAPPEDFRAMERATE_FULL, "all movements"},
     {UNCAPPEDFRAMERATE_CAMERAMOVEMENT, "camera movement"},
 };
 
@@ -181,6 +181,13 @@ multiitem_t multiitem_sndchannels[4] =
     {8, "8"},
     {16, "16"},
     {32, "32"},
+};
+
+multiitem_t multiitem_vsync[NUM_VSYNC] =
+{
+    {VSYNC_OFF, "off"},
+    {VSYNC_ON, "vsync"},
+    {VSYNC_CAPPED, "config FPS limit"},
 };
 
 multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
@@ -665,19 +672,28 @@ void M_CrispyToggleUncapped(int choice)
 
 void M_CrispyToggleVsyncHook (void)
 {
-    crispy->vsync = !crispy->vsync;
+
+    if (force_software_renderer && (((hookchoice == 1) && (crispy->vsync == 0)) || ((hookchoice != 1) && (crispy->vsync == 2)))) // [So Doom] skip vsync option if software rendering is forced
+    {
+        if (hookchoice == 1)
+            crispy->vsync = 2;
+        else
+            crispy->vsync = 0;
+    }
+    else
+        ChangeSettingEnum(&crispy->vsync, hookchoice, NUM_VSYNC);
 
     I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
 }
 
 void M_CrispyToggleVsync(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
 
-    if (force_software_renderer)
-    {
-	return;
-    }
+//    if (force_software_renderer)
+//    {
+//	return;
+//    }
 
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
 }

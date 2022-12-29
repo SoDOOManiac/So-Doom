@@ -149,6 +149,14 @@ enum
 
 enum
 {
+    VSYNC_OFF,
+    VSYNC_ON,
+    VSYNC_CAPPED,
+    NUM_VSYNC,
+};
+
+enum
+{
     PIXELASPECTRATIO_OFF,
     PIXELASPECTRATIO_1_2,
     PIXELASPECTRATIO_1,

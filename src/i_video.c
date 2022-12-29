@@ -1430,11 +1430,11 @@ static void SetVideoMode(void)
     // Turn on vsync if we aren't in a -timedemo
     if (!singletics && mode.refresh_rate > 0)
     {
-        if (crispy->vsync) // [crispy] uncapped vsync
+        if (crispy->vsync == 1) // [crispy] uncapped vsync
         {
             renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
         }
-        else if (crispy->fpslimit > 0)
+        else if ((crispy->fpslimit > 0) && (crispy->vsync == 2))
         {
             limit_framerate = true;
         }
@@ -1444,8 +1444,9 @@ static void SetVideoMode(void)
     {
         renderer_flags |= SDL_RENDERER_SOFTWARE;
         renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
-        crispy->vsync = false;
-        limit_framerate = (crispy->fpslimit > 0);
+        if (crispy->vsync == 1)
+            crispy->vsync = false;
+        limit_framerate = (crispy->fpslimit > 0) && (crispy->vsync == 2);
     }
 
     if (renderer != NULL)
@@ -1828,7 +1829,7 @@ void I_ReInitGraphics (int reinit)
 		SDL_GetRendererInfo(renderer, &info);
 		flags = info.flags;
 
-		if (crispy->vsync && !(flags & SDL_RENDERER_SOFTWARE))
+		if ((crispy->vsync == 1) && !(flags & SDL_RENDERER_SOFTWARE))
 		{
 			flags |= SDL_RENDERER_PRESENTVSYNC;
 			limit_framerate = false;
@@ -1836,7 +1837,7 @@ void I_ReInitGraphics (int reinit)
 		else
 		{
 			flags &= ~SDL_RENDERER_PRESENTVSYNC;
-			limit_framerate = (crispy->fpslimit > 0);
+			limit_framerate = (crispy->fpslimit > 0) && (crispy->vsync == 2);
 		}
 
 		SDL_DestroyRenderer(renderer);
