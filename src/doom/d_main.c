@@ -459,6 +459,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);
     M_BindIntVariable("crispy_fliplevels",      &crispy->fliplevels);
     M_BindIntVariable("crispy_flipweapons",     &crispy->flipweapons);
+    M_BindIntVariable("crispy_fpslimit",        &crispy->fpslimit);
     M_BindIntVariable("crispy_freeaim",         &crispy->freeaim);
     M_BindIntVariable("crispy_freelook",        &crispy->freelook);
     M_BindIntVariable("crispy_hires",           &crispy->hires);

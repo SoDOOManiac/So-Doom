@@ -59,6 +59,7 @@ typedef struct
 	int flipcorpses;
 	int fliplevels;
 	int flipweapons;
+	int fpslimit;
 	int freeaim;
 	int freelook;
 	int freelook_hh;
