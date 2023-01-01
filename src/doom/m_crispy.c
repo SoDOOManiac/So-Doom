@@ -673,11 +673,11 @@ void M_CrispyToggleUncapped(int choice)
 void M_CrispyToggleVsyncHook (void)
 {
 
-    if (force_software_renderer && (((hookchoice == 1) && (crispy->vsync == 0)) || ((hookchoice != 1) && (crispy->vsync == 2)))) // [So Doom] skip vsync option if software rendering is forced
+    if (force_software_renderer) // [So Doom] skip vsync option if software rendering is forced
     {
-        if (hookchoice == 1)
+        if (crispy->vsync != 2)
             crispy->vsync = 2;
-        else
+        else if (crispy->vsync != 0)
             crispy->vsync = 0;
     }
     else
