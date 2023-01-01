@@ -1566,7 +1566,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_arlimit, "Aspect Ratio Limit", multiitem_arlimit, crispy->arlimit, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Fast Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
-    M_DrawCrispnessMultiItem(crispness_vsync, "Framerate Limit", multiitem_vsync, crispy->vsync,  !force_software_renderer);
+    M_DrawCrispnessMultiItem(crispness_vsync, "Framerate Limit", multiitem_vsync, crispy->vsync,  true);
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, !force_software_renderer);
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
