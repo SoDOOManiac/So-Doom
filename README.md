@@ -130,8 +130,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ## Download
 
-Source code and Windows binaries (compatible with both x86 and x64 editions) for the latest release can be found on the [Release]
-(https://github.com/SoDOOManiac/So-Doom/releases/latest) page.
+Source code and Windows binaries (compatible with both x86 and x64 editions) for the latest release can be found on the [Release](https://github.com/SoDOOManiac/So-Doom/releases/latest) page.
 
 To install on OSX, get macports and then run "sudo port install so-doom".
 
