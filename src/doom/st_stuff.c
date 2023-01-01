@@ -1287,9 +1287,9 @@ ST_Responder (event_t* ev)
     }
 
       // [crispy] snow
-      if (cht_CheckCheatSP(&cheat_snow, ev->data2))
+      if (cht_CheckCheat(&cheat_snow, ev->data2))
       {
-    crispy->snowflakes = !crispy->snowflakes;
+      crispy->snowflakes = !crispy->snowflakes;
       }
 
 	// [So Doom] health powerup giving cheats
