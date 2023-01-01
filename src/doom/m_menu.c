@@ -1261,7 +1261,7 @@ void M_DrawMainMenu(void)
 
     V_DrawPatchDirect(94, 2,
                       W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
-    if (crispy->logo == LOGO_MAINMENU || crispy->logo == LOGO_BOTH)
+    if (crispy->logo % NUM_LOGOS == LOGO_MAINMENU % NUM_LOGOS || crispy->logo == LOGO_BOTH % NUM_LOGOS)
 		V_DrawPatchDirect(0, 0, (patch_t*) &main_menu_background); // [So Doom] port logo above the menu logo that can be large like in Memento Mori    
 }
 
@@ -1373,7 +1373,7 @@ void M_DrawOptions(void)
 
     V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
                                                PU_CACHE));
-    if (crispy->logo == LOGO_OPTIONS || crispy->logo == LOGO_BOTH)
+    if (crispy->logo % NUM_LOGOS == LOGO_OPTIONS % NUM_LOGOS || crispy->logo == LOGO_BOTH % NUM_LOGOS)
     	V_DrawPatchDirect(200, 20, (patch_t*) &main_menu_background); // [So Doom] draw logo to the right of the Options menu
 
     if (OptionsDef.lumps_missing == -1)
