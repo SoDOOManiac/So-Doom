@@ -33,6 +33,9 @@
 #include "s_sound.h"
 #include "v_video.h"
 
+#include "deh_main.h" // [crispy] for demo footer
+#include "memio.h"
+
 // Macros
 
 #define AM_STARTKEY     9
@@ -2360,6 +2363,77 @@ void G_TimeDemo(char *name)
     }
 }
 
+#define DEMO_FOOTER_SEPARATOR "\n"
+
+static void G_AddDemoFooter(void)
+{
+    int i;
+    size_t len = 0;
+    char *tmp, **filenames;
+
+    MEMFILE *stream = mem_fopen_write();
+
+    filenames = W_GetWADFileNames();
+
+    if (!filenames)
+    {
+        return;
+    }
+
+    tmp = M_StringReplace(PACKAGE_STRING, "Doom", "Heretic");
+    mem_fputs(tmp, stream);
+    free(tmp);
+
+    tmp = M_StringJoin(DEMO_FOOTER_SEPARATOR, "-iwad \"",
+        M_BaseName(filenames[0]), "\"", NULL);
+    mem_fputs(tmp, stream);
+    free(tmp);
+
+    if (filenames[1])
+    {
+        mem_fputs(" -file", stream);
+
+        for (i = 1; filenames[i]; i++)
+        {
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            mem_fputs(tmp, stream);
+            free(tmp);
+        }
+    }
+
+    filenames = DEH_GetFileNames();
+
+    if (filenames)
+    {
+        mem_fputs(" -deh", stream);
+
+        for (i = 0; filenames[i]; i++)
+        {
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            mem_fputs(tmp, stream);
+            free(tmp);
+        }
+    }
+
+    if (M_CheckParm("-solo-net"))
+    {
+        mem_fputs(" -solo-net", stream);
+    }
+
+    mem_fputs(DEMO_FOOTER_SEPARATOR, stream);
+
+    mem_get_buf(stream, (void **)&tmp, &len);
+
+    while (demo_p > demoend - len)
+    {
+        IncreaseDemoBuffer();
+    }
+
+    memcpy(demo_p, tmp, len);
+    demo_p += len;
+
+    mem_fclose(stream);
+}
 
 /*
 ===================
@@ -2401,6 +2475,7 @@ boolean G_CheckDemoStatus(void)
     if (demorecording)
     {
         *demo_p++ = DEMOMARKER;
+        G_AddDemoFooter();
         M_WriteFile(demoname, demobuffer, demo_p - demobuffer);
         Z_Free(demobuffer);
         demorecording = false;

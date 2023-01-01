@@ -77,6 +77,8 @@
 #include "g_game.h"
 #include "v_trans.h" // [crispy] colored "always run" message
 
+#include "deh_main.h" // [crispy] for demo footer
+#include "memio.h"
 
 #define SAVEGAMESIZE	0x2c000
 
@@ -3129,6 +3131,78 @@ void G_TimeDemo (char* name)
     gameaction = ga_playdemo; 
 } 
  
+#define DEMO_FOOTER_SEPARATOR "\n"
+
+static void G_AddDemoFooter(void)
+{
+    int i;
+    size_t len = 0;
+    char *tmp, **filenames;
+    extern const char *D_GetGameVersionCmd(void);
+
+    MEMFILE *stream = mem_fopen_write();
+
+    filenames = W_GetWADFileNames();
+
+    if (!filenames)
+    {
+        return;
+    }
+
+    tmp = M_StringJoin(PACKAGE_STRING, DEMO_FOOTER_SEPARATOR,
+            "-iwad \"", M_BaseName(filenames[0]), "\"", NULL);
+    mem_fputs(tmp, stream);
+    free(tmp);
+
+    if (filenames[1])
+    {
+        mem_fputs(" -file", stream);
+
+        for (i = 1; filenames[i]; i++)
+        {
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            mem_fputs(tmp, stream);
+            free(tmp);
+        }
+    }
+
+    filenames = DEH_GetFileNames();
+
+    if (filenames)
+    {
+        mem_fputs(" -deh", stream);
+
+        for (i = 0; filenames[i]; i++)
+        {
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            mem_fputs(tmp, stream);
+            free(tmp);
+        }
+    }
+
+    tmp = M_StringJoin(" -gameversion ", D_GetGameVersionCmd(), NULL);
+    mem_fputs(tmp, stream);
+    free(tmp);
+
+    if (M_CheckParm("-solo-net"))
+    {
+        mem_fputs(" -solo-net", stream);
+    }
+
+    mem_fputs(DEMO_FOOTER_SEPARATOR, stream);
+
+    mem_get_buf(stream, (void **)&tmp, &len);
+
+    while (demo_p > demoend - len)
+    {
+        IncreaseDemoBuffer();
+    }
+
+    memcpy(demo_p, tmp, len);
+    demo_p += len;
+
+    mem_fclose(stream);
+}
  
 /* 
 =================== 
@@ -3218,6 +3292,7 @@ boolean G_CheckDemoStatus (void)
     if (demorecording) 
     { 
 	*demo_p++ = DEMOMARKER; 
+	G_AddDemoFooter();
 	M_WriteFile (demoname, demobuffer, demo_p - demobuffer); 
 	Z_Free (demobuffer); 
 	demorecording = false; 

@@ -130,8 +130,10 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ## Download
 
-Binaries for Windows XP / Vista / 7 / 8.1 / 10 (32-bit binaries compatible with both x86 and x64 editions) are available here:
-https://github.com/SoDOOManiac/So-Doom/releases/download/so-doom-5.12.0/so-doom-5.12.0-win32.zip
+Source code and Windows binaries (compatible with both x86 and x64 editions) for the latest release can be found on the [Release]
+(https://github.com/SoDOOManiac/So-Doom/releases/latest) page.
+
+To install on OSX, get macports and then run "sudo port install so-doom".
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 
