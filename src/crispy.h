@@ -73,6 +73,7 @@ typedef struct
 	int pitch;
 	int playercoords;
 	int recoil;
+	int screenwipe;
 	int mapsecrets;
 	int secretmessage;
 	int smarttotals;

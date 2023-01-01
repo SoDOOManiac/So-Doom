@@ -441,7 +441,8 @@ enum
     //crispness_sep_rendering_,
 
     //crispness_sep_visual,
-    crispness_logo,
+    //crispness_logo,
+    crispness_screenwipe,
     crispness_coloredhud,
     crispness_translucency,
     crispness_smoothlight,
@@ -467,7 +468,8 @@ static menuitem_t Crispness1Menu[]=
     {2,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
 //    {-1,"",0,'\0'},
-    {2,"",  M_CrispyToggleLogo,'o'},
+//    {2,"",  M_CrispyToggleLogo,'o'},
+    {2,"",  M_CrispyToggleScreenwipe,'o'},
     {2,"",	M_CrispyToggleColoredhud,'c'},
     {2,"",	M_CrispyToggleTranslucency,'e'},
     {2,"",	M_CrispyToggleSmoothLighting,'l'},
@@ -1570,7 +1572,8 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, !force_software_renderer);
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
-    M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
+    //M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
+    M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe", crispy->screenwipe, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);

@@ -591,6 +591,12 @@ void M_CrispyToggleRecoil(int choice)
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 }
 
+void M_CrispyToggleScreenwipe(int choice)
+{
+    choice = 0;
+    crispy->screenwipe = !crispy->screenwipe;
+}
+
 void M_CrispyToggleSecretmessage(int choice)
 {
     ChangeSettingEnum(&crispy->secretmessage, choice, NUM_SECRETMESSAGE);

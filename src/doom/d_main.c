@@ -189,13 +189,14 @@ boolean D_Display (void)
     }
 
     // save the current screen if about to wipe
-    if (gamestate != wipegamestate)
+    // [JNechaevsky] Wiping: make optional
+    if (gamestate != wipegamestate && crispy->screenwipe)
     {
-	wipe = true;
-	wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+        wipe = true;
+        wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
     }
     else
-	wipe = false;
+    wipe = false;
 
     if (gamestate == GS_LEVEL && gametic)
 	HU_Erase();
@@ -472,6 +473,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_pitch",           &crispy->pitch);
     M_BindIntVariable("crispy_playercoords",    &crispy->playercoords);
     M_BindIntVariable("crispy_recoil",          &crispy->recoil);
+    M_BindIntVariable("crispy_screenwipe",      &crispy->screenwipe);
     M_BindIntVariable("crispy_mapsecrets",      &crispy->mapsecrets);
     M_BindIntVariable("crispy_secretmessage",   &crispy->secretmessage);
     M_BindIntVariable("crispy_smarttotals",   	&crispy->smarttotals);

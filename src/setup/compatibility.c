@@ -93,6 +93,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_pitch",           &crispy->pitch);
         M_BindIntVariable("crispy_playercoords",    &crispy->playercoords);
         M_BindIntVariable("crispy_recoil",          &crispy->recoil);
+        M_BindIntVariable("crispy_screenwipe",      &crispy->screenwipe);
         M_BindIntVariable("crispy_mapsecrets",      &crispy->mapsecrets);
         M_BindIntVariable("crispy_secretmessage",   &crispy->secretmessage);
         M_BindIntVariable("crispy_smarttotals",     &crispy->smarttotals);

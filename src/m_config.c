@@ -2327,6 +2327,15 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+
+    // Wiping screen on level load made optional (by JNechaevsky).
+    //
+
+    CONFIG_VARIABLE_INT(crispy_screenwipe),
+
+    //!
+    // @game doom
+    //
     // Automapping borders of secret sectors: default based on line flags (don't map if ML_DONTDRAW), default + color bright green when triggered (if not ML_DONTDRAW),
     // forced when seen, forced when seen + color bright green when triggered.
     //
