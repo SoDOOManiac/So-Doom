@@ -1286,12 +1286,6 @@ ST_Responder (event_t* ev)
 	}
     }
 
-      // [crispy] snow
-      if (cht_CheckCheat(&cheat_snow, ev->data2))
-      {
-      crispy->snowflakes = !crispy->snowflakes;
-      }
-
 	// [So Doom] health powerup giving cheats
 
 	  if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
@@ -1470,6 +1464,11 @@ ST_Responder (event_t* ev)
       M_snprintf(msg, sizeof(msg), "Skill: %s",
                  skilltable[BETWEEN(0,5,(int) gameskill+1)]);
       plyr->message = msg;
+    }
+    // [crispy] snow
+    else if (cht_CheckCheat(&cheat_snow, ev->data2))
+    {
+      crispy->snowflakes = !crispy->snowflakes;
     }
     
     // 'clev' change-level cheat
