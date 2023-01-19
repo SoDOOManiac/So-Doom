@@ -447,7 +447,6 @@ enum
     crispness_pixelaspectratio,
     crispness_uncapped,
     crispness_fpslimit,
-    crispness_vsync,
     crispness_smoothscaling,
     //crispness_sep_rendering_,
 
