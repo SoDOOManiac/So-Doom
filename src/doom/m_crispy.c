@@ -19,6 +19,7 @@
 
 #include "crispy.h"
 #include "doomstat.h"
+#include "i_input.h" // [crispy] start/stop text input
 #include "m_menu.h" // [crispy] M_SetDefaultDifficulty()
 #include "p_local.h" // [crispy] thinkercap
 #include "s_sound.h"
@@ -32,6 +33,8 @@ multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
     {UNCAPPEDFRAMERATE_OFF, "off"},
     {UNCAPPEDFRAMERATE_FULL, "all movements"},
     {UNCAPPEDFRAMERATE_CAMERAMOVEMENT, "camera movement"},
+    {UNCAPPEDFRAMERATE_FULL_VSYNC, "all movements + vsync"},
+    {UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC, "cam movement + vsync"},
 };
 
 multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS] =
@@ -460,6 +463,52 @@ static void M_CrispyToggleSkyHook (void)
     R_InitSkyMap();
 }
 
+void M_CrispyToggleFpsLimit(int choice)
+{
+    if (!crispy->uncapped)
+    {
+        return;
+    }
+
+    if (choice == 0)
+    {
+        crispy->fpslimit--;
+
+        if (crispy->fpslimit < CRISPY_FPSLIMIT_MIN)
+        {
+            crispy->fpslimit = 0;
+        }
+    }
+    else if (choice == 1)
+    {
+        crispy->fpslimit++;
+    }
+    else if (choice == 2)
+    {
+        if (numeric_enter)
+        {
+            crispy->fpslimit = numeric_entry;
+            numeric_enter = false;
+            I_StopTextInput();
+        }
+        else
+        {
+            numeric_enter = true;
+            I_StartTextInput(0, 0, 0, 0);
+            return;
+        }
+    }
+
+    if (crispy->fpslimit && crispy->fpslimit < CRISPY_FPSLIMIT_MIN)
+    {
+        crispy->fpslimit = CRISPY_FPSLIMIT_MIN;
+    }
+    else if (crispy->fpslimit > CRISPY_FPSLIMIT_MAX)
+    {
+        crispy->fpslimit = CRISPY_FPSLIMIT_MAX;
+    }
+}
+
 void M_CrispyToggleFreelook(int choice)
 {
     ChangeSettingEnum(&crispy->freelook, choice, NUM_FREELOOKS);
@@ -674,32 +723,36 @@ void M_CrispyToggleTranslucency(int choice)
 void M_CrispyToggleUncapped(int choice)
 {
     ChangeSettingEnum(&crispy->uncapped, choice, NUM_UNCAPPEDFRAMERATES); // [So Doom]
+
+    if (force_software_renderer) // [So Doom] skip vsync-including options if software rendering is forced
+    {
+        if (crispy->uncapped == 3)
+            crispy->uncapped = 0;
+        else if (crispy->uncapped == 4)
+            crispy->uncapped = 2;
+    }
+    else
+    {
+        crispy->vsync = (crispy->uncapped > 2);
+        I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+    }
 }
 
 void M_CrispyToggleVsyncHook (void)
 {
-
-    if (force_software_renderer) // [So Doom] skip vsync option if software rendering is forced
-    {
-        if (crispy->vsync != 2)
-            crispy->vsync = 2;
-        else if (crispy->vsync != 0)
-            crispy->vsync = 0;
-    }
-    else
-        ChangeSettingEnum(&crispy->vsync, hookchoice, NUM_VSYNC);
+    crispy->vsync = !crispy->vsync;
 
     I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
 }
 
 void M_CrispyToggleVsync(int choice)
 {
-    hookchoice = choice;
+    choice = 0;
 
-//    if (force_software_renderer)
-//    {
-//	return;
-//    }
+    if (force_software_renderer)
+    {
+	    return;
+    }
 
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
 }
