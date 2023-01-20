@@ -1438,6 +1438,8 @@ static void SetVideoMode(void)
         renderer_flags |= SDL_RENDERER_SOFTWARE;
         renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
         crispy->vsync = false;
+        if (crispy->uncapped > 2)
+            crispy->uncapped -= 2; // [So Doom] force a fast framerate option without vsync
     }
 
     if (renderer != NULL)
