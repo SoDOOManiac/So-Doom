@@ -59,6 +59,26 @@ typedef struct
 
 } maskdraw_t;
 
+static size_t num_vissprite, num_vissprite_alloc, num_vissprite_ptrs; // killough
+static vissprite_t **vissprite_ptrs;
+
+typedef struct drawseg_xrange_item_s
+{
+    short x1, x2;
+    drawseg_t *user;
+} drawseg_xrange_item_t;
+
+typedef struct drawsegs_xrange_s
+{
+    drawseg_xrange_item_t *items;
+    int count;
+} drawsegs_xrange_t;
+
+#define DS_RANGES_COUNT 3
+static drawsegs_xrange_t drawsegs_xranges[DS_RANGES_COUNT];
+
+static drawseg_xrange_item_t *drawsegs_xrange;
+static int drawsegs_xrange_count = 0;
 
 static degenmobj_t laserspot_m = {{0}};
 degenmobj_t *laserspot = &laserspot_m;
@@ -324,11 +344,6 @@ void R_InitSpriteDefs(const char **namelist)
 // GAME FUNCTIONS
 //
 vissprite_t*	vissprites = NULL;
-vissprite_t*	vissprite_p;
-int		newvissprite;
-static int	numvissprites;
-
-
 
 //
 // R_InitSprites
@@ -347,54 +362,36 @@ void R_InitSprites(const char **namelist)
 }
 
 
-
-//
+// -----------------------------------------------------------------------------
 // R_ClearSprites
 // Called at frame start.
-//
+// -----------------------------------------------------------------------------
+
 void R_ClearSprites (void)
 {
-    vissprite_p = vissprites;
+    num_vissprite = 0;  // [JN] killough
 }
 
-
-//
+// -----------------------------------------------------------------------------
 // R_NewVisSprite
-//
-vissprite_t	overflowsprite;
+// -----------------------------------------------------------------------------
 
-vissprite_t* R_NewVisSprite (void)
+static vissprite_t* R_NewVisSprite (void)
 {
-    // [crispy] remove MAXVISSPRITE Vanilla limit
-    if (vissprite_p == &vissprites[numvissprites])
+    if (num_vissprite >= num_vissprite_alloc)   // [JN] killough
     {
-	static int max;
-	int numvissprites_old = numvissprites;
+        
+        size_t num_vissprite_alloc_prev = num_vissprite_alloc;
+        num_vissprite_alloc = num_vissprite_alloc ? num_vissprite_alloc*2 : 128;
+        vissprites = I_Realloc(vissprites,num_vissprite_alloc*sizeof(*vissprites));
 
-	// [crispy] cap MAXVISSPRITES limit at 4096
-	if (!max && numvissprites == 32 * MAXVISSPRITES)
-	{
-	    fprintf(stderr, "R_NewVisSprite: MAXVISSPRITES limit capped at %d.\n", numvissprites);
-	    max++;
-	}
-
-	if (max)
-	return &overflowsprite;
-
-	numvissprites = numvissprites ? 2 * numvissprites : MAXVISSPRITES;
-	vissprites = I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
-	memset(vissprites + numvissprites_old, 0, (numvissprites - numvissprites_old) * sizeof(*vissprites));
-
-	vissprite_p = vissprites + numvissprites_old;
-
-	if (numvissprites_old)
-	    fprintf(stderr, "R_NewVisSprite: Hit MAXVISSPRITES limit at %d, raised to %d.\n", numvissprites_old, numvissprites);
+        // [JN] Andrey Budko: set all fields to zero
+        memset(vissprites + num_vissprite_alloc_prev, 0,
+        (num_vissprite_alloc - num_vissprite_alloc_prev)*sizeof(*vissprites));
     }
-    
-    vissprite_p++;
-    return vissprite_p-1;
-}
 
+    return vissprites + num_vissprite++;
+}
 
 
 //
@@ -1165,99 +1162,88 @@ void R_DrawPlayerSprites (void)
     }
 }
 
-
-
-
-//
+// -----------------------------------------------------------------------------
 // R_SortVisSprites
 //
-#ifdef HAVE_QSORT
-// [crispy] use stdlib's qsort() function for sorting the vissprites[] array
-static inline int cmp_vissprites (const void *a, const void *b)
+// Rewritten by Lee Killough to avoid using unnecessary
+// linked lists, and to use faster sorting algorithm.
+// -----------------------------------------------------------------------------
+
+#define bcopyp(d, s, n) memcpy(d, s, (n) * sizeof(void *))
+
+// killough 9/2/98: merge sort
+
+static void msort(vissprite_t **s, vissprite_t **t, const int n)
 {
-    const vissprite_t *vsa = (const vissprite_t *) a;
-    const vissprite_t *vsb = (const vissprite_t *) b;
+    if (n >= 16)
+    {
+        int n1 = n/2, n2 = n - n1;
+        vissprite_t **s1 = s, **s2 = s + n1, **d = t;
 
-    const int ret = vsa->scale - vsb->scale;
+        msort(s1, t, n1);
+        msort(s2, t, n2);
 
-    return ret ? ret : vsa->next - vsb->next;
+        while ((*s1)->scale > (*s2)->scale ?
+              (*d++ = *s1++, --n1) : (*d++ = *s2++, --n2));
+
+        if (n2)
+        bcopyp(d, s2, n2);
+        else
+        bcopyp(d, s1, n1);
+
+        bcopyp(s, t, n);
+    }
+    else
+    {
+        int i;
+
+        for (i = 1; i < n; i++)
+        {
+            vissprite_t *temp = s[i];
+
+            if (s[i-1]->scale < temp->scale)
+            {
+                int j = i;
+
+                while ((s[j] = s[j-1])->scale < temp->scale && --j);
+                s[j] = temp;
+            }
+        }
+    }
 }
+
+// -----------------------------------------------------------------------------
+// R_SortVisSprites
+// -----------------------------------------------------------------------------
 
 void R_SortVisSprites (void)
 {
-    int count;
-    vissprite_t *ds;
-
-    count = vissprite_p - vissprites;
-
-    if (!count)
-	return;
-
-    // [crispy] maintain a stable sort for deliberately overlaid sprites
-    for (ds = vissprites; ds < vissprite_p; ds++)
+    if (num_vissprite)
     {
-	ds->next = ds + 1;
-    }
+        int i = num_vissprite;
 
-    qsort(vissprites, count, sizeof(*vissprites), cmp_vissprites);
-}
-#else
-vissprite_t	vsprsortedhead;
+        // If we need to allocate more pointers for the vissprites,
+        // allocate as many as were allocated for sprites -- killough
+        // killough 9/22/98: allocate twice as many
 
+        if (num_vissprite_ptrs < num_vissprite*2)
+        {
+            free(vissprite_ptrs);  // better than realloc -- no preserving needed
+            vissprite_ptrs = malloc((num_vissprite_ptrs = num_vissprite_alloc*2)
+                                    * sizeof *vissprite_ptrs);
+        }
 
-void R_SortVisSprites (void)
-{
-    int			i;
-    int			count;
-    vissprite_t*	ds;
-    vissprite_t*	best;
-    vissprite_t		unsorted;
-    fixed_t		bestscale;
+        while (--i >= 0)
+        {
+            vissprite_ptrs[i] = vissprites+i;
+        }
 
-    count = vissprite_p - vissprites;
-	
-    unsorted.next = unsorted.prev = &unsorted;
+        // killough 9/22/98: replace qsort with merge sort, since the keys
+        // are roughly in order to begin with, due to BSP rendering.
 
-    if (!count)
-	return;
-		
-    for (ds=vissprites ; ds<vissprite_p ; ds++)
-    {
-	ds->next = ds+1;
-	ds->prev = ds-1;
-    }
-    
-    vissprites[0].prev = &unsorted;
-    unsorted.next = &vissprites[0];
-    (vissprite_p-1)->next = &unsorted;
-    unsorted.prev = vissprite_p-1;
-    
-    // pull the vissprites out by scale
-
-    vsprsortedhead.next = vsprsortedhead.prev = &vsprsortedhead;
-    for (i=0 ; i<count ; i++)
-    {
-	bestscale = INT_MAX;
-        best = unsorted.next;
-	for (ds=unsorted.next ; ds!= &unsorted ; ds=ds->next)
-	{
-	    if (ds->scale < bestscale)
-	    {
-		bestscale = ds->scale;
-		best = ds;
-	    }
-	}
-	best->next->prev = best->prev;
-	best->prev->next = best->next;
-	best->next = &vsprsortedhead;
-	best->prev = vsprsortedhead.prev;
-	vsprsortedhead.prev->next = best;
-	vsprsortedhead.prev = best;
+        msort(vissprite_ptrs, vissprite_ptrs + num_vissprite, num_vissprite);
     }
 }
-#endif
-
-
 
 //
 // R_DrawSprite
@@ -1380,27 +1366,34 @@ void R_DrawSprite (vissprite_t* spr)
 //
 void R_DrawMasked (void)
 {
-    vissprite_t*	spr;
+    int				i;
     drawseg_t*		ds;
 	
     R_SortVisSprites ();
 
-    if (vissprite_p > vissprites)
+    // draw all vissprites back to front
+
+    for (i = num_vissprite ; --i>=0 ; )
     {
-	// draw all vissprites back to front
-#ifdef HAVE_QSORT
-	for (spr = vissprites;
-	     spr < vissprite_p;
-	     spr++)
-#else
-	for (spr = vsprsortedhead.next ;
-	     spr != &vsprsortedhead ;
-	     spr=spr->next)
-#endif
-	{
-	    
-	    R_DrawSprite (spr);
-	}
+        vissprite_t* spr = vissprite_ptrs[i];
+
+        if (spr->x2 < centerx)
+        {
+            drawsegs_xrange = drawsegs_xranges[1].items;
+            drawsegs_xrange_count = drawsegs_xranges[1].count;
+        }
+        else if (spr->x1 >= centerx)
+        {
+            drawsegs_xrange = drawsegs_xranges[2].items;
+            drawsegs_xrange_count = drawsegs_xranges[2].count;
+        }
+        else
+        {
+            drawsegs_xrange = drawsegs_xranges[0].items;
+            drawsegs_xrange_count = drawsegs_xranges[0].count;
+        }
+
+        R_DrawSprite(spr);    // [JN] killough
     }
     
     // render any remaining masked mid textures
