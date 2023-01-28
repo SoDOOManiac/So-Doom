@@ -78,6 +78,7 @@ typedef struct drawsegs_xrange_s
 static drawsegs_xrange_t drawsegs_xranges[DS_RANGES_COUNT];
 
 static drawseg_xrange_item_t *drawsegs_xrange;
+static unsigned int drawsegs_xrange_size = 0;
 static int drawsegs_xrange_count = 0;
 
 static degenmobj_t laserspot_m = {{0}};
@@ -1370,6 +1371,55 @@ void R_DrawMasked (void)
     drawseg_t*		ds;
 	
     R_SortVisSprites ();
+
+    // [JN] Andrey Budko
+    // Makes sense for scenes with huge amount of drawsegs.
+    // ~12% of speed improvement on epic.wad map05
+    for (i = 0 ; i < DS_RANGES_COUNT ; i++)
+    {
+        drawsegs_xranges[i].count = 0;
+    }
+
+    if (num_vissprite > 0)
+    {
+        if (drawsegs_xrange_size < numdrawsegs)
+        {
+            drawsegs_xrange_size = 2 * numdrawsegs;
+
+            for(i = 0; i < DS_RANGES_COUNT; i++)
+            {
+                drawsegs_xranges[i].items = I_Realloc(
+                drawsegs_xranges[i].items,
+                drawsegs_xrange_size * sizeof(drawsegs_xranges[i].items[0]));
+            }
+        }
+
+        for (ds = ds_p; ds-- > drawsegs;)
+        {
+            if (ds->silhouette || ds->maskedtexturecol)
+            {
+                drawsegs_xranges[0].items[drawsegs_xranges[0].count].x1 = ds->x1;
+                drawsegs_xranges[0].items[drawsegs_xranges[0].count].x2 = ds->x2;
+                drawsegs_xranges[0].items[drawsegs_xranges[0].count].user = ds;
+
+                // [JN] Andrey Budko: ~13% of speed improvement on sunder.wad map10
+                if (ds->x1 < centerx)
+                {
+                    drawsegs_xranges[1].items[drawsegs_xranges[1].count] = 
+                    drawsegs_xranges[0].items[drawsegs_xranges[0].count];
+                    drawsegs_xranges[1].count++;
+                }
+                if (ds->x2 >= centerx)
+                {
+                    drawsegs_xranges[2].items[drawsegs_xranges[2].count] = 
+                    drawsegs_xranges[0].items[drawsegs_xranges[0].count];
+                    drawsegs_xranges[2].count++;
+                }
+
+                drawsegs_xranges[0].count++;
+            }
+        }
+    }
 
     // draw all vissprites back to front
 
