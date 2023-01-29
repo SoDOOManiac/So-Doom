@@ -62,6 +62,8 @@ typedef struct
 static size_t num_vissprite, num_vissprite_alloc, num_vissprite_ptrs; // killough
 static vissprite_t **vissprite_ptrs;
 
+// [JN] optimization for drawing huge amount of drawsegs.
+// adapted from prboom-plus/src/r_things.c
 typedef struct drawseg_xrange_item_s
 {
     short x1, x2;
@@ -1259,28 +1261,22 @@ void R_DrawSprite (vissprite_t* spr)
     int			r2;
     fixed_t		scale;
     fixed_t		lowscale;
-    int			silhouette;
 		
     for (x = spr->x1 ; x<=spr->x2 ; x++)
 	clipbot[x] = cliptop[x] = -2;
     
-    // Scan drawsegs from end to start for obscuring segs.
-    // The first drawseg that has a greater scale
-    //  is the clip seg.
-    for (ds=ds_p-1 ; ds >= drawsegs ; ds--)
+  // [Woof!] e6y: optimization
+  if (drawsegs_xrange_size)
+  {
+    const drawseg_xrange_item_t *last = &drawsegs_xrange[drawsegs_xrange_count - 1];
+    drawseg_xrange_item_t *curr = &drawsegs_xrange[-1];
+    while (++curr <= last)
     {
-	// determine if the drawseg obscures the sprite
-	if (ds->x1 > spr->x2
-	    || ds->x2 < spr->x1
-	    || (!ds->silhouette
-		&& !ds->maskedtexturecol) )
-	{
-	    // does not cover sprite
-	    continue;
-	}
+      // determine if the drawseg obscures the sprite
+      if (curr->x1 > spr->x2 || curr->x2 < spr->x1)
+	    continue; // does not cover sprite
 			
-	r1 = ds->x1 < spr->x1 ? spr->x1 : ds->x1;
-	r2 = ds->x2 > spr->x2 ? spr->x2 : ds->x2;
+    ds = curr->user;
 
 	if (ds->scale1 > ds->scale2)
 	{
@@ -1296,52 +1292,31 @@ void R_DrawSprite (vissprite_t* spr)
 	if (scale < spr->scale
 	    || ( lowscale < spr->scale
 		 && !R_PointOnSegSide (spr->gx, spr->gy, ds->curline) ) )
-	{
-	    // masked mid texture?
-	    if (ds->maskedtexturecol)	
-		R_RenderMaskedSegRange (ds, r1, r2);
-	    // seg is behind sprite
-	    continue;			
-	}
-
-	
-	// clip this piece of the sprite
-	silhouette = ds->silhouette;
-	
-	if (spr->gz >= ds->bsilheight)
-	    silhouette &= ~SIL_BOTTOM;
-
-	if (spr->gzt <= ds->tsilheight)
-	    silhouette &= ~SIL_TOP;
-			
-	if (silhouette == 1)
-	{
-	    // bottom sil
-	    for (x=r1 ; x<=r2 ; x++)
-		if (clipbot[x] == -2)
-		    clipbot[x] = ds->sprbottomclip[x];
-	}
-	else if (silhouette == 2)
-	{
-	    // top sil
-	    for (x=r1 ; x<=r2 ; x++)
-		if (cliptop[x] == -2)
-		    cliptop[x] = ds->sprtopclip[x];
-	}
-	else if (silhouette == 3)
-	{
-	    // both
-	    for (x=r1 ; x<=r2 ; x++)
+    {
+        if (ds->maskedtexturecol)       // masked mid texture?
 	    {
-		if (clipbot[x] == -2)
-		    clipbot[x] = ds->sprbottomclip[x];
-		if (cliptop[x] == -2)
-		    cliptop[x] = ds->sprtopclip[x];
+          r1 = ds->x1 < spr->x1 ? spr->x1 : ds->x1;
+          r2 = ds->x2 > spr->x2 ? spr->x2 : ds->x2;
+          R_RenderMaskedSegRange(ds, r1, r2);
 	    }
-	}
-		
+        continue;               // seg is behind sprite
     }
-    
+
+      r1 = ds->x1 < spr->x1 ? spr->x1 : ds->x1;
+      r2 = ds->x2 > spr->x2 ? spr->x2 : ds->x2;
+	
+      // clip this piece of the sprite
+      // killough 3/27/98: optimized and made much shorter
+      if (ds->silhouette&SIL_BOTTOM && spr->gz < ds->bsilheight) //bottom sil
+        for (x=r1 ; x<=r2 ; x++)
+          if (clipbot[x] == -2)
+            clipbot[x] = ds->sprbottomclip[x];
+      if (ds->silhouette&SIL_TOP && spr->gzt > ds->tsilheight)   // top sil
+        for (x=r1 ; x<=r2 ; x++)
+          if (cliptop[x] == -2)
+            cliptop[x] = ds->sprtopclip[x];
+    }
+    }
     // all clipping has been performed, so draw the sprite
 
     // check for unclipped columns
