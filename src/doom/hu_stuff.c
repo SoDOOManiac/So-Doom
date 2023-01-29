@@ -1054,6 +1054,24 @@ void HU_Ticker(void)
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d+%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount, totalkills, extraspawns);
 
+	HUlib_clearTextLine(&w_kills);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sI %s%d/%d", cr_stat, crstr[CR_GRAY],
+	        plr->itemcount, totalitems);
+	HUlib_clearTextLine(&w_items);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_items, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sS %s%d/%d", cr_stat, crstr[CR_GRAY],
+	        plr->secretcount, totalsecret);
+	HUlib_clearTextLine(&w_scrts);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_scrts, *(s++));
     }
 
     if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))
