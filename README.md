@@ -177,7 +177,7 @@ The most important changes in this release are performance optimizations (vispla
 #### So Doom-specific changes
 
  * Fixed a bug of level stats not displayed, brought when merging Crispy codebase.
- * Visplane hash improving the performance at critical vistas of Sunder.wad MAP15 from 4 to 9 fps (PC1)
+ * Visplane hash improving the performance at critical vistas of Sunder.wad MAP15 up to 500% speed improvement (from 10 to 60 fps!)
  * DRAWSEGS optimization (~12% of speed improvement on epic.wad MAP05, ~13% of speed improvement on Sunder.wad MAP10)
  * Sprite sorting (~23% of speed improvement on nuts.wad)
  * Fast framerate menu item now comprises the vsync setting (totally uncapped framerate is now with crispy->uncapped 1 or 2 with FPS limit set to 0).
