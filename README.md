@@ -127,6 +127,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `IDMUS00` restarts the current music.
  * `VERSION` shows the engine version, build date and SDL version.
  * `SKILL` shows the current skill level.
+ * `LETITSNOW` toggles snowfall in the calling player's view.
 
 ## Download
 
