@@ -1069,10 +1069,6 @@ void P_SpawnMapThing (mapthing_t* mthing)
     if (crispy->coloredblood == COLOREDBLOOD_ALL && i == MT_SKULL)
         mobj->flags |= MF_NOBLOOD;
 
-    // [crispy] Lost Souls bleed Puffs
-    if (crispy->coloredblood && i == MT_SKULL)
-        mobj->flags |= MF_NOBLOOD;
-
     // [crispy] randomly colorize space marine corpse objects
     if (!netgame && crispy->coloredblood &&
         (mobj->info->spawnstate == S_PLAY_DIE7 ||
