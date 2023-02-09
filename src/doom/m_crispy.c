@@ -734,8 +734,13 @@ void M_CrispyToggleUncapped(int choice)
     else
     {
         crispy->vsync = (crispy->uncapped > 2);
-        I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+        crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
     }
+}
+
+void M_CrispyReInitGraphicsHook (void)
+{
+    I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
 }
 
 void M_CrispyToggleVsyncHook (void)
