@@ -1567,10 +1567,10 @@ A_PainShootSkull
 	P_DamageMobj (newmobj,actor,actor,10000);	
 	return;
     }
-
+		
     // [crispy] Lost Souls bleed Puffs
-    if (crispy->coloredblood)
-	    newmobj->flags |= MF_NOBLOOD;
+    if (crispy->coloredblood == COLOREDBLOOD_ALL)
+        newmobj->flags |= MF_NOBLOOD;
 
     newmobj->target = actor->target;
     A_SkullAttack (newmobj);
