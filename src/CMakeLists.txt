@@ -1,4 +1,4 @@
-foreach(SUBDIR doom heretic hexen strife setup)
+foreach(SUBDIR doom setup)
     add_subdirectory("${SUBDIR}")
 endforeach()
 
@@ -159,47 +159,47 @@ if(MSVC)
                           LINK_FLAGS "/MANIFEST:NO")
 endif()
 
-if(WIN32)
-    add_executable("${PROGRAM_PREFIX}heretic" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/heretic-res.rc")
-else()
-    add_executable("${PROGRAM_PREFIX}heretic" ${SOURCE_FILES_WITH_DEH})
-endif()
+#if(WIN32)
+#    add_executable("${PROGRAM_PREFIX}heretic" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/heretic-res.rc")
+#else()
+#    add_executable("${PROGRAM_PREFIX}heretic" ${SOURCE_FILES_WITH_DEH})
+#endif()
 
-target_include_directories("${PROGRAM_PREFIX}heretic" PRIVATE ${GAME_INCLUDE_DIRS})
-target_link_libraries("${PROGRAM_PREFIX}heretic" heretic ${EXTRA_LIBS})
+#target_include_directories("${PROGRAM_PREFIX}heretic" PRIVATE ${GAME_INCLUDE_DIRS})
+#target_link_libraries("${PROGRAM_PREFIX}heretic" heretic ${EXTRA_LIBS})
 
-if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}heretic" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
-endif()
+#if(MSVC)
+#    set_target_properties("${PROGRAM_PREFIX}heretic" PROPERTIES
+#                          LINK_FLAGS "/MANIFEST:NO")
+#endif()
 
-if(WIN32)
-    add_executable("${PROGRAM_PREFIX}hexen" WIN32 ${SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/hexen-res.rc")
-else()
-    add_executable("${PROGRAM_PREFIX}hexen" ${SOURCE_FILES})
-endif()
+#if(WIN32)
+#    add_executable("${PROGRAM_PREFIX}hexen" WIN32 ${SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/hexen-res.rc")
+#else()
+#    add_executable("${PROGRAM_PREFIX}hexen" ${SOURCE_FILES})
+#endif()
 
-target_include_directories("${PROGRAM_PREFIX}hexen" PRIVATE ${GAME_INCLUDE_DIRS})
-target_link_libraries("${PROGRAM_PREFIX}hexen" hexen ${EXTRA_LIBS})
+#target_include_directories("${PROGRAM_PREFIX}hexen" PRIVATE ${GAME_INCLUDE_DIRS})
+#target_link_libraries("${PROGRAM_PREFIX}hexen" hexen ${EXTRA_LIBS})
 
-if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}hexen" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
-endif()
+#if(MSVC)
+#    set_target_properties("${PROGRAM_PREFIX}hexen" PROPERTIES
+#                          LINK_FLAGS "/MANIFEST:NO")
+#endif()
 
-if(WIN32)
-    add_executable("${PROGRAM_PREFIX}strife" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/strife-res.rc")
-else()
-    add_executable("${PROGRAM_PREFIX}strife" ${SOURCE_FILES_WITH_DEH})
-endif()
+#if(WIN32)
+#    add_executable("${PROGRAM_PREFIX}strife" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/strife-res.rc")
+#else()
+#    add_executable("${PROGRAM_PREFIX}strife" ${SOURCE_FILES_WITH_DEH})
+#endif()
 
-target_include_directories("${PROGRAM_PREFIX}strife" PRIVATE ${GAME_INCLUDE_DIRS})
-target_link_libraries("${PROGRAM_PREFIX}strife" strife ${EXTRA_LIBS})
+#target_include_directories("${PROGRAM_PREFIX}strife" PRIVATE ${GAME_INCLUDE_DIRS})
+#target_link_libraries("${PROGRAM_PREFIX}strife" strife ${EXTRA_LIBS})
 
-if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}strife" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
-endif()
+#if(MSVC)
+#    set_target_properties("${PROGRAM_PREFIX}strife" PROPERTIES
+#                          LINK_FLAGS "/MANIFEST:NO")
+#endif()
 
 # Source files needed for chocolate-setup:
 
@@ -219,26 +219,26 @@ set(SETUP_FILES
     z_native.c          z_zone.h)
 
 if(WIN32)
-    add_executable("${PROGRAM_PREFIX}setup" WIN32 ${SETUP_FILES} ${COMMON_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/setup-res.rc")
+    add_executable("${PROGRAM_PREFIX}doom-setup" WIN32 ${SETUP_FILES} ${COMMON_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/setup-res.rc")
 else()
-    add_executable("${PROGRAM_PREFIX}setup" ${SETUP_FILES} ${COMMON_SOURCE_FILES})
+    add_executable("${PROGRAM_PREFIX}doom-setup" ${SETUP_FILES} ${COMMON_SOURCE_FILES})
 endif()
 
-target_include_directories("${PROGRAM_PREFIX}setup"
+target_include_directories("${PROGRAM_PREFIX}doom-setup"
                            PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/../")
-target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::SDL2main SDL2::SDL2 setup textscreen)
+target_link_libraries("${PROGRAM_PREFIX}doom-setup" SDL2::SDL2main SDL2::SDL2 setup textscreen)
 if(ENABLE_SDL2_MIXER)
-    target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::mixer)
+    target_link_libraries("${PROGRAM_PREFIX}doom-setup" SDL2::mixer)
 endif()
 if(ENABLE_SDL2_NET)
-    target_link_libraries("${PROGRAM_PREFIX}setup" SDL2::net)
+    target_link_libraries("${PROGRAM_PREFIX}doom-setup" SDL2::net)
 endif()
 if(WIN32)
-    target_link_libraries("${PROGRAM_PREFIX}setup" winmm)
+    target_link_libraries("${PROGRAM_PREFIX}doom-setup" winmm)
 endif()
 
 if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}setup" PROPERTIES
+    set_target_properties("${PROGRAM_PREFIX}doom-setup" PROPERTIES
                           LINK_FLAGS "/MANIFEST:NO")
 endif()
 
