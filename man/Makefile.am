@@ -3,9 +3,6 @@ SUBDIRS = bash-completion
 MANPAGE_GEN_FILES = environ.man           \
                     iwad_paths.man        \
                     doom.template         \
-                    heretic.template      \
-                    hexen.template        \
-                    strife.template       \
                     docgen                \
                     default.cfg.template  \
                     extra.cfg.template
@@ -98,78 +95,78 @@ INSTALL.doom: INSTALL.template
             -DLONG_EXE_NAME="@PROGRAM_PREFIX@doom" \
             -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
 
-@PROGRAM_PREFIX@heretic.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES) heretic.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g heretic -m $(srcdir)/heretic.template \
-                  $(top_srcdir)/src $(top_srcdir)/src/heretic > $@
+#@PROGRAM_PREFIX@heretic.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES) heretic.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g heretic -m $(srcdir)/heretic.template \
+#                  $(top_srcdir)/src $(top_srcdir)/src/heretic > $@
 
-heretic.cfg.5: $(top_srcdir)/src $(srcdir)/default.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g heretic -m $(srcdir)/default.cfg.template \
-                  -c default $(top_srcdir)/src/m_config.c > $@
+#heretic.cfg.5: $(top_srcdir)/src $(srcdir)/default.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g heretic -m $(srcdir)/default.cfg.template \
+#                  -c default $(top_srcdir)/src/m_config.c > $@
 
-@PROGRAM_PREFIX@heretic.cfg.5: $(top_srcdir)/src extra.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g heretic -m $(srcdir)/extra.cfg.template \
-                 -c extended $(top_srcdir)/src/m_config.c > $@
+#@PROGRAM_PREFIX@heretic.cfg.5: $(top_srcdir)/src extra.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g heretic -m $(srcdir)/extra.cfg.template \
+#                 -c extended $(top_srcdir)/src/m_config.c > $@
 
-CMDLINE.heretic : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/heretic
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -p $(srcdir)/CMDLINE.template \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/heretic/ > $@
+#CMDLINE.heretic : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/heretic
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -p $(srcdir)/CMDLINE.template \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/heretic/ > $@
 
-CMDLINE.heretic.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/heretic
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -M $(srcdir)/CMDLINE.template.md \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/heretic/ > $@
+#CMDLINE.heretic.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/heretic
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -M $(srcdir)/CMDLINE.template.md \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/heretic/ > $@
 
-INSTALL.heretic: INSTALL.template
-	$(srcdir)/simplecpp -DHERETIC $(WIN32) \
-            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Heretic" \
-            -DLONG_EXE_NAME="@PROGRAM_PREFIX@heretic" \
-            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
+#INSTALL.heretic: INSTALL.template
+#	$(srcdir)/simplecpp -DHERETIC $(WIN32) \
+#            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Heretic" \
+#            -DLONG_EXE_NAME="@PROGRAM_PREFIX@heretic" \
+#            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
 
 
-@PROGRAM_PREFIX@hexen.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g hexen -m $(srcdir)/hexen.template \
-                  $(top_srcdir)/src $(top_srcdir)/src/hexen > $@
+#@PROGRAM_PREFIX@hexen.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g hexen -m $(srcdir)/hexen.template \
+#                  $(top_srcdir)/src $(top_srcdir)/src/hexen > $@
 
-hexen.cfg.5: $(top_srcdir)/src default.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g hexen -m $(srcdir)/default.cfg.template \
-                 -c default $(top_srcdir)/src/m_config.c > $@
+#hexen.cfg.5: $(top_srcdir)/src default.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g hexen -m $(srcdir)/default.cfg.template \
+#                 -c default $(top_srcdir)/src/m_config.c > $@
 
-@PROGRAM_PREFIX@hexen.cfg.5: $(top_srcdir)/src extra.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                 -g hexen -m $(srcdir)/extra.cfg.template \
-                 -c extended $(top_srcdir)/src/m_config.c > $@
+#@PROGRAM_PREFIX@hexen.cfg.5: $(top_srcdir)/src extra.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                 -g hexen -m $(srcdir)/extra.cfg.template \
+#                 -c extended $(top_srcdir)/src/m_config.c > $@
 
-CMDLINE.hexen : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/hexen
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -p $(srcdir)/CMDLINE.template \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/hexen/ > $@
+#CMDLINE.hexen : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/hexen
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -p $(srcdir)/CMDLINE.template \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/hexen/ > $@
 
-CMDLINE.hexen.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/hexen
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -M $(srcdir)/CMDLINE.template.md \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/hexen/ > $@
+#CMDLINE.hexen.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/hexen
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -M $(srcdir)/CMDLINE.template.md \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/hexen/ > $@
 
-INSTALL.hexen: INSTALL.template
-	$(srcdir)/simplecpp -DHEXEN $(WIN32) \
-            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Hexen" \
-            -DLONG_EXE_NAME="@PROGRAM_PREFIX@hexen" \
-            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
+#INSTALL.hexen: INSTALL.template
+#	$(srcdir)/simplecpp -DHEXEN $(WIN32) \
+#            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Hexen" \
+#            -DLONG_EXE_NAME="@PROGRAM_PREFIX@hexen" \
+#            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
 
-@PROGRAM_PREFIX@strife.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -g strife -m $(srcdir)/strife.template \
-                  $(top_srcdir)/src $(top_srcdir)/src/strife > $@
+#@PROGRAM_PREFIX@strife.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -g strife -m $(srcdir)/strife.template \
+#                  $(top_srcdir)/src $(top_srcdir)/src/strife > $@
 
-@PROGRAM_PREFIX@server.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -g server -m $(srcdir)/server.template \
-                  $(top_srcdir)/src > $@
+#@PROGRAM_PREFIX@server.6: $(top_srcdir)/src $(MANPAGE_GEN_FILES)
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -g server -m $(srcdir)/server.template \
+#                  $(top_srcdir)/src > $@
 
 $(SETUP_MAN_PAGES): $(top_srcdir)/src $(MANPAGE_GEN_FILES)
 	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
@@ -177,31 +174,31 @@ $(SETUP_MAN_PAGES): $(top_srcdir)/src $(MANPAGE_GEN_FILES)
                   -m $(srcdir)/setup.template \
                   $(top_srcdir)/src > $@
 
-strife.cfg.5: $(top_srcdir)/src default.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -g strife -m $(srcdir)/default.cfg.template \
-                  -c default $(top_srcdir)/src/m_config.c > $@
+#strife.cfg.5: $(top_srcdir)/src default.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -g strife -m $(srcdir)/default.cfg.template \
+#                  -c default $(top_srcdir)/src/m_config.c > $@
 
-@PROGRAM_PREFIX@strife.cfg.5: $(top_srcdir)/src extra.cfg.template
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -g strife -m $(srcdir)/extra.cfg.template \
-                  -c extended $(top_srcdir)/src/m_config.c > $@
+#@PROGRAM_PREFIX@strife.cfg.5: $(top_srcdir)/src extra.cfg.template
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -g strife -m $(srcdir)/extra.cfg.template \
+#                  -c extended $(top_srcdir)/src/m_config.c > $@
 
-CMDLINE.strife : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/strife
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -p $(srcdir)/CMDLINE.template \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/strife/ > $@
+#CMDLINE.strife : CMDLINE.template $(top_srcdir)/src $(top_srcdir)/src/strife
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -p $(srcdir)/CMDLINE.template \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/strife/ > $@
 
-CMDLINE.strife.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/strife
-	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
-                  -M $(srcdir)/CMDLINE.template.md \
-                  $(top_srcdir)/src/ $(top_srcdir)/src/strife/ > $@
+#CMDLINE.strife.md : CMDLINE.template.md $(top_srcdir)/src $(top_srcdir)/src/strife
+#	$(DOCGEN) $(DOCGEN_COMMON_ARGS) \
+#                  -M $(srcdir)/CMDLINE.template.md \
+#                  $(top_srcdir)/src/ $(top_srcdir)/src/strife/ > $@
 
-INSTALL.strife: INSTALL.template
-	$(srcdir)/simplecpp -DSTRIFE $(WIN32) \
-            -DLONG_EXE_NAME="@PROGRAM_PREFIX@strife" \
-            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Strife" \
-            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
+#INSTALL.strife: INSTALL.template
+#	$(srcdir)/simplecpp -DSTRIFE $(WIN32) \
+#            -DLONG_EXE_NAME="@PROGRAM_PREFIX@strife" \
+#            -DLONG_GAME_NAME="@PACKAGE_SHORTNAME@ Strife" \
+#            -DPRECOMPILED < $(srcdir)/INSTALL.template > $@
 
 
 INSTALL: INSTALL.template

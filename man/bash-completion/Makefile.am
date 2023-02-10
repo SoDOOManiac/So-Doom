@@ -1,10 +1,10 @@
 bashcompletiondir=@datadir@/bash-completion/completions
 
 BASH_COMPLETION_TEMPLATES = \
-    doom.template \
-    heretic.template \
-    hexen.template \
-    strife.template
+    doom.template 
+#    heretic.template \
+#    hexen.template \
+#    strife.template
 
 if HAVE_BASH_COMPLETION
 

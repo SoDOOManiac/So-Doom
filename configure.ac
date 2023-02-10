@@ -1,4 +1,4 @@
-AC_INIT(So Doom, 5.12.1,
+AC_INIT(So Doom, 5.12.2,
         zodomaniac@gmail.com, so-doom)
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
@@ -261,9 +261,6 @@ Makefile
 man/Makefile
 man/bash-completion/Makefile
 man/bash-completion/doom.template
-man/bash-completion/heretic.template
-man/bash-completion/hexen.template
-man/bash-completion/strife.template
 opl/Makefile
 opl/examples/Makefile
 pcsound/Makefile
@@ -278,22 +275,10 @@ src/Doom.metainfo.xml
 src/Doom.desktop
 src/Doom_Screensaver.desktop
 src/doom/Makefile
-src/heretic-res.rc
-src/Heretic.metainfo.xml
-src/Heretic.desktop
-src/heretic/Makefile
-src/hexen-res.rc
-src/Hexen.metainfo.xml
-src/Hexen.desktop
-src/hexen/Makefile
 src/setup-res.rc
 src/setup/Makefile
 src/setup/Setup.desktop
 src/setup/setup-manifest.xml
-src/strife-res.rc
-src/Strife.metainfo.xml
-src/Strife.desktop
-src/strife/Makefile
 textscreen/Makefile
 textscreen/examples/Makefile
 textscreen/fonts/Makefile
