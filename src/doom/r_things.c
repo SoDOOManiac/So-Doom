@@ -785,7 +785,7 @@ void R_ProjectSprite (mobj_t* thing)
     vis->brightmap = R_BrightmapForSprite(thing->sprite);
 
     // [crispy] colored blood
-    if (crispy->coloredblood &&
+    if ((crispy->coloredblood >= 2) &&
         (thing->type == MT_BLOOD || thing->state - states == S_GIBS) &&
         thing->target)
     {

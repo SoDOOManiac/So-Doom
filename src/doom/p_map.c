@@ -1575,7 +1575,7 @@ boolean PIT_ChangeSector (mobj_t*	thing)
 	mo->target = thing;
 
     // [crispy] Spectres bleed spectre blood
-    if (crispy->coloredblood == COLOREDBLOOD_ALL)
+    if ((crispy->coloredblood == COLOREDBLOOD_ALL) || (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES))
         mo->flags |= (thing->flags & MF_SHADOW);
     }
 

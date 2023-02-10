@@ -62,9 +62,20 @@ multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS] =
 
 multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] =
 {
+		COLOREDBLOOD_OFF,
+	COLOREDBLOOD_SKULLPUFFS,
+	COLOREDBLOOD_RGB,
+	COLOREDBLOOD_SKULLPUFFS_RGB,
+	COLOREDBLOOD_ALL,
+	COLOREDBLOOD_PLUSCORPSES,
+
     {COLOREDBLOOD_OFF, "off"},
-    {COLOREDBLOOD_BLOOD, "blood"},
-    {COLOREDBLOOD_ALL, "all"}
+    {COLOREDBLOOD_SKULLPUFFS, "~4skull puffs"},
+    {COLOREDBLOOD_RGB, "~5R~3G~6B"}
+    {COLOREDBLOOD_SKULLPUFFS_RGB, "~4skull puffs ~3+ ~5R~3G~6B"},
+    {COLOREDBLOOD_ALL, "~4skull puffs ~3+ ~5R~3G~6B ~3+ ~2fuzz"},
+    {COLOREDBLOOD_PLUSCORPSES, "all+colored marine corpses"},
+	NUM_COLOREDBLOOD,
 };
 
 multiitem_t multiitem_centerweapon[NUM_CENTERWEAPON] =
@@ -353,7 +364,7 @@ void M_CrispyToggleColoredblood(int choice)
 
 		if (mobj->type == MT_SKULL)
 		{
-			if (crispy->coloredblood == COLOREDBLOOD_ALL)
+			if ((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood == COLOREDBLOOD_ALL) || (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES))
 			{
 				mobj->flags |= MF_NOBLOOD;
 			}
