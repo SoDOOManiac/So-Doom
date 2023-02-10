@@ -727,6 +727,12 @@ void M_CrispyToggleTranslucency(int choice)
     ChangeSettingEnum(&crispy->translucency, choice, NUM_TRANSLUCENCY);
 }
 
+
+void M_CrispyReInitGraphicsHook (void)
+{
+    I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+}
+
 void M_CrispyToggleUncapped(int choice)
 {
     ChangeSettingEnum(&crispy->uncapped, choice, NUM_UNCAPPEDFRAMERATES); // [So Doom]
@@ -743,11 +749,6 @@ void M_CrispyToggleUncapped(int choice)
         crispy->vsync = (crispy->uncapped > 2);
         crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
     }
-}
-
-void M_CrispyReInitGraphicsHook (void)
-{
-    I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
 }
 
 void M_CrispyToggleVsyncHook (void)
