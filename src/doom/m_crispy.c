@@ -364,6 +364,21 @@ void M_CrispyToggleColoredblood(int choice)
 				mobj->flags &= ~MF_NOBLOOD;
 			}
 		}
+
+	// [crispy] randomly colorize space marine corpse objects
+	if (!netgame && (mobj->info->spawnstate == S_PLAY_DIE7 ||
+	mobj->info->spawnstate == S_PLAY_XDIE9))
+	{
+	if (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES)
+	{
+		mobj->flags |= (Crispy_Random() & 3) << MF_TRANSSHIFT;
+	}
+	else
+	{
+		mobj->flags &= ~MF_TRANSLATION;
+	}
+	}
+
 	}
     }
 }
