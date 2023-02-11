@@ -1569,7 +1569,7 @@ A_PainShootSkull
     }
 		
     // [crispy] Lost Souls bleed Puffs
-    if ((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood == COLOREDBLOOD_ALL) || (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES))
+    if ((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood >= COLOREDBLOOD_SKULLPUFFS_RGB))
         newmobj->flags |= MF_NOBLOOD;
 
     newmobj->target = actor->target;

@@ -1066,7 +1066,7 @@ void P_SpawnMapThing (mapthing_t* mthing)
 	mobj->health = 1000 + musid;
     }
     // [crispy] Lost Souls bleed Puffs
-    if (((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood == COLOREDBLOOD_ALL) || (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES))
+    if (((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood >= COLOREDBLOOD_SKULLPUFFS_RGB))
 	&& i == MT_SKULL)
         mobj->flags |= MF_NOBLOOD;
 
