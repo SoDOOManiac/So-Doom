@@ -1167,7 +1167,7 @@ P_SpawnBlood
 
     // [crispy] Spectres bleed spectre blood
 
-    if ((crispy->coloredblood == COLOREDBLOOD_ALL) || (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES))
+    if (crispy->coloredblood >= COLOREDBLOOD_ALL)
         th->flags |= (target->flags & MF_SHADOW);
 }
 
