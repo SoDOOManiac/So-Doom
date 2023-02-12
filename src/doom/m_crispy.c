@@ -28,6 +28,8 @@
 
 #include "m_crispy.h"
 
+#include "m_random.h" // [So Doom] to use Crispy_Random() for randomly colored marine corpses
+
 multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
 {
     {UNCAPPEDFRAMERATE_OFF, "off"},
