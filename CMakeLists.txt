@@ -29,6 +29,9 @@ else()
                         "-Wredundant-decls")
 endif()
 
+option(CMAKE_FIND_PACKAGE_PREFER_CONFIG
+       "Lookup package config files before using find modules" On)
+
 option(ENABLE_SDL2_NET "Enable SDL2_net" On)
 option(ENABLE_SDL2_MIXER "Enable SDL2_mixer" On)
 
@@ -48,8 +51,8 @@ endif()
 option(CRISPY_TRUECOLOR "True color rendering" OFF)
 
 # Check for libsamplerate.
-find_package(samplerate)
-if(SAMPLERATE_FOUND)
+find_package(SampleRate)
+if(SampleRate_FOUND)
     set(HAVE_LIBSAMPLERATE TRUE)
 endif()
 
