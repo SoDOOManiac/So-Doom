@@ -170,6 +170,7 @@ extern int mousebnextweapon;
 extern int mousebinvleft;
 extern int mousebinvright;
 extern int mousebuseartifact;
+extern int mousebinvuse; // [crispy]
 
 extern int mousebmapzoomin; // [crispy]
 extern int mousebmapzoomout; // [crispy]
