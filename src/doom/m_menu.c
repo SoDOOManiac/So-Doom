@@ -1530,9 +1530,9 @@ static void M_DrawCrispnessBackground(void)
 		for (x = 0; x < NONWIDEWIDTH; x++) // and ends at (1<<crispy->hires)*WIDESCREENDELTA + NONWIDEWIDTH 
 		{
 #ifndef CRISPY_TRUECOLOR
-			dest[i] = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*NONWIDEWIDTH];
+			dest[i] = src[x*(4>>crispy->hires)+y*(4>>crispy->hires)*(4>>crispy->hires)*NONWIDEWIDTH];
 #else
-			dest[i] = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*NONWIDEWIDTH]];
+			dest[i] = colormaps[src[x*(4>>crispy->hires)+y*(4>>crispy->hires)*(4>>crispy->hires)*NONWIDEWIDTH]];
 #endif
 			i++;
 		}
