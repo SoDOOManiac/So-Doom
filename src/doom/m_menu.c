@@ -1496,6 +1496,19 @@ static void M_DrawCrispnessBackground(void)
 	}
 	dest = I_VideoBuffer;
 	*/
+	
+	const byte *src = crispness_background;
+	pixel_t *dest;
+	int x, y, i;
+	
+	// [NS] Try to load the background from a lump.
+	int lump = W_CheckNumForName("CRISPYBG");
+	if (lump != -1 && W_LumpLength(lump) >= 640*400)
+	{
+		src = W_CacheLumpNum(lump, PU_STATIC);
+	}
+	dest = I_VideoBuffer;
+	
 
     /*for (y = 0; y < SCREENHEIGHT; y++)  // [crispy] tiling 64x64 background crisps texture
 	{
@@ -1509,19 +1522,21 @@ static void M_DrawCrispnessBackground(void)
 		}
 	}*/
 
-	V_DrawPatchDirect(0, 0, (patch_t*) &crispness_background); 
+	//V_DrawPatchDirect(0, 0, (patch_t*) &crispness_background); 
 
-	/*for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
+	for (y = 0; y < SCREENHEIGHT; y++)   // So Doom logo background texture
 	{
-		for (x = crispy->widescreen*WIDESCREENDELTA; x < SCREENWIDTH-crispy->widescreen*WIDESCREENDELTA; x++)
+		i = y * SCREENWIDTH + (1<<crispy->hires)*WIDESCREENDELTA; // valid x of the framebuffer pixel for non-wide background texture begins at (1<<crispy->hires)*WIDESCREENDELTA
+		for (x = 0; x < NONWIDEWIDTH; x++) // and ends at (1<<crispy->hires)*WIDESCREENDELTA + NONWIDEWIDTH 
 		{
 #ifndef CRISPY_TRUECOLOR
-			*dest++ = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*WIDESCREENDELTA)];
+			dest[i] = src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*NONWIDEWIDTH];
 #else
-			*dest++ = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*(SCREENWIDTH-2*crispy->widescreen*WIDESCREENDELTA)]];
+			dest[i] = colormaps[src[x*(2>>crispy->hires)+y*(2>>crispy->hires)*(2>>crispy->hires)*NONWIDEWIDTH]];
 #endif
+			i++;
 		}
-	}*/
+	}
 
 	inhelpscreens = true;
 }
