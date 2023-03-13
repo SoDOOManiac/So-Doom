@@ -65,10 +65,10 @@ multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS] =
 multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] =
 {
     {COLOREDBLOOD_OFF, "off"},
-    {COLOREDBLOOD_SKULLPUFFS, "~4skull puffs"},
+    {COLOREDBLOOD_SKULLPUFFS, "~4skulls emit puffs"},
     {COLOREDBLOOD_RGB, "~5R~3G~6B"},
-    {COLOREDBLOOD_SKULLPUFFS_RGB, "~4skull puffs ~3+ ~5R~3G~6B"},
-    {COLOREDBLOOD_ALL, "~4puffs~3, ~5R~3G~6B~3, ~2fuzz"},
+    {COLOREDBLOOD_SKULLPUFFS_RGB, "~4skulls emit puffs ~3+ ~5R~3G~6B"},
+    {COLOREDBLOOD_ALL, "~4puffs ~3+ ~5R~3G~6B ~3+ ~2invis. fuzz"},
     {COLOREDBLOOD_PLUSCORPSES, "all + dead player colors"},
 };
 

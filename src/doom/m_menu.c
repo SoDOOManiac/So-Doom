@@ -1526,7 +1526,7 @@ static void M_DrawCrispnessBackground(void)
 	inhelpscreens = true;
 }
 
-static char crispy_menu_text[48];
+static char crispy_menu_text[96];
 
 static void M_DrawCrispnessHeader(const char *item)
 {
