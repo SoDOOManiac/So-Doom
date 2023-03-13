@@ -1503,7 +1503,7 @@ static void M_DrawCrispnessBackground(void)
 	
 	// [NS] Try to load the background from a lump.
 	int lump = W_CheckNumForName("CRISPYBG");
-	if (lump != -1 && W_LumpLength(lump) >= 640*400)
+	if (lump != -1 && W_LumpLength(lump) >= 1280*800)
 	{
 		src = W_CacheLumpNum(lump, PU_STATIC);
 	}
