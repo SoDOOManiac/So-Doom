@@ -254,7 +254,7 @@ void R_ClearClipSegs (void)
 // [AM] Interpolate the passed sector, if prudent.
 void R_MaybeInterpolateSector(sector_t* sector)
 {
-    if (crispy->uncapped &&
+    if ((crispy->uncapped % 3) &&
         // Only if we moved the sector last tic ...
         sector->oldgametic == gametic - 1 &&
         // ... and it has a thinker associated with it.

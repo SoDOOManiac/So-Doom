@@ -31,6 +31,7 @@ static crispy_t crispy_s = {
 #ifdef CRISPY_TRUECOLOR
 	.truecolor = 1,
 #endif
+	.uncapped = 3, // by default: basic framerate with vsync
 	.vsync = 1,
 };
 crispy_t *const crispy = &crispy_s;
