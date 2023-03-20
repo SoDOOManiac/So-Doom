@@ -651,7 +651,7 @@ void M_CrispyTogglePitch(int choice)
 void M_CrispyTogglePlayerCoords(int choice)
 {
     // [crispy] disable "always" setting
-    ChangeSettingEnum(&crispy->playercoords, choice, NUM_WIDGETS - 1);
+    ChangeSettingEnum(&crispy->playercoords, choice, NUM_WIDGETS);
 }
 
 void M_CrispyToggleRecoil(int choice)
