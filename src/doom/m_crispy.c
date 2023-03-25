@@ -756,10 +756,13 @@ void M_CrispyReInitGraphicsHook (void)
 
 void M_CrispyToggleUncapped(int choice)
 {
+    int old_crispy_vsync = crispy->vsync;
+
     ChangeSettingEnum(&crispy->uncapped, choice, NUM_UNCAPPEDFRAMERATES); // [So Doom]
 
     if (force_software_renderer) // [So Doom] skip vsync-including options if software rendering is forced
     {
+		crispy->vsync = 0;
         if (crispy->uncapped == 3)
             crispy->uncapped = 0;
         else if (crispy->uncapped == 4)
@@ -767,9 +770,10 @@ void M_CrispyToggleUncapped(int choice)
     }
     else
     {
-        crispy->vsync = (crispy->uncapped > 2);
-        crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
+        crispy->vsync = (crispy->uncapped != 1) && (crispy->uncapped != 2); // if crispy->uncapped = 0, vsync is on in case of force_software_renderer == 0
     }
+    if (crispy->vsync != old_crispy_vsync)
+        crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
 }
 
 void M_CrispyToggleVsyncHook (void)
