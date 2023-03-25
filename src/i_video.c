@@ -895,7 +895,7 @@ void I_FinishUpdate (void)
     SDL_RenderPresent(renderer);
 
     // [AM] Figure out how far into the current tic we're in as a fixed_t.
-    if (crispy->uncapped % 3)
+    if (crispy->uncapped)
     {
         // Limit framerate
         if (crispy->fpslimit >= TICRATE)
@@ -1466,8 +1466,8 @@ static void SetVideoMode(void)
         renderer_flags |= SDL_RENDERER_SOFTWARE;
         renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
         crispy->vsync = false;
-        if (crispy->uncapped >= 3)
-            crispy->uncapped -= 3; // [So Doom] force the respective framerate option without vsync
+        if (crispy->uncapped > 2)
+            crispy->uncapped -= 2; // [So Doom] force a fast framerate option without vsync
     }
 
     if (renderer != NULL)

@@ -494,7 +494,7 @@ void I_ReadMouse(void)
 
     SDL_GetRelativeMouseState(&x, &y);
 
-    if (crispy->uncapped % 3)
+    if (crispy->uncapped)
     {
         SmoothMouse(&x, &y);
     }

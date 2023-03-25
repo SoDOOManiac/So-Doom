@@ -1022,7 +1022,7 @@ void R_SetupFrame (player_t* player)
     viewplayer = player;
 
     // [AM] Interpolate the player camera if the feature is enabled.
-    if ((crispy->uncapped % 3) &&
+    if (crispy->uncapped &&
         // Don't interpolate on the first tic of a level,
         // otherwise oldviewz might be garbage.
         leveltime > 1 &&

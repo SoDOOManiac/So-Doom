@@ -503,7 +503,7 @@ void AM_changeWindowLoc(void)
     int64_t incx, incy;
 
     // [crispy] accumulate automap panning by keyboard and mouse
-    if ((crispy->uncapped % 3) && leveltime > oldleveltime)
+    if (crispy->uncapped && leveltime > oldleveltime)
     {
         incx = FixedMul(m_paninc_target.x, fractionaltic);
         incy = FixedMul(m_paninc_target.y, fractionaltic);
@@ -1863,7 +1863,7 @@ void AM_drawPlayers(void)
 	const angle_t smoothangle = crispy->automaprotate ? plr->mo->angle : viewangle;
 
 	// [crispy] interpolate player arrow
-	if ((crispy->uncapped % 3) && leveltime > oldleveltime)
+	if (crispy->uncapped && leveltime > oldleveltime)
 	{
 	pt.x = viewx >> FRACTOMAPBITS;
 	pt.y = viewy >> FRACTOMAPBITS;
@@ -1909,7 +1909,7 @@ void AM_drawPlayers(void)
 	    color = their_colors[their_color];
 	
 	// [crispy] interpolate other player arrows
-	if ((crispy->uncapped % 3) && leveltime > oldleveltime)
+	if (crispy->uncapped && leveltime > oldleveltime)
 	{
 	    pt.x = (p->mo->oldx + FixedMul(p->mo->x - p->mo->oldx, fractionaltic)) >> FRACTOMAPBITS;
 	    pt.y = (p->mo->oldy + FixedMul(p->mo->y - p->mo->oldy, fractionaltic)) >> FRACTOMAPBITS;

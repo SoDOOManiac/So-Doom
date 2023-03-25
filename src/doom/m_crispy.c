@@ -35,7 +35,6 @@ multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
     {UNCAPPEDFRAMERATE_OFF, "off"},
     {UNCAPPEDFRAMERATE_FULL, "all movements"},
     {UNCAPPEDFRAMERATE_CAMERAMOVEMENT, "camera movement"},
-    {UNCAPPEDFRAMERATE_OFF_VSYNC, "off + vsync"},
     {UNCAPPEDFRAMERATE_FULL_VSYNC, "all movements + vsync"},
     {UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC, "cam movement + vsync"},
 };
@@ -492,7 +491,7 @@ static void M_CrispyToggleSkyHook (void)
 
 void M_CrispyToggleFpsLimit(int choice)
 {
-    if (!(crispy->uncapped % 3))
+    if (!crispy->uncapped)
     {
         return;
     }
@@ -761,12 +760,14 @@ void M_CrispyToggleUncapped(int choice)
 
     if (force_software_renderer) // [So Doom] skip vsync-including options if software rendering is forced
     {
-        if (crispy->uncapped >= 3)
-            crispy->uncapped -= 3;
+        if (crispy->uncapped == 3)
+            crispy->uncapped = 0;
+        else if (crispy->uncapped == 4)
+            crispy->uncapped = 2;
     }
     else
     {
-        crispy->vsync = (crispy->uncapped >= 3);
+        crispy->vsync = (crispy->uncapped > 2);
         crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
     }
 }

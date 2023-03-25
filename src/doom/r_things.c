@@ -593,7 +593,7 @@ void R_ProjectSprite (mobj_t* thing)
 
     // [AM] Interpolate between current and last position,
     //      if prudent.
-    if ((crispy->uncapped % 3) &&
+    if (crispy->uncapped &&
         // Don't interpolate if the mobj did something
         // that would necessitate turning it off for a tic.
         thing->interp == true &&
@@ -1084,7 +1084,7 @@ void R_DrawPSprite (pspdef_t* psp, psprnum_t psprnum) // [crispy] differentiate 
     }
 
     // interpolate weapon bobbing
-    if (crispy->uncapped % 3)
+    if (crispy->uncapped)
     {
         static int     oldx1, x1_saved;
         static fixed_t oldtexturemid, texturemid_saved;

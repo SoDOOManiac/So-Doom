@@ -690,7 +690,7 @@ void TryRunTics (void)
     // [AM] If we've uncapped the framerate and there are no tics
     //      to run, return early instead of waiting around.
     extern int leveltime;
-    #define return_early ((crispy->uncapped % 3) && counts == 0 && leveltime > oldleveltime && screenvisible)
+    #define return_early (crispy->uncapped && counts == 0 && leveltime > oldleveltime && screenvisible)
 
     // get real tics
     entertic = I_GetTime() / ticdup;
@@ -717,7 +717,7 @@ void TryRunTics (void)
 
     if (new_sync)
     {
-        if (crispy->uncapped % 3)
+        if (crispy->uncapped)
         {
             // decide how many tics to run
             if (realtics < availabletics-1)
