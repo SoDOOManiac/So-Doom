@@ -180,6 +180,9 @@ boolean D_Display (void)
 		
     redrawsbar = false;
     
+    // [JN] Reset performance counters
+    R_ClearStats();
+	
     // change the view size if needed
     if (setsizeneeded)
     {
@@ -334,6 +337,7 @@ boolean D_Display (void)
 
     // menus go directly to the screen
     M_Drawer ();          // menu is drawn even on top of everything
+	
     NetUpdate ();         // send out any new accumulation
 
     return wipe;
@@ -467,6 +471,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_jump",            &crispy->jump);
     M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
     M_BindIntVariable("crispy_logo",            &crispy->logo);
+	M_BindIntVariable("crispy_mapviewstats",    &crispy->mapviewstats);
     M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
     M_BindIntVariable("crispy_neghealth",       &crispy->neghealth);
     M_BindIntVariable("crispy_overunder",       &crispy->overunder);

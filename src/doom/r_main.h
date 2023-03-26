@@ -166,6 +166,8 @@ angle_t R_InterpolateAngle(angle_t oangle, angle_t nangle, fixed_t scale);
 // REFRESH - the actual rendering functions.
 //
 
+void R_ClearStats (void);
+
 // Called by G_Drawer.
 void R_RenderPlayerView (player_t *player);
 

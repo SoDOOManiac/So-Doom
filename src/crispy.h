@@ -101,6 +101,11 @@ typedef struct
 	int cleanscreenshot;
 	int demowarp;
 	int fps;
+	int mapviewstats;
+	int rendered_segs;
+	int rendered_visplanes;
+	int rendered_sprites;
+	int rendered_openings;
 
 	boolean flashinghom;
 //	boolean fliplevels;

@@ -1399,6 +1399,7 @@ void R_DrawMasked (void)
 
     // draw all vissprites back to front
 
+    crispy->rendered_sprites = num_vissprite;
     for (i = num_vissprite ; --i>=0 ; )
     {
         vissprite_t* spr = vissprite_ptrs[i];

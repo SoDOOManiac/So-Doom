@@ -69,6 +69,7 @@ visplane_t *floorplane, *ceilingplane;
 
 // [JN] killough 8/1/98: set static number of openings to be large enough
 // (a static limit is okay in this case and avoids difficulties in r_segs.c)
+// [SoDOOManiac] the limit was not made static, actually
 
 size_t maxopenings;
 int *openings, *lastopening; // [crispy] 32-bit integer math
@@ -420,8 +421,10 @@ void R_DrawPlanes (void)
     int         lumpnum;
     boolean swirling;
 
+    crispy->rendered_openings = lastopening - openings;
+
     for (int i = 0 ; i < MAXVISPLANES ; i++)
-    for (visplane_t *pl = visplanes[i] ; pl ; pl = pl->next)
+    for (visplane_t *pl = visplanes[i] ; pl ; pl = pl->next, crispy->rendered_visplanes++)
     if (pl->minx <= pl->maxx)
     {
         // sky flat

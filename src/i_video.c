@@ -310,7 +310,6 @@ void I_ShutdownGraphics(void)
 void I_StartFrame (void)
 {
     // er?
-
 }
 
 // Adjust window_width / window_height variables to be an an aspect

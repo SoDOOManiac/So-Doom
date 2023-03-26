@@ -948,12 +948,9 @@ void R_SetGoobers (boolean mode)
     }
 }
 
-
 //
 // R_Init
 //
-
-
 
 void R_Init (void)
 {
@@ -1100,7 +1097,16 @@ void R_SetupFrame (player_t* player)
     validcount++;
 }
 
-
+// -----------------------------------------------------------------------------
+// R_ClearStats
+// -----------------------------------------------------------------------------
+void R_ClearStats (void)
+{
+	crispy->rendered_segs = 0;
+	crispy->rendered_visplanes = 0;
+	crispy->rendered_sprites = 0;
+	crispy->rendered_openings = 0;
+}
 
 //
 // R_RenderView

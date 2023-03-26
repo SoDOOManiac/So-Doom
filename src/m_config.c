@@ -2390,6 +2390,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // [So Doom] Map view stats.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_mapviewstats),
+
+    //!
+    // @game doom
+    //
     // Negative player health.
     //
 

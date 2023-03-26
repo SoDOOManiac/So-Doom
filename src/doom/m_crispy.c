@@ -748,7 +748,6 @@ void M_CrispyToggleTranslucency(int choice)
     ChangeSettingEnum(&crispy->translucency, choice, NUM_TRANSLUCENCY);
 }
 
-
 void M_CrispyReInitGraphicsHook (void)
 {
     I_ReInitGraphics(REINIT_RENDERER | REINIT_TEXTURES | REINIT_ASPECTRATIO);
@@ -774,6 +773,11 @@ void M_CrispyToggleUncapped(int choice)
     }
     if (crispy->vsync != old_crispy_vsync)
         crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
+}
+
+void M_CrispyToggleMapViewStats (int choice)
+{
+	ChangeSettingEnum(&crispy->mapviewstats, choice, NUM_WIDGETS);
 }
 
 void M_CrispyToggleVsyncHook (void)
