@@ -777,7 +777,8 @@ void M_CrispyToggleUncapped(int choice)
 
 void M_CrispyToggleMapViewStats (int choice)
 {
-	ChangeSettingEnum(&crispy->mapviewstats, choice, NUM_WIDGETS);
+    choice = 0;
+    crispy->mapviewstats = !crispy->mapviewstats;
 }
 
 void M_CrispyToggleVsyncHook (void)

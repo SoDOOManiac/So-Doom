@@ -522,7 +522,7 @@ enum
     crispness_playercoords,
     crispness_secretmessage,
     crispness_mapsecrets,
-    //crispness_sep_navigational_,
+    crispness_sep_navigational_,
 
     crispness2_next,
     crispness2_prev,
@@ -546,7 +546,7 @@ static menuitem_t Crispness2Menu[]=
     {3,"",	M_CrispyTogglePlayerCoords,'p'},
     {3,"",	M_CrispyToggleSecretmessage,'s'},
     {3,"",	M_CrispyToggleMapSecrets,'r'},
-//    {-1,"",0,'\0'},
+    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -579,7 +579,7 @@ enum
     crispness_crosshairtype,
     crispness_crosshairhealth,
     crispness_crosshairtarget,
-//    crispness_sep_crosshair_,
+    crispness_sep_crosshair_,
 
     crispness3_next,
     crispness3_prev,
@@ -603,7 +603,7 @@ static menuitem_t Crispness3Menu[]=
     {3,"",	M_CrispyToggleCrosshairtype,'s'},
     {3,"",	M_CrispyToggleCrosshairHealth,'h'},
     {3,"",	M_CrispyToggleCrosshairTarget,'t'},
-//    {-1,"",0,'\0'},
+    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1622,7 +1622,7 @@ static void M_DrawCrispness1(void)
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     //M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
-	M_DrawCrispnessMultiItem(crispness_mapviewstats, "Map view stats", multiitem_widgets, crispy->mapviewstats, true);
+	M_DrawCrispnessItem(crispness_mapviewstats, "Map rendering stats", crispy->mapviewstats, true);
     M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe", crispy->screenwipe, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);

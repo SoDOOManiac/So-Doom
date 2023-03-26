@@ -658,38 +658,38 @@ void HU_Start(void)
 		       hu_font,
 		       HU_FONTSTART);
 
-    HUlib_initTextLine(&w_segs,
-		       HU_MVSTATSX, HU_MSGY + 1 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_visplanes,
-		       HU_MVSTATSX, HU_MSGY + 2 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_sprites,
-		       HU_MVSTATSX, HU_MSGY + 3 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_openings,
-		       HU_MVSTATSX, HU_MSGY + 4 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
     HUlib_initTextLine(&w_coordx,
-		       HU_COORDX, HU_MSGY + 6 * 8,
+		       HU_COORDX, HU_MSGY + 1 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_coordy,
-		       HU_COORDX, HU_MSGY + 7 * 8,
+		       HU_COORDX, HU_MSGY + 2 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_coorda,
-		       HU_COORDX, HU_MSGY + 8 * 8,
+		       HU_COORDX, HU_MSGY + 3 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_segs,
+		       HU_MVSTATSX, HU_MSGY + 5 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_visplanes,
+		       HU_MVSTATSX, HU_MSGY + 6 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_sprites,
+		       HU_MVSTATSX, HU_MSGY + 7 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_openings,
+		       HU_MVSTATSX, HU_MSGY + 8 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
@@ -896,19 +896,19 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_ltime, false);
     }
 
-    if (crispy->mapviewstats == WIDGETS_ALWAYS || (automapactive && crispy->mapviewstats == WIDGETS_AUTOMAP))
-    {
-	HUlib_drawTextLine(&w_segs, false);
-	HUlib_drawTextLine(&w_visplanes, false);
-	HUlib_drawTextLine(&w_sprites, false);
-	HUlib_drawTextLine(&w_openings, false);
-    }
-
     if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
 	HUlib_drawTextLine(&w_coordx, false);
 	HUlib_drawTextLine(&w_coordy, false);
 	HUlib_drawTextLine(&w_coorda, false);
+    }
+
+    if (crispy->mapviewstats && (!automapactive || crispy->automapoverlay))
+    {
+	HUlib_drawTextLine(&w_segs, false);
+	HUlib_drawTextLine(&w_visplanes, false);
+	HUlib_drawTextLine(&w_sprites, false);
+	HUlib_drawTextLine(&w_openings, false);
     }
 
     if (plr->powers[pw_showfps])
@@ -953,14 +953,13 @@ void HU_Erase(void)
     HUlib_eraseTextLine(&w_scrts);
     HUlib_eraseTextLine(&w_ltime);
     HUlib_eraseTextLine(&w_fps);
+    HUlib_eraseTextLine(&w_coordx);
+    HUlib_eraseTextLine(&w_coordy);
+    HUlib_eraseTextLine(&w_coorda);
 	HUlib_eraseTextLine(&w_segs);
 	HUlib_eraseTextLine(&w_visplanes);
 	HUlib_eraseTextLine(&w_sprites);
 	HUlib_eraseTextLine(&w_openings);
-    HUlib_eraseTextLine(&w_coordx);
-    HUlib_eraseTextLine(&w_coordy);
-    HUlib_eraseTextLine(&w_coorda);
-
 
 }
 
@@ -972,8 +971,6 @@ void HU_Ticker(void)
     char str[32], *s;
 
     const int chat_line = chat_on ? 8 : 0; // [So Doom] moved as there is no if condition anymore
-	
-	const int offset_for_rendering_stats = crispy->mapviewstats ? 40 : 0;
 
     // tick down message counter if message is up
     if (message_counter && !--message_counter)
@@ -1069,14 +1066,14 @@ void HU_Ticker(void)
         w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
         // [crispy] do not shift level time widget if no stats widget is used
         w_ltime.y = HU_MSGY + 4 * 8 + (crispy->automapstats ? chat_line : 0);
-        w_segs.y = HU_MSGY + 1 * 8 + chat_line;
-        w_visplanes.y = HU_MSGY + 2 * 8 + chat_line;
-        w_sprites.y = HU_MSGY + 3 * 8 + chat_line;
-		w_openings.y = HU_MSGY + 4 * 8 + chat_line;
-		// [So Doom] shift player coords 5 lines down if map view stats are displayed
-		w_coordx.y = HU_MSGY + 1 * 8 + chat_line + offset_for_rendering_stats;
-        w_coordy.y = HU_MSGY + 2 * 8 + chat_line + offset_for_rendering_stats;
-        w_coorda.y = HU_MSGY + 3 * 8 + chat_line + offset_for_rendering_stats;
+        w_coordx.y = HU_MSGY + 1 * 8 + chat_line;
+        w_coordy.y = HU_MSGY + 2 * 8 + chat_line;
+        w_coorda.y = HU_MSGY + 3 * 8 + chat_line;
+        w_segs.y = HU_MSGY + 5 * 8 + chat_line;
+        w_visplanes.y = HU_MSGY + 6 * 8 + chat_line;
+        w_sprites.y = HU_MSGY + 7 * 8 + chat_line;
+		w_openings.y = HU_MSGY + 8 * 8 + chat_line;
+
     //}
     }
 
@@ -1160,37 +1157,6 @@ void HU_Ticker(void)
 	    HUlib_addCharToTextLine(&w_fps, *(s++));
     }
 
-    if (crispy->mapviewstats == WIDGETS_ALWAYS || (automapactive && crispy->mapviewstats == WIDGETS_AUTOMAP))
-    {
-	M_snprintf(str, sizeof(str), "%sSEG:\t%s%-6d", cr_stat2, crstr[CR_GRAY],
-	        crispy->rendered_segs);
-	HUlib_clearTextLine(&w_segs);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_segs, *(s++));
-
-	M_snprintf(str, sizeof(str), "%sVPL:\t%s%-6d", cr_stat2, crstr[CR_GRAY],
-	        crispy->rendered_visplanes);
-	HUlib_clearTextLine(&w_visplanes);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_visplanes, *(s++));
-
-	M_snprintf(str, sizeof(str), "%sSPR:\t%s%-6d", cr_stat2, crstr[CR_GRAY],
-	        crispy->rendered_sprites);
-	HUlib_clearTextLine(&w_sprites);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_sprites, *(s++));
-
-	M_snprintf(str, sizeof(str), "%sOPN:\t%s%-6d", cr_stat2, crstr[CR_GRAY],
-	        crispy->rendered_openings);
-	HUlib_clearTextLine(&w_openings);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_openings, *(s++));
-    }
-
     if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
 	M_snprintf(str, sizeof(str), "%sX\t%s%-5d", cr_stat2, crstr[CR_GRAY],
@@ -1213,6 +1179,37 @@ void HU_Ticker(void)
 	s = str;
 	while (*s)
 	    HUlib_addCharToTextLine(&w_coorda, *(s++));
+    }
+
+    if (crispy->mapviewstats && (!automapactive || crispy->automapoverlay))
+    {
+	M_snprintf(str, sizeof(str), "%sSEG %s%-6d", cr_stat2, crstr[CR_GRAY],
+	        crispy->rendered_segs);
+	HUlib_clearTextLine(&w_segs);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_segs, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sVPL %s%-6d", cr_stat2, crstr[CR_GRAY],
+	        crispy->rendered_visplanes);
+	HUlib_clearTextLine(&w_visplanes);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_visplanes, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sSPR %s%-6d", cr_stat2, crstr[CR_GRAY],
+	        crispy->rendered_sprites);
+	HUlib_clearTextLine(&w_sprites);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_sprites, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sOPN %s%-6d", cr_stat2, crstr[CR_GRAY],
+	        crispy->rendered_openings);
+	HUlib_clearTextLine(&w_openings);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_openings, *(s++));
     }
 }
 
