@@ -658,6 +658,26 @@ void HU_Start(void)
 		       hu_font,
 		       HU_FONTSTART);
 
+    HUlib_initTextLine(&w_segs,
+		       HU_MVSTATSX, HU_MSGY + 1 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_visplanes,
+		       HU_MVSTATSX, HU_MSGY + 2 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_sprites,
+		       HU_MVSTATSX, HU_MSGY + 3 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
+    HUlib_initTextLine(&w_openings,
+		       HU_MVSTATSX, HU_MSGY + 4 * 8,
+		       hu_font,
+		       HU_FONTSTART);
+
     HUlib_initTextLine(&w_coordx,
 		       HU_COORDX, HU_MSGY + 1 * 8,
 		       hu_font,
@@ -670,26 +690,6 @@ void HU_Start(void)
 
     HUlib_initTextLine(&w_coorda,
 		       HU_COORDX, HU_MSGY + 3 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_segs,
-		       HU_MVSTATSX, HU_MSGY + 5 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_visplanes,
-		       HU_MVSTATSX, HU_MSGY + 6 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_sprites,
-		       HU_MVSTATSX, HU_MSGY + 7 * 8,
-		       hu_font,
-		       HU_FONTSTART);
-
-    HUlib_initTextLine(&w_openings,
-		       HU_MVSTATSX, HU_MSGY + 8 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
@@ -896,11 +896,9 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_ltime, false);
     }
 
-    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
+    if (plr->powers[pw_showfps])
     {
-	HUlib_drawTextLine(&w_coordx, false);
-	HUlib_drawTextLine(&w_coordy, false);
-	HUlib_drawTextLine(&w_coorda, false);
+	HUlib_drawTextLine(&w_fps, false);
     }
 
     if (crispy->mapviewstats && (!automapactive || crispy->automapoverlay))
@@ -911,9 +909,11 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_openings, false);
     }
 
-    if (plr->powers[pw_showfps])
+    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
-	HUlib_drawTextLine(&w_fps, false);
+	HUlib_drawTextLine(&w_coordx, false);
+	HUlib_drawTextLine(&w_coordy, false);
+	HUlib_drawTextLine(&w_coorda, false);
     }
 
     if (crispy->crosshair == CROSSHAIR_STATIC)
@@ -953,13 +953,13 @@ void HU_Erase(void)
     HUlib_eraseTextLine(&w_scrts);
     HUlib_eraseTextLine(&w_ltime);
     HUlib_eraseTextLine(&w_fps);
+    HUlib_eraseTextLine(&w_segs);
+    HUlib_eraseTextLine(&w_visplanes);
+    HUlib_eraseTextLine(&w_sprites);
+    HUlib_eraseTextLine(&w_openings);
     HUlib_eraseTextLine(&w_coordx);
     HUlib_eraseTextLine(&w_coordy);
     HUlib_eraseTextLine(&w_coorda);
-	HUlib_eraseTextLine(&w_segs);
-	HUlib_eraseTextLine(&w_visplanes);
-	HUlib_eraseTextLine(&w_sprites);
-	HUlib_eraseTextLine(&w_openings);
 
 }
 
@@ -971,7 +971,8 @@ void HU_Ticker(void)
     char str[32], *s;
 
     const int chat_line = chat_on ? 8 : 0; // [So Doom] moved as there is no if condition anymore
-
+	const int mapviewstats_shift_coords = crispy->mapviewstats ? 5*8 : 0;
+	
     // tick down message counter if message is up
     if (message_counter && !--message_counter)
     {
@@ -1015,6 +1016,18 @@ void HU_Ticker(void)
 
     } // else message_on = false;
 
+    // w_kills.y = HU_MSGY + 1 * 8;
+    // w_items.y = HU_MSGY + 2 * 8;
+	// w_scrts.y = HU_MSGY + 3 * 8;
+	// w_ltime.y = HU_MSGY + 4 * 8;
+	// w_segs.y = HU_MSGY + 1 * 8;
+	// w_visplanes.y = HU_MSGY + 2 * 8;
+	// w_sprites.y = HU_MSGY + 3 * 8;
+	// w_openings.y = HU_MSGY + 4 * 8;
+	w_coordx.y = HU_MSGY + 1 * 8 + mapviewstats_shift_coords;
+	w_coordy.y = HU_MSGY + 2 * 8 + mapviewstats_shift_coords;
+	w_coorda.y = HU_MSGY + 3 * 8 + mapviewstats_shift_coords;
+	
     // check for incoming chat characters
     if (netgame)
     {
@@ -1056,7 +1069,7 @@ void HU_Ticker(void)
 	}
     // [crispy] shift widgets one line down so chat typing line may appear
 
-    // [So Doom] commented out if conditon as So Doom doesn't have WIDGETS_STBAR
+    // [So Doom] commented out if condition as So Doom doesn't have WIDGETS_STBAR
 
     // if (crispy->automapstats != WIDGETS_STBAR)
     //{
@@ -1064,15 +1077,15 @@ void HU_Ticker(void)
         w_kills.y = HU_MSGY + 1 * 8 + chat_line;
         w_items.y = HU_MSGY + 2 * 8 + chat_line;
         w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
-        // [crispy] do not shift level time widget if no stats widget is used
+        // [crispy] do not shift level time widget if no level stats widget is used
         w_ltime.y = HU_MSGY + 4 * 8 + (crispy->automapstats ? chat_line : 0);
-        w_coordx.y = HU_MSGY + 1 * 8 + chat_line;
-        w_coordy.y = HU_MSGY + 2 * 8 + chat_line;
-        w_coorda.y = HU_MSGY + 3 * 8 + chat_line;
-        w_segs.y = HU_MSGY + 5 * 8 + chat_line;
-        w_visplanes.y = HU_MSGY + 6 * 8 + chat_line;
-        w_sprites.y = HU_MSGY + 7 * 8 + chat_line;
-		w_openings.y = HU_MSGY + 8 * 8 + chat_line;
+        w_segs.y = HU_MSGY + 1 * 8 + chat_line;
+        w_visplanes.y = HU_MSGY + 2 * 8 + chat_line;
+        w_sprites.y = HU_MSGY + 3 * 8 + chat_line;
+		w_openings.y = HU_MSGY + 4 * 8 + chat_line;
+        w_coordx.y += chat_line; // coord line y positions were set explicitly before in HU_Ticker()
+        w_coordy.y += chat_line;
+        w_coorda.y += chat_line;
 
     //}
     }
@@ -1157,30 +1170,6 @@ void HU_Ticker(void)
 	    HUlib_addCharToTextLine(&w_fps, *(s++));
     }
 
-    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
-    {
-	M_snprintf(str, sizeof(str), "%sX\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->x)>>FRACBITS);
-	HUlib_clearTextLine(&w_coordx);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coordx, *(s++));
-
-	M_snprintf(str, sizeof(str), "%sY\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->y)>>FRACBITS);
-	HUlib_clearTextLine(&w_coordy);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coordy, *(s++));
-
-	M_snprintf(str, sizeof(str), "%sA\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->angle)/ANG1);
-	HUlib_clearTextLine(&w_coorda);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coorda, *(s++));
-    }
-
     if (crispy->mapviewstats && (!automapactive || crispy->automapoverlay))
     {
 	M_snprintf(str, sizeof(str), "%sSEG %s%-6d", cr_stat2, crstr[CR_GRAY],
@@ -1210,6 +1199,30 @@ void HU_Ticker(void)
 	s = str;
 	while (*s)
 	    HUlib_addCharToTextLine(&w_openings, *(s++));
+    }
+	
+    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
+    {
+	M_snprintf(str, sizeof(str), "%sX\t%s%-5d", cr_stat2, crstr[CR_GRAY],
+	        (plr->mo->x)>>FRACBITS);
+	HUlib_clearTextLine(&w_coordx);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_coordx, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sY\t%s%-5d", cr_stat2, crstr[CR_GRAY],
+	        (plr->mo->y)>>FRACBITS);
+	HUlib_clearTextLine(&w_coordy);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_coordy, *(s++));
+
+	M_snprintf(str, sizeof(str), "%sA\t%s%-5d", cr_stat2, crstr[CR_GRAY],
+	        (plr->mo->angle)/ANG1);
+	HUlib_clearTextLine(&w_coorda);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_coorda, *(s++));
     }
 }
 
