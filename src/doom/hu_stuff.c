@@ -1016,7 +1016,7 @@ void HU_Ticker(void)
 
     } // else message_on = false;
 
-    // w_kills.y = HU_MSGY + 1 * 8;
+    w_kills.y = HU_MSGY + 1 * 8;
     // w_items.y = HU_MSGY + 2 * 8;
 	// w_scrts.y = HU_MSGY + 3 * 8;
 	// w_ltime.y = HU_MSGY + 4 * 8;
@@ -1074,7 +1074,7 @@ void HU_Ticker(void)
     // if (crispy->automapstats != WIDGETS_STBAR)
     //{
 
-        w_kills.y = HU_MSGY + 1 * 8 + chat_line;
+        w_kills.y += chat_line;
         w_items.y = HU_MSGY + 2 * 8 + chat_line;
         w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
         // [crispy] do not shift level time widget if no level stats widget is used
