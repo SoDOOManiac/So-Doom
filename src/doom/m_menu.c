@@ -637,6 +637,7 @@ enum
     crispness_demobar,
     crispness_demousetimer,
     crispness_sep_demos_,
+	crispness_sep_demos__,
 
     crispness4_next,
     crispness4_prev,
@@ -661,6 +662,7 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleDemoBar,'w'},
     {3,"",	M_CrispyToggleDemoUseTimer,'u'},
     {-1,"",0,'\0'},
+	{-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };

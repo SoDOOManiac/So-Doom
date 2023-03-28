@@ -1638,7 +1638,7 @@ void I_GetScreenDimensions (void)
 	// [crispy] widescreen rendering makes no sense without aspect ratio correction
 	if (crispy->widescreen && crispy->arlimit && aspect_ratio_correct)
 	{
-		 switch(crispy->arlimit)	// [So Doom] aspect ratio limit
+		switch(crispy->arlimit)	// [So Doom] aspect ratio limit
 		{
 			case RATIO_16_10:
 				w = 16;
