@@ -571,6 +571,18 @@ void ST_refreshBackground(boolean force)
 #endif
 			}
 		}
+
+		// [crispy] preserve bezel bottom edge
+		if (scaledviewwidth == SCREENWIDTH)
+		{
+			patch_t *const patch = W_CacheLumpName(DEH_String("brdr_b"), PU_CACHE);
+
+			for (x = 0; x < WIDESCREENDELTA; x += 8)
+			{
+				V_DrawPatch(x - WIDESCREENDELTA, 0, patch);
+				V_DrawPatch(ORIGWIDTH + WIDESCREENDELTA - x - 8, 0, patch);
+			}
+		}
 	}
 
 	// [crispy] center unity rerelease wide status bar
@@ -1127,6 +1139,8 @@ ST_Responder (event_t* ev)
 
 	EV_DoGoobers();
 
+	R_SetGoobers(true);
+
 	M_snprintf(msg, sizeof(msg), "Get Psyched!");
 	plyr->message = msg;
       }
@@ -1192,6 +1206,8 @@ ST_Responder (event_t* ev)
 	{
 	    if (!plyr->weaponowned[w])
 	    {
+		extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
+		extern const char *const WeaponPickupMessages[NUMWEAPONS];
 
 		P_GiveWeapon(plyr, w, false);
 		S_StartSound(NULL, sfx_wpnup);
@@ -1212,6 +1228,8 @@ ST_Responder (event_t* ev)
 		// [crispy] removed current weapon, select another one
 		if (w == plyr->readyweapon)
 		{
+		    extern boolean P_CheckAmmo (player_t* player);
+
 		    P_CheckAmmo(plyr);
 		}
 	    }
@@ -1917,7 +1935,7 @@ void ST_updateWidgets(void)
 
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
-	if (i != consoleplayer)
+	if (i != displayplayer)
 	    st_fragscount += plyr->frags[i];
 	else
 	    st_fragscount -= plyr->frags[i];

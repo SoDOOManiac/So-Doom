@@ -815,7 +815,7 @@ static void HU_DrawCrosshair (void)
 
     if (weaponinfo[plr->readyweapon].ammo == am_noammo ||
         plr->playerstate != PST_LIVE ||
-        automapactive ||
+        (automapactive && !crispy->automapoverlay) ||
         menuactive ||
         paused ||
         secret_on)
