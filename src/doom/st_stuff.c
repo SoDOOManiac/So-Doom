@@ -606,13 +606,6 @@ void ST_refreshBackground(boolean force)
 	// [crispy] killough 3/7/98: make face background change with displayplayer
 	if (netgame)
     {
-        if (screenblocks == CRISPY_HUD+1)
-        {
-        dp_translucent = true;
-        V_DrawPatch(23 - SHORT(faceback_sd[displayplayer]->width)/2-crispy->widescreen*ST_WIDESCREENDELTA, ST_Y - ST_HEIGHT, faceback_sd[displayplayer]);
-        dp_translucent = false;
-        }
-        else
 	    V_DrawPatch(ST_FX, 0, faceback[displayplayer]);
     }
         V_RestoreBuffer();
