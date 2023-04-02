@@ -517,12 +517,13 @@ enum
     crispness_extautomap,
     crispness_smoothmap,
     crispness_automapstats,
+    crispness_statsformat,
     crispness_smarttotals,
     crispness_leveltime,
     crispness_playercoords,
     crispness_secretmessage,
     crispness_mapsecrets,
-    crispness_sep_navigational_,
+    //crispness_sep_navigational_,
 
     crispness2_next,
     crispness2_prev,
@@ -541,12 +542,13 @@ static menuitem_t Crispness2Menu[]=
     {3,"",	M_CrispyToggleExtAutomap,'e'},
     {3,"",	M_CrispyToggleSmoothMap,'m'},
     {3,"",	M_CrispyToggleAutomapstats,'s'},
+	{3,"",	M_CrispyToggleStatsFormat,'a'},
     {3,"",	M_CrispyToggleSmartTotals,'t'},
     {3,"",	M_CrispyToggleLeveltime,'l'},
     {3,"",	M_CrispyTogglePlayerCoords,'p'},
     {3,"",	M_CrispyToggleSecretmessage,'s'},
     {3,"",	M_CrispyToggleMapSecrets,'r'},
-    {-1,"",0,'\0'},
+    //{-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1655,6 +1657,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessItem(crispness_extautomap, "Extended Automap colors", crispy->extautomap, true);
     M_DrawCrispnessItem(crispness_smoothmap, "Smooth automap lines", crispy->smoothmap, true);
     M_DrawCrispnessMultiItem(crispness_automapstats, "Show Level Stats", multiitem_widgets, crispy->automapstats, true);
+    M_DrawCrispnessMultiItem(crispness_statsformat, "Level Stats Format", multiitem_statsformat, crispy->statsformat, crispy->automapstats);
     M_DrawCrispnessItem(crispness_smarttotals, "Smart Totals", crispy->smarttotals, true);
     M_DrawCrispnessMultiItem(crispness_leveltime, "Show Level Time", multiitem_widgets, crispy->leveltime, true);
     M_DrawCrispnessMultiItem(crispness_playercoords, "Show Player Coords", multiitem_widgets, crispy->playercoords, true);

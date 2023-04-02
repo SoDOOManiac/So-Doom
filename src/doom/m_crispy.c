@@ -183,6 +183,14 @@ multiitem_t multiitem_difficulties[NUM_SKILLS] =
     {SKILL_HNTR, "HNTR"},
 };
 
+multiitem_t multiitem_statsformat[NUM_STATSFORMATS] =
+{
+    {STATSFORMAT_RATIO, "ratio"},
+    {STATSFORMAT_REMAINING, "remaining"},
+    {STATSFORMAT_PERCENT, "percent"},
+    {STATSFORMAT_BOOLEAN, "boolean"},
+};
+
 multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =
 {
     {TRANSLUCENCY_OFF, "off"},
@@ -741,6 +749,11 @@ void M_CrispyToggleSoundMono(int choice)
     crispy->soundmono = !crispy->soundmono;
 
     S_UpdateStereoSeparation();
+}
+
+void M_CrispyToggleStatsFormat(int choice)
+{
+    ChangeSettingEnum(&crispy->statsformat, choice, NUM_STATSFORMATS);
 }
 
 void M_CrispyToggleTranslucency(int choice)

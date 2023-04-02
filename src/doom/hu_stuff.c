@@ -962,6 +962,44 @@ void HU_Erase(void)
 
 }
 
+static void Crispy_Statsline_Ratio (char *str, int str_size, const char *prefix, int count, int total, int extra)
+{
+	if (extra)
+	    M_snprintf(str, str_size, "%s%s%s%d/%d+%d ", cr_stat, prefix, crstr[CR_GRAY],
+	               count, total, extra);
+	else
+	    M_snprintf(str, str_size, "%s%s%s%d/%d ", cr_stat, prefix, crstr[CR_GRAY],
+	               count, total);
+}
+
+static void Crispy_Statsline_Remaining (char *str, int str_size, const char *prefix, int count, int total, int extra)
+{
+	M_snprintf(str, str_size, "%s%s%s%d ", cr_stat, prefix, crstr[CR_GRAY],
+		   MAX(0, total - count));
+}
+
+static void Crispy_Statsline_Percent (char *str, int str_size, const char *prefix, int count, int total, int extra)
+{
+	M_snprintf(str, str_size, "%s%s%s%d%% ", cr_stat, prefix, crstr[CR_GRAY],
+		   count * 100 / (total ? total : 1));
+}
+
+static void Crispy_Statsline_Boolean (char *str, int str_size, const char *prefix, int count, int total, int extra)
+{
+	M_snprintf(str, str_size, "%s%s%s%s ", cr_stat, prefix, crstr[CR_GRAY],
+		   count >= total ? "Yes" : "No");
+}
+
+typedef void (*crispy_statsline_func_t)(char *str, int str_size, const char *prefix, int count, int total, int extra);
+
+static const crispy_statsline_func_t crispy_statslines[NUM_STATSFORMATS] =
+{
+	Crispy_Statsline_Ratio,
+	Crispy_Statsline_Remaining,
+	Crispy_Statsline_Percent,
+	Crispy_Statsline_Boolean,
+};
+
 void HU_Ticker(void)
 {
 
@@ -1102,14 +1140,39 @@ void HU_Ticker(void)
     {
 
 	// [crispy] count spawned monsters
-	if (crispy->smarttotals || extraspawns == 0)
+
+	/*if (crispy->smarttotals || extraspawns == 0)
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
-	            plr->killcount-plr->extrakills, totalkills);
+	            plr->killcount - plr->extrakills, totalkills);
 	else
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d+%d", cr_stat, kills, crstr[CR_GRAY],
-	            plr->killcount, totalkills, extraspawns);
+	            plr->killcount, totalkills, extraspawns);*/
 
+	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
+
+	if (crispy->smarttotals || extraspawns == 0)
+		crispy_statsline(str, sizeof(str), kills, plr->killcount - plr->extrakills, totalkills, 0);
+	else
+		crispy_statsline(str, sizeof(str), kills, plr->killcount, totalkills, extraspawns);
 	HUlib_clearTextLine(&w_kills);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	crispy_statsline(str, sizeof(str), "I\t", plr->itemcount, totalitems, 0);
+	HUlib_clearTextLine(&w_items);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_items, *(s++));
+
+	crispy_statsline(str, sizeof(str), "S\t", plr->secretcount, totalsecret, 0);
+	HUlib_clearTextLine(&w_scrts);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_scrts, *(s++));
+    }
+
+	/*HUlib_clearTextLine(&w_kills);
 	s = str;
 	while (*s)
 	    HUlib_addCharToTextLine(&w_kills, *(s++));
@@ -1127,7 +1190,7 @@ void HU_Ticker(void)
 	s = str;
 	while (*s)
 	    HUlib_addCharToTextLine(&w_scrts, *(s++));
-    }
+    }*/
 
     if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))
     {
