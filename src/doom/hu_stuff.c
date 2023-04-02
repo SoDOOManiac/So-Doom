@@ -72,8 +72,7 @@
 #define HU_INPUTHEIGHT	1
 
 #define HU_COORDX	((ORIGWIDTH - 7 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
-#define HU_FPSX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA) // JNechaevsky suggested replacing 7 with 8 to allow for multi-thousand FPS in the widget
-#define HU_MVSTATSX	((ORIGWIDTH - 9 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
+#define HU_FPSX	((ORIGWIDTH - 9 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
 
 char *chat_macros[10];
 
@@ -659,22 +658,22 @@ void HU_Start(void)
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_segs,
-		       HU_MVSTATSX, HU_MSGY + 1 * 8,
+		       HU_FPSX, HU_MSGY + 1 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_visplanes,
-		       HU_MVSTATSX, HU_MSGY + 2 * 8,
+		       HU_FPSX, HU_MSGY + 2 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_sprites,
-		       HU_MVSTATSX, HU_MSGY + 3 * 8,
+		       HU_FPSX, HU_MSGY + 3 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
     HUlib_initTextLine(&w_openings,
-		       HU_MVSTATSX, HU_MSGY + 4 * 8,
+		       HU_FPSX, HU_MSGY + 4 * 8,
 		       hu_font,
 		       HU_FONTSTART);
 
@@ -855,7 +854,7 @@ void HU_Drawer(void)
     }
 
     // [crispy] translucent messages for translucent HUD
-    if (screenblocks > CRISPY_HUD + 2 && (!automapactive || crispy->automapoverlay)) // [So Doom] in So Doom there are 3 variations of non-translucent status bar-less HUD
+    if (screenblocks == CRISPY_HUD + 3 && (!automapactive || crispy->automapoverlay)) // [So Doom] in So Doom there are 3 variations of non-translucent status bar-less HUD
 	dp_translucent = true;
 
     if (secret_on && !menuactive)
@@ -1163,7 +1162,7 @@ void HU_Ticker(void)
 
     if (plr->powers[pw_showfps])
     {
-	M_snprintf(str, sizeof(str), "%s%-4d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
+	M_snprintf(str, sizeof(str), "%s%d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
 	HUlib_clearTextLine(&w_fps);
 	s = str;
 	while (*s)

@@ -2268,7 +2268,7 @@ void ST_drawWidgets(boolean refresh)
 		V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback[0]->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
     }
     // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
-    if (st_crispyhud && screenblocks == CRISPY_HUD+1)
+    if (st_crispyhud && screenblocks == CRISPY_HUD + 1)
     {
     if (netgame)
     {
@@ -2335,7 +2335,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     ST_doPaletteStuff();
 
     // [crispy] translucent HUD
-    if (st_crispyhud && screenblocks > CRISPY_HUD + 2)
+    if (st_crispyhud && screenblocks == CRISPY_HUD + 3)
 	dp_translucent = true;
 
     // If just after ST_Start(), refresh all
@@ -2597,7 +2597,7 @@ void ST_createWidgets(void)
 		  ST_FRAGSWIDTH);
 
     // faces
-/*    if (screenblocks == CRISPY_HUD+1) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD, commented as it doesn't update properly
+/*    if (screenblocks == CRISPY_HUD + 1) // [So Doom] Draw the status face above the ammo widget in So Doomy HUD, commented as it doesn't update properly
     {
     STlib_initMultIcon(&w_faces,
 		       23 - SHORT(faceback_sd->width)/2,
