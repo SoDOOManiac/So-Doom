@@ -497,9 +497,8 @@ cheatseq_t cheat_notarget2 = CHEAT("fhshh", 0); // [crispy] Doom95
 cheatseq_t cheat_spechits = CHEAT("spechits", 0);
 cheatseq_t cheat_nomomentum = CHEAT("nomomentum", 0);
 cheatseq_t cheat_nomomentum2 = CHEAT("snail", 0);
-cheatseq_t cheat_showfps = CHEAT("showfps", 0);
+cheatseq_t cheat_showfps = CHEAT("fps", 0); // [So Doom] shorter version of Crispy Doom's showfps
 cheatseq_t cheat_showfps2 = CHEAT("idrate", 0); // [crispy] PrBoom+
-cheatseq_t cheat_showfps3 = CHEAT("sfps", 0); // [So Doom] shorter version of showfps
 cheatseq_t cheat_goobers = CHEAT("goobers", 0);
 cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] Russian Doom
 cheatseq_t cheat_skill = CHEAT("skill", 0);
@@ -1438,7 +1437,7 @@ ST_Responder (event_t* ev)
 
     // [crispy] implement Crispy Doom's "showfps" cheat, ne debug aid
     if (cht_CheckCheat(&cheat_showfps, ev->data2) ||
-             cht_CheckCheat(&cheat_showfps2, ev->data2) || cht_CheckCheat(&cheat_showfps3, ev->data2))
+             cht_CheckCheat(&cheat_showfps2, ev->data2))
     {
 	plyr->powers[pw_showfps] ^= 1;
     }
