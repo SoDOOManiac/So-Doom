@@ -893,8 +893,7 @@ void I_FinishUpdate (void)
 
     SDL_RenderPresent(renderer);
 
-    // [AM] Figure out how far into the current tic we're in as a fixed_t.
-    if (crispy->uncapped)
+    if (crispy->uncapped && !singletics)
     {
         // Limit framerate
         if (crispy->fpslimit >= TICRATE)
