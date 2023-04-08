@@ -895,7 +895,7 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_ltime, false);
     }
 
-    if (plr->powers[pw_showfps])
+    if (plr->powers[pw_showfps] || (crispy->mapviewstats == 2))
     {
 	HUlib_drawTextLine(&w_fps, false);
     }
@@ -1223,7 +1223,7 @@ void HU_Ticker(void)
 	    HUlib_addCharToTextLine(&w_ltime, *(s++));
     }
 
-    if (plr->powers[pw_showfps])
+    if (plr->powers[pw_showfps] || (crispy->mapviewstats == 2))
     {
 	M_snprintf(str, sizeof(str), "%s%d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
 	HUlib_clearTextLine(&w_fps);

@@ -55,6 +55,7 @@ typedef struct
 	int defaultskill;
 	int demotimer;
 	int demotimerdir;
+	int demotimerpos;
 	int demobar;
 	int evadinginterover;
 	int extautomap;
@@ -77,6 +78,7 @@ typedef struct
 	int recoil;
 	int screenwipe;
 	int mapsecrets;
+	int mapviewstats;
 	int secretmessage;
 	int smarttotals;
 	int smoothlight;
@@ -101,7 +103,6 @@ typedef struct
 	int cleanscreenshot;
 	int demowarp;
 	int fps;
-	int mapviewstats;
 	int rendered_segs;
 	int rendered_visplanes;
 	int rendered_sprites;
@@ -315,6 +316,14 @@ enum
     MAPSECRETS_FORCE,
     MAPSECRETS_FORCE_AND_COLOR,
     NUM_MAPSECRETS
+};
+
+enum
+{
+    MAPVIEWSTATS_OFF,
+    MAPVIEWSTATS_NO_FPS,
+    MAPVIEWSTATS_WITH_FPS,
+    NUM_MAPVIEWSTATS
 };
 
 enum

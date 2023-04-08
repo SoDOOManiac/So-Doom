@@ -125,6 +125,13 @@ multiitem_t multiitem_demotimerdir[] =
     {2, "backward"},
 };
 
+multiitem_t multiitem_demotimerpos[] =
+{
+    {0, "none"},
+    {1, "top right"},
+    {2, "top center"},
+};
+
 multiitem_t multiitem_freelook[NUM_FREELOOKS] =
 {
     {FREELOOK_OFF, "off"},
@@ -172,6 +179,13 @@ multiitem_t multiitem_mapsecrets[NUM_MAPSECRETS] =
     {MAPSECRETS_DEFAULT_AND_COLOR, "default + color revealed"},
     {MAPSECRETS_FORCE, "force"},
     {MAPSECRETS_FORCE_AND_COLOR, "force + color revealed"},
+};
+
+multiitem_t multiitem_mapviewstats[NUM_MAPVIEWSTATS] =
+{
+    {MAPVIEWSTATS_OFF, "off"},
+    {MAPVIEWSTATS_NO_FPS, "on - fps"},
+    {MAPVIEWSTATS_WITH_FPS, "on + fps"},
 };
 
 multiitem_t multiitem_difficulties[NUM_SKILLS] =
@@ -449,6 +463,17 @@ void M_CrispyToggleDemoTimerDir(int choice)
     crispy->demotimerdir = !crispy->demotimerdir;
 }
 
+void M_CrispyToggleDemoTimerPos(int choice)
+{
+    if (!crispy->demotimer)
+    {
+	return;
+    }
+
+    choice = 0;
+    crispy->demotimerpos = !crispy->demotimerpos;
+}
+
 void M_CrispyToggleDemoUseTimer(int choice)
 {
     choice = 0;
@@ -692,6 +717,11 @@ void M_CrispyToggleMapSecrets(int choice)
     ChangeSettingEnum(&crispy->mapsecrets, choice, NUM_MAPSECRETS);
 }
 
+void M_CrispyToggleMapViewStats(int choice)
+{
+    ChangeSettingEnum(&crispy->mapviewstats, choice, NUM_MAPVIEWSTATS);
+}
+
 void M_CrispyToggleSmartTotals(int choice)
 {
     choice = 0;
@@ -786,12 +816,6 @@ void M_CrispyToggleUncapped(int choice)
     }
     if (crispy->vsync != old_crispy_vsync)
         crispy->post_rendering_hook = M_CrispyReInitGraphicsHook;
-}
-
-void M_CrispyToggleMapViewStats (int choice)
-{
-    choice = 0;
-    crispy->mapviewstats = !crispy->mapviewstats;
 }
 
 void M_CrispyToggleVsyncHook (void)

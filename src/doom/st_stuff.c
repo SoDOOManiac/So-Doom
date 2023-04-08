@@ -2770,12 +2770,20 @@ void ST_DrawDemoTimer (const int time)
 	const int mins = time / (60 * TICRATE);
 	const float secs = (float)(time % (60 * TICRATE)) / TICRATE;
 	const int w = shortnum[0]->width;
-	int n, x;
+	int n, x, y;
 
 	n = M_snprintf(buffer, sizeof(buffer), "%02i %05.02f", mins, secs);
-
-	x = MIN((SCREENWIDTH >> crispy->hires) - 2*WIDESCREENDELTA + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
-
+	
+	if (crispy->demotimerpos == 1)
+	{
+		x = (NONWIDEWIDTH >> crispy->hires)/2 + 16;
+	    y = (viewwindowy >> crispy->hires) + 8;
+	}
+	else
+	{
+	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
+	    y = viewwindowy >> crispy->hires;
+	}
 	// [crispy] draw the Demo Timer widget with gray numbers
 	dp_translation = cr[CR_GRAY];
 	dp_translucent = (gamestate == GS_LEVEL);
@@ -2788,7 +2796,7 @@ void ST_DrawDemoTimer (const int time)
 
 		if (c >= 0 && c <= 9)
 		{
-			V_DrawPatch(x, viewwindowy >> crispy->hires, shortnum[c]);
+			V_DrawPatch(x, y, shortnum[c]);
 		}
 	}
 

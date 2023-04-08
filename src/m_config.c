@@ -2283,6 +2283,13 @@ static default_t extra_defaults_list[] =
 
     CONFIG_VARIABLE_INT(crispy_demotimerdir),
 
+    //!
+    // @game doom
+    //
+    // Demo timer position.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_demotimerpos),
 
     //!
     // @game doom

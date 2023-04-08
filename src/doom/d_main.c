@@ -459,6 +459,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_demobar",         &crispy->demobar);
     M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
     M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
+	M_BindIntVariable("crispy_demotimerpos",    &crispy->demotimerpos);
     M_BindIntVariable("crispy_evadinginterover",&crispy->evadinginterover);
     M_BindIntVariable("crispy_extautomap",      &crispy->extautomap);
     M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);

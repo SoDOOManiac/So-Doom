@@ -635,11 +635,11 @@ enum
 
     crispness_sep_demos,
     crispness_demotimer,
+	crispness_demotimerpos,
     crispness_demotimerdir,
     crispness_demobar,
     crispness_demousetimer,
     crispness_sep_demos_,
-	crispness_sep_demos__,
 
     crispness4_next,
     crispness4_prev,
@@ -660,11 +660,11 @@ static menuitem_t Crispness4Menu[]=
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleDemoTimer,'t'},
+    {3,"",	M_CrispyToggleDemoTimerPos,'P'},
     {3,"",	M_CrispyToggleDemoTimerDir,'d'},
     {3,"",	M_CrispyToggleDemoBar,'w'},
     {3,"",	M_CrispyToggleDemoUseTimer,'u'},
     {-1,"",0,'\0'},
-	{-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1626,7 +1626,7 @@ static void M_DrawCrispness1(void)
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     //M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
-	M_DrawCrispnessItem(crispness_mapviewstats, "Map rendering stats", crispy->mapviewstats, true);
+	M_DrawCrispnessMultiItem(crispness_mapviewstats, "Map rendering stats", multiitem_mapviewstats, crispy->mapviewstats, true);
     M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe", crispy->screenwipe, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
@@ -1719,6 +1719,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessSeparator(crispness_sep_demos, "Demos");
 
     M_DrawCrispnessMultiItem(crispness_demotimer, "Show Demo Timer", multiitem_demotimer, crispy->demotimer, true);
+	M_DrawCrispnessMultiItem(crispness_demotimerpos, "Demo Timer Position", multiitem_demotimerpos, crispy->demotimerpos + 1, crispy->demotimer);
     M_DrawCrispnessMultiItem(crispness_demotimerdir, "Playback Timer Direction", multiitem_demotimerdir, crispy->demotimerdir + 1, crispy->demotimer & DEMOTIMER_PLAYBACK);
     M_DrawCrispnessItem(crispness_demobar, "Show Demo Progress Bar", crispy->demobar, true);
     M_DrawCrispnessItem(crispness_demousetimer, "\"Use\" Button Timer", crispy->btusetimer, true);
