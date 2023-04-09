@@ -491,12 +491,13 @@ cheatseq_t cheat_weapon2 [11] = // [So Doom] TNTWEAPx is too long IMO - Zodomani
 cheatseq_t cheat_massacre = CHEAT("tntem", 0); // [crispy] PrBoom+
 cheatseq_t cheat_massacre2 = CHEAT("killem", 0); // [crispy] MBF
 cheatseq_t cheat_massacre3 = CHEAT("fhhall", 0); // [crispy] Doom95
-cheatseq_t cheat_hom = CHEAT("tnthom", 0);
+cheatseq_t cheat_hom = CHEAT("hom", 0);
 cheatseq_t cheat_notarget = CHEAT("notarget", 0); // [crispy] PrBoom+
 cheatseq_t cheat_notarget2 = CHEAT("fhshh", 0); // [crispy] Doom95
 cheatseq_t cheat_spechits = CHEAT("spechits", 0);
 cheatseq_t cheat_nomomentum = CHEAT("nomomentum", 0);
-cheatseq_t cheat_nomomentum2 = CHEAT("snail", 0);
+cheatseq_t cheat_nomomentum2 = CHEAT("monumentum", 0); // [So Doom] I love puns on obscure music scene - SoDOOManiac. This really toggles moving like a dragged monument.
+cheatseq_t cheat_nomomentum3 = CHEAT("snail", 0);
 cheatseq_t cheat_showfps = CHEAT("fps", 0); // [So Doom] shorter version of Crispy Doom's showfps
 cheatseq_t cheat_showfps2 = CHEAT("idrate", 0); // [crispy] PrBoom+
 cheatseq_t cheat_goobers = CHEAT("goobers", 0);
@@ -514,7 +515,7 @@ cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
     CHEAT("ta", 0),
 };
 
-cheatseq_t cheat_snow = CHEAT("letitsnow", 0);
+cheatseq_t cheat_snow = CHEAT("snow", 0);
 
 static char msg[ST_MSGWIDTH];
 
@@ -1110,17 +1111,17 @@ ST_Responder (event_t* ev)
 	}
 
 	M_snprintf(msg, sizeof(msg), "Notarget Mode %s%s",
-	           crstr[CR_GREEN],
+	           (plyr->cheats & CF_NOTARGET) ? crstr[CR_GREEN] : crstr[CR_RED],
 	           (plyr->cheats & CF_NOTARGET) ? "ON" : "OFF");
 	plyr->message = msg;
       }
       // [crispy] implement "nomomentum" cheat, ne debug aid -- pretty useless, though
-      else if (cht_CheckCheatSP(&cheat_nomomentum, ev->data2) || cht_CheckCheatSP(&cheat_nomomentum2, ev->data2))
+      else if (cht_CheckCheatSP(&cheat_nomomentum, ev->data2) || cht_CheckCheatSP(&cheat_nomomentum2, ev->data2) || cht_CheckCheatSP(&cheat_nomomentum3, ev->data2))
       {
 	plyr->cheats ^= CF_NOMOMENTUM;
 
 	M_snprintf(msg, sizeof(msg), "Nomomentum Mode %s%s",
-	           crstr[CR_GREEN],
+	           (plyr->cheats & CF_NOMOMENTUM) ? crstr[CR_GREEN] : crstr[CR_RED],
 	           (plyr->cheats & CF_NOMOMENTUM) ? "ON" : "OFF");
 	plyr->message = msg;
       }
@@ -1447,7 +1448,7 @@ ST_Responder (event_t* ev)
 	crispy->flashinghom = !crispy->flashinghom;
 
 	M_snprintf(msg, sizeof(msg), "HOM Detection %s%s",
-	           crstr[CR_GREEN],
+	           (crispy->flashinghom) ? crstr[CR_GREEN] : crstr[CR_RED],
 	           (crispy->flashinghom) ? "ON" : "OFF");
 	plyr->message = msg;
     }

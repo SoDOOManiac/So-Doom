@@ -29,6 +29,7 @@ Its distinguishing features are:
  * Option for INTERCEPTS overflow evasion in singleplayer, shadowed and disabled in netgames.
  * In-game control of pixel aspect ratio correction (not having to edit the `so-doom.cfg` file manually).
  * Possibility to interpolate camera movement only ('Camera movement' setting of 'Uncapped framerate' menu item), so that monsters don't 'slide'.
+ * Extra settings like optional screen wipe, map rendering stats and others.
  * Extra options for some Crispy settings (like weapon bobbing).
  * Extra cheat codes.
  
@@ -107,7 +108,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `-levelstat` prints a levelstat.txt file with statistics for each completed level (new in 5.9.0).
  * `-pistolstart` reset health, armor and inventory at start of each level in Doom (new in 5.9.2)
  * `-doubleammo` doubles ammo pickup rate in Doom and (Crispy) Strife (new in 5.11).
- * `-fast` enables fast monsters
+ * `-fast` enables fast monsters.
 
 ### New cheat codes
 
@@ -118,16 +119,16 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
  * `NOTARGET` or `FHSHH` toggle deaf and blind monsters that do not act until attacked.
- * `TNTHOM` toggles the flashing [HOM](https://doomwiki.org/wiki/Hall_of_mirrors_effect) indicator (disabled by default).
- * `SHOWFPS` or `IDRATE` or `SFPS` toggle printing the FPS in the upper right corner.
- * `NOMOMENTUM` or `SNAIL` toggles a debug aid for pixel-perfect positioning on a map (not recommended to use in-game).
+ * `HOM` toggles the flashing [HOM](https://doomwiki.org/wiki/Hall_of_mirrors_effect) indicator (disabled by default).
+ * `FPS` or `IDRATE` toggle printing the FPS in the upper right corner. FPS can also be displayed with Map Rendering Stats setting.
+ * `NOMOMENTUM`, `MONUMENTUM` or `SNAIL` toggles a debug aid for pixel-perfect positioning on a map (not recommended to use in-game).
  * `GOOBERS` triggers an easter egg, i.e. an "homage to an old friend". ;-)
  * `IDBEHOLD0` or `TP0` disables all currently active power-ups.
  * `IDCLEV00` restarts the current level.
  * `IDMUS00` restarts the current music.
  * `VERSION` shows the engine version, build date and SDL version.
  * `SKILL` shows the current skill level.
- * `LETITSNOW` toggles snowfall in the calling player's view.
+ * `SNOW` toggles snowfall in the calling player's view.
 
 ## Download
 
@@ -168,6 +169,71 @@ to install the prerequisites and then
 After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
+
+### So Doom 6.0
+
+So Doom 6.0 has been released on Apr 9, 2023. The aim of this release is to maximize usability and to fix a critical bug I introduced by ignorance in 5.12.0.
+
+#### So Doom-specific changes
+
+**New Features and Improvements**
+
+* Options set for Blood fixes setting (Colored blood in Crispy) expanded compared to Crispy Doom.
+* New Demo timer position option: top right corner or top center, the latter to avoid message string and FPS counter interference with the demo timer.
+* New Map rendering stats setting, with a possibility to display FPS counter without a cheat code.
+* While at it, simplified cheat codes: `SHOWFPS` to `FPS`, `LETITSNOW` to `SNOW`, `TNTHOM` to `HOM`. `NOMOMENTUM` can be triggered by the short `SNAIL` or a pun `MONUMENTUM`. 
+* Don't exclude the possibility to display player coordinates always.
+* SoDOOMy menu background resolution now depends on the rendering resolution.
+* So Doom logo in the main/options menus can now only be set through editing `crispy_logo` value in `so-doom.cfg` file (0 = off, 1 = main menu, 2 = options menu, 3 = both) as there's no more space on the Rendering/Visual SoDOOMy menu page.
+
+**Bug Fixes**
+
+* Fixed the crash when setting screenblocks = 13 in a netgame or starting a netgame with this value.
+
+#### Changes pulled from Crispy Doom
+
+**New Features and Improvements**
+
+* Make MIDI device selection less ambiguous.
+* Add default difficulty option (by kiwaph and @mikeday0).
+* Improve smoothness of network games when running uncapped (thanks @rfomin).
+* Disable smooth pixel scaling if software rendering is enforced.
+* Add framerate limiting option (@mikeday0 and @rfomin).
+* Updates from Chocolate Doom:
+  * Add -display command line parameter.
+  * Support drag-and-drop of demo lumps onto the executable.
+* Updates of Native MIDI on Windows from Chocolate Doom (@ceski-1 and @rfomin):
+  * SysEx messages.
+  * Proper device reset (winmm_reset_type and winmm_reset_delay config options).
+  * Loop points (Final Fantasy and RPG Maker).
+  * Full support of EMIDI.
+* Native FluidSynth support (@mikeday0).
+* All music formats now work when the OPL backend is selected (@rfomin).
+* Implement demo footer for Doom and Heretic (@rfomin).
+* Do not cap FPS to the user-entered value and don't calculate fractionaltic in -timedemo (@JNechaevsky).
+
+**Bug Fixes**
+
+* Fix crosshair shifting position after changing resolution.
+* Fix Automap line jitter in low res mode (@mikeday0).
+* Widescreen rendering now requires aspect ratio correction.
+* Fix widgets obscuring chat line (@JNechaevsky).
+* Fix glitchy drawing of instant moving sectors when running uncapped (@mikeday0).
+* Fix bogus linedef numbers in P_LoadSegs warning (thanks @tpoppins).
+
+**Doom-specific**
+
+* Always interpolate idle weapon bob with uncapped FPS (@ceski-1).
+* Fix free look judder (@ceski-1).
+* Add support for loading REKKR as IWAD (@SoDOOManiac).
+* Do not show the "WAD: map" Automap widget for IWAD levels.
+* Improve brightmap for COMPUTE1 texture (@JNechaevsky).
+* Allow L and R arrow keys in Crispness menu (@mikeday0).
+* Add weapon bobbing interpolation from Woof! (@rrPKrr).
+* Restore colored blood options from previous Crispy Doom versions (@rrPKrr).
+* Add known hashes for Sigil music tracks (@SirYodaJedi).
+* Colored blood setting to change in both directions (@SoDOOManiac).
+* Minor HUD fixes (@SoDOOManiac).
 
 ### So Doom 5.12.1
 
