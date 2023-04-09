@@ -173,6 +173,7 @@ After successful compilation the resulting binaries can be found in the `src/` d
 ### So Doom 6.0
 
 So Doom 6.0 has been released on Apr 9, 2023. The aim of this release is to maximize usability and to fix a critical bug I introduced by ignorance in 5.12.0.
+As FluidSynth support has been re-introduced, I'm also placing an example SF2 soundfont on the release page.
 
 #### So Doom-specific changes
 
