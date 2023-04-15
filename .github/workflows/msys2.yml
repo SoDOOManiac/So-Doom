@@ -66,18 +66,3 @@ jobs:
         run: |
           cd pkg/win32
           make
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Win-${{ matrix.env }}
-          path: pkg/win32/*.zip
-
-      - name: Release
-        if: ${{ contains(github.ref, 'tags') }}
-        uses: ncipollo/release-action@v1
-        with:
-          name: Crispy Doom ${{ env.VERSION }}
-          bodyFile: CHANGELOG.md
-          allowUpdates: true
-          artifacts: pkg/win32/*.zip
