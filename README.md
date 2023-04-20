@@ -452,7 +452,7 @@ So Doom 5.7.5 has been released on April 02, 2020 to merge the newly-introduced 
 
 **Changes pulled from Crispy Doom**
 
- * Status bar and reduced screen sizes are now available in widescreen mode, requested by sovietmewtwo, TeamSoldierNub2 along with many Doomworld members and debugged with the help from cnrm and SoDOOMmaniac.
+ * Status bar and reduced screen sizes are now available in widescreen mode, requested by sovietmewtwo, TeamSoldierNub2 along with many Doomworld members and debugged with the help from cnrm and SoDOOManiac.
  * Once the last screen size has been exceeded you loop over to the empty HUD.
  * When calculating weapon bobbing, the check is now performed for player being not in attacking state instead of checking for `A_WeaponReady()` because weapon states could have been modified by DeHackEd. This fixes jerky weapon bobbing reported by kitchen-ace for some weapons in mods like Vanilla Smooth Weapons and DOOM 4 Vanilla.
 
@@ -508,12 +508,12 @@ So Doom 5.7.1 has been released on March 05, 2020 to feature post-Crispy 5.7.1 b
 
 **Changes pulled from Crispy Doom**
 
- * Wrong alignment of HUD widgets when launching map from command line on Windows has been fixed, spotted by SoDOOMmaniac.
+ * Wrong alignment of HUD widgets when launching map from command line on Windows has been fixed, spotted by SoDOOManiac.
  * `crispy-doom` is now explicitly written to extended savegame header instead of `PACKAGE_TARNAME` to preserve savegame header compatibility across forks that might have different package names.
  * 'Oof' sounds have been removed from Crispness menu as pistol firing sound played upon any (including futile) attempt to manipulate the Crispness menu item is much louder and oofs can barely be heard.
  * "Wide" and "Compact" HUDs are now available for widescreen mode, where "wide" and "compact" refer to the alignment of status bar and HUD widgets.
  * Respective Crispness menu item has been renamed to "Report Revealed Secrets". This should improve the discoverability of this feature, thanks to oprypin for the discussion. 
- * Screen resolution is now not changed during a wipe as it was causing crashes reported and investigated by SoDOOMmaniac and JNechaevsky.
+ * Screen resolution is now not changed during a wipe as it was causing crashes reported and investigated by SoDOOManiac and JNechaevsky.
 
 ### So Doom 5.7
 
@@ -525,7 +525,7 @@ So Doom 5.7 has been released on February 26, 2020 to accompany Crispy Doom 5.7 
 
 **Changes pulled from Crispy Doom**
 
- * Widescreen rendering is now disabled in case of disabled aspect ratio correction, as SoDOOMmaniac proved it made no sense.
+ * Widescreen rendering is now disabled in case of disabled aspect ratio correction, as SoDOOManiac proved it made no sense.
  * The obtrusive MAP/WAD automap text widget is not drawn anymore in widescreen mode, thanks to plumsinus.
  * Horizontal coordinates of automap markers in widescreen mode have been fixed, thanks unerxai from Doomworld forums.
  * Fix for GUS emulation in presence of midiproc.exe has been pulled from Chocolate Doom, whereto it was contributed by JNechaevsky.
@@ -567,7 +567,7 @@ So Doom 5.6.10 has been released on February 06, 2020 to bring the fixes that ca
  * `gamemap` is now set to `startmap` when restarting a demo during recording.
  * Blood splats and projectile puffs are now drawn as small squares in the Automap.
  * Missing prototype for `calloc` in `r_data.c` causing memory corruption on 64bit in Windows/MSVC builds has been fixed, thanks to zx64 for spotting this. 
- * Crash when the flag for the berserk pack sprite patch memory zone is changed has been fixed, thanks to IsBebs for the bug report and SoDOOMmaniac, JNechaevsky and turol for helping with the analysis.
+ * Crash when the flag for the berserk pack sprite patch memory zone is changed has been fixed, thanks to IsBebs for the bug report and SoDOOManiac, JNechaevsky and turol for helping with the analysis.
  * Zombie player crash on SELFDEAD has been fixed, thanks to tpoppins for the report and turol for the analysis.
  * `"doomstat.h"` is now included instead of `<doomstat.h>` in `doom/r_swirl.c`, fixing compilation with MSVC2017, and packed attribute for structs when compiling with MSVC has been fixed. Thanks to drfrag666 for reporting and confirming the fix.
  * Level/demo restart key description has been adjusted to become self-explanatory.
@@ -590,7 +590,7 @@ So Doom 5.6.9 has been released on Nov 30, 2019.
  * Subsequent calls to `A_BrainAwake()` to reset the braintargeton variable are now allowed. This fixes demo sync for maps with more than one brain, e.g. PL2.
  * OSX: Freedoom single player IWADs have been added to launcher (inherited from Chocolate Doom).
  * The smooth chainsaw idle animation has been brought back.
- * Player viewheight in NOMOMENTUM mode has been fixed on SoDOOMmaniac's report.
+ * Player viewheight in NOMOMENTUM mode has been fixed on SoDOOManiac's report.
  * Weapon bobbing has been reworked and made adjustable.
 
 ### So Doom 5.6.8
