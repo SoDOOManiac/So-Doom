@@ -791,6 +791,11 @@ void M_CrispyToggleTranslucency(int choice)
     ChangeSettingEnum(&crispy->translucency, choice, NUM_TRANSLUCENCY);
 }
 
+void M_SoDoomToggleVsyncHook (void)
+{
+    I_ToggleVsync();
+}
+
 void M_CrispyToggleUncapped(int choice)
 {
     int old_crispy_vsync = crispy->vsync;
@@ -810,7 +815,7 @@ void M_CrispyToggleUncapped(int choice)
         crispy->vsync = (crispy->uncapped != 1) && (crispy->uncapped != 2); // if crispy->uncapped = 0, vsync is on in case of force_software_renderer == 0
     }
     if (crispy->vsync != old_crispy_vsync)
-        I_ToggleVsync();
+        crispy->post_rendering_hook = M_SoDoomToggleVsyncHook;
 }
 
 void M_CrispyToggleVsyncHook (void)
