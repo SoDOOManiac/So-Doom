@@ -1,5 +1,5 @@
 # So Doom
-[![So Doom Icon](https://github.com/Zodomaniac/So-Doom/blob/master/data/sodoom.png)](https://github.com/SoDOOManiac/so-doom)
+[![So Doom Icon](https://github.com/SoDOOManiac/So-Doom/blob/master/data/sodoom.png)](https://github.com/SoDOOManiac/so-doom)
 
 [![Top Language](https://img.shields.io/github/languages/top/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
 [![Code Size](https://img.shields.io/github/languages/code-size/SoDOOManiac/so-doom.svg?style=flat)](https://github.com/SoDOOManiac/so-doom)
@@ -452,7 +452,7 @@ So Doom 5.7.5 has been released on April 02, 2020 to merge the newly-introduced 
 
 **Changes pulled from Crispy Doom**
 
- * Status bar and reduced screen sizes are now available in widescreen mode, requested by sovietmewtwo, TeamSoldierNub2 along with many Doomworld members and debugged with the help from cnrm and Zodomaniac.
+ * Status bar and reduced screen sizes are now available in widescreen mode, requested by sovietmewtwo, TeamSoldierNub2 along with many Doomworld members and debugged with the help from cnrm and SoDOOMmaniac.
  * Once the last screen size has been exceeded you loop over to the empty HUD.
  * When calculating weapon bobbing, the check is now performed for player being not in attacking state instead of checking for `A_WeaponReady()` because weapon states could have been modified by DeHackEd. This fixes jerky weapon bobbing reported by kitchen-ace for some weapons in mods like Vanilla Smooth Weapons and DOOM 4 Vanilla.
 
@@ -508,12 +508,12 @@ So Doom 5.7.1 has been released on March 05, 2020 to feature post-Crispy 5.7.1 b
 
 **Changes pulled from Crispy Doom**
 
- * Wrong alignment of HUD widgets when launching map from command line on Windows has been fixed, spotted by Zodomaniac.
+ * Wrong alignment of HUD widgets when launching map from command line on Windows has been fixed, spotted by SoDOOMmaniac.
  * `crispy-doom` is now explicitly written to extended savegame header instead of `PACKAGE_TARNAME` to preserve savegame header compatibility across forks that might have different package names.
  * 'Oof' sounds have been removed from Crispness menu as pistol firing sound played upon any (including futile) attempt to manipulate the Crispness menu item is much louder and oofs can barely be heard.
  * "Wide" and "Compact" HUDs are now available for widescreen mode, where "wide" and "compact" refer to the alignment of status bar and HUD widgets.
  * Respective Crispness menu item has been renamed to "Report Revealed Secrets". This should improve the discoverability of this feature, thanks to oprypin for the discussion. 
- * Screen resolution is now not changed during a wipe as it was causing crashes reported and investigated by Zodomaniac and JNechaevsky.
+ * Screen resolution is now not changed during a wipe as it was causing crashes reported and investigated by SoDOOMmaniac and JNechaevsky.
 
 ### So Doom 5.7
 
@@ -525,7 +525,7 @@ So Doom 5.7 has been released on February 26, 2020 to accompany Crispy Doom 5.7 
 
 **Changes pulled from Crispy Doom**
 
- * Widescreen rendering is now disabled in case of disabled aspect ratio correction, as Zodomaniac proved it made no sense.
+ * Widescreen rendering is now disabled in case of disabled aspect ratio correction, as SoDOOMmaniac proved it made no sense.
  * The obtrusive MAP/WAD automap text widget is not drawn anymore in widescreen mode, thanks to plumsinus.
  * Horizontal coordinates of automap markers in widescreen mode have been fixed, thanks unerxai from Doomworld forums.
  * Fix for GUS emulation in presence of midiproc.exe has been pulled from Chocolate Doom, whereto it was contributed by JNechaevsky.
@@ -567,7 +567,7 @@ So Doom 5.6.10 has been released on February 06, 2020 to bring the fixes that ca
  * `gamemap` is now set to `startmap` when restarting a demo during recording.
  * Blood splats and projectile puffs are now drawn as small squares in the Automap.
  * Missing prototype for `calloc` in `r_data.c` causing memory corruption on 64bit in Windows/MSVC builds has been fixed, thanks to zx64 for spotting this. 
- * Crash when the flag for the berserk pack sprite patch memory zone is changed has been fixed, thanks to IsBebs for the bug report and Zodomaniac, JNechaevsky and turol for helping with the analysis.
+ * Crash when the flag for the berserk pack sprite patch memory zone is changed has been fixed, thanks to IsBebs for the bug report and SoDOOMmaniac, JNechaevsky and turol for helping with the analysis.
  * Zombie player crash on SELFDEAD has been fixed, thanks to tpoppins for the report and turol for the analysis.
  * `"doomstat.h"` is now included instead of `<doomstat.h>` in `doom/r_swirl.c`, fixing compilation with MSVC2017, and packed attribute for structs when compiling with MSVC has been fixed. Thanks to drfrag666 for reporting and confirming the fix.
  * Level/demo restart key description has been adjusted to become self-explanatory.
@@ -590,7 +590,7 @@ So Doom 5.6.9 has been released on Nov 30, 2019.
  * Subsequent calls to `A_BrainAwake()` to reset the braintargeton variable are now allowed. This fixes demo sync for maps with more than one brain, e.g. PL2.
  * OSX: Freedoom single player IWADs have been added to launcher (inherited from Chocolate Doom).
  * The smooth chainsaw idle animation has been brought back.
- * Player viewheight in NOMOMENTUM mode has been fixed on Zodomaniac's report.
+ * Player viewheight in NOMOMENTUM mode has been fixed on SoDOOMmaniac's report.
  * Weapon bobbing has been reworked and made adjustable.
 
 ### So Doom 5.6.8
@@ -698,7 +698,7 @@ as well as flipped levels and weapons swappable on the run.
 
 So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Crispy Doom master branch up to commit [`af14e55d`](https://github.com/fabiangreffrath/crispy-doom/commit/af14e55dc45a846e28d7b0e99851f1548a9c6b1b).
 
- * The sky in NRFTL Maps 04-08 is now fixed if loaded from command line (thanks @Zodomaniac).
+ * The sky in NRFTL Maps 04-08 is now fixed if loaded from command line (thanks @SoDOOManiac).
  * HUD texts are now printed up to the right screen edge again (thanks Grizzly).
  * The DSSECRET fallback sound is now checked for availability. This fixes a crash when playing with a v1.2 or earlier IWAD (thanks @zx64).
  * The HUD widget coordinate re-calculation has been moved from thinker to drawer functions. This should fix the racing condition that caused the wide status bar widget alignment being drawn to the automap status bar with the brick border (thanks @kitchen-ace).
@@ -770,7 +770,7 @@ I join all Fabian's acknoledgements I cite here:
 
 "Although I have played the thought of hacking on Chocolate Doom's renderer for quite some time already, it was Brad Harding's [Doom Retro](https://www.chocolate-doom.org/wiki/index.php/Doom_Retro) that provided the incentive to finally do it. However, his fork aims at a different direction and I did not take a single line of code from it. Lee Killough's [MBF](https://doomwiki.org/wiki/WinMBF) was studied and used to debug the code, especially in the form of Team Eternity's [WinMBF](https://doomwiki.org/wiki/WinMBF) source port, which made it easier to compile and run on my machine. And of course there is fraggle's [Chocolate Doom](https://www.chocolate-doom.org/wiki/index.php/Chocolate_Doom) with its exceptionally clean and legible source code. Please let me take this opportunity to appreciate all these authors for their work!
 
-Also, thanks to plums of the [Doomworld forums](https://www.doomworld.com/vb/) for beta testing, "release manager" Zodomaniac and "art director" JNechaevsky for the continuous flow of support and inspiration during the post-3.x development cycle and (last but not the least) [Cacodemon9000](http://www.moddb.com/members/cacodemon9000) for his [Infested Outpost](http://www.moddb.com/games/doom-ii/addons/infested-outpost) map that helped to track down quite a few bugs!
+Also, thanks to plums of the [Doomworld forums](https://www.doomworld.com/vb/) for beta testing, "release manager" SoDOOManiac and "art director" JNechaevsky for the continuous flow of support and inspiration during the post-3.x development cycle and (last but not the least) [Cacodemon9000](http://www.moddb.com/members/cacodemon9000) for his [Infested Outpost](http://www.moddb.com/games/doom-ii/addons/infested-outpost) map that helped to track down quite a few bugs!
 
 Furthermore, thanks to VGA for his aid with adding support for his two mods: [PerK & NightFright's Black Ops smooth weapons add-on converted to DEHACKED](https://www.doomworld.com/forum/topic/84859-black-ops-smooth-weapons-dehacked-mod) and [Gifty's Smooth Doom smooth monster animations converted to DEHACKED](https://www.doomworld.com/forum/topic/85991-smoothed-smooth-monsters-for-doom-retro-and-crispy-doom) that can make the gameplay even more pleasing to the eyes".
 
@@ -793,5 +793,3 @@ SDL 2.0, SDL_mixer 2.0 and SDL_net 2.0 are © 1997-2016 Sam Lantinga and are rel
 Secret Rabbit Code (libsamplerate) is © 2002-2011 Erik de Castro Lopo and is released under the [GPL-2+](http://www.gnu.org/licenses/gpl-2.0.html).
 Libpng is © 1998-2014 Glenn Randers-Pehrson, © 1996-1997 Andreas Dilger, © 1995-1996 Guy Eric Schalnat, Group 42, Inc. and is released under the [libpng license](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt).
 Zlib is © 1995-2013 Jean-loup Gailly and Mark Adler and is released under the [zlib license](http://www.zlib.net/zlib_license.html).
-
-The Crispy Doom icon (as shown at the top of this page) has been contributed by [Philip Kiwan](https://www.github.com/kiwphi).
