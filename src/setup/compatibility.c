@@ -78,7 +78,8 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_demobar",         &crispy->demobar);
         M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
         M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
-		M_BindIntVariable("crispy_demotimerpos",    &crispy->demotimerpos);
+        M_BindIntVariable("crispy_demotimerpos",    &crispy->demotimerpos);
+        M_BindIntVariable("crispy_doom2projtrigger",    &crispy->doom2projtrigger);
         M_BindIntVariable("crispy_evadinginterover",&crispy->evadinginterover);
         M_BindIntVariable("crispy_extautomap",      &crispy->extautomap);
         M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);
@@ -88,7 +89,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_hires",           &crispy->hires);
         M_BindIntVariable("crispy_jump",            &crispy->jump);
         M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
-		M_BindIntVariable("crispy_mapviewstats",    &crispy->mapviewstats);
+        M_BindIntVariable("crispy_mapviewstats",    &crispy->mapviewstats);
         M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
         M_BindIntVariable("crispy_neghealth",       &crispy->neghealth);
         M_BindIntVariable("crispy_overunder",       &crispy->overunder);
