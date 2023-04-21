@@ -627,7 +627,7 @@ enum
     crispness_jumping,
     crispness_overunder,
     crispness_recoil,
-    crispness_doom2projtrigger,
+    crispness_doom2projbypass,
     crispness_sep_physical_,
 
     crispness_sep_interover,
@@ -655,7 +655,7 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleJumping,'a'},
     {3,"",	M_CrispyToggleOverunder,'o'},
     {3,"",	M_CrispyToggleRecoil,'r'},
-    {3,"",	M_CrispyToggleDoom2ProjTrigger,'g'},
+    {3,"",	M_CrispyToggleDoom2ProjBypass,'g'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleEvadingInterOver,'i'},
@@ -1714,7 +1714,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_doom2projtrigger, "Doom 2-only shots trigger lines", crispy->doom2projtrigger, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_doom2projbypass, "Doom 2-only shots bypass lines", crispy->doom2projbypass, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);

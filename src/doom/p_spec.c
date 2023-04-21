@@ -613,10 +613,10 @@ P_CrossSpecialLinePtr
         //	Triggers that other things can activate
         if (!thing->player)
         {
-            if (crispy->doom2projtrigger)
+            if (crispy->doom2projbypass)
             {
-                 if(thing->flags & MF_MISSILE)
-                     return;
+                if(thing->flags & MF_MISSILE)
+                    return;
             }
             else
             {

@@ -57,7 +57,7 @@ typedef struct
 	int demotimerdir;
 	int demotimerpos;
 	int demobar;
-        int doom2projtrigger;
+    int doom2projbypass;
 	int evadinginterover;
 	int extautomap;
 	int flipcorpses;
