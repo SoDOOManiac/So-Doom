@@ -613,18 +613,26 @@ P_CrossSpecialLinePtr
         //	Triggers that other things can activate
         if (!thing->player)
         {
-            // Things that should NOT trigger specials...
-            switch(thing->type)
+            if (crispy->doom2projtrigger)
             {
-                case MT_ROCKET:
-                case MT_PLASMA:
-                case MT_BFG:
-                case MT_TROOPSHOT:
-                case MT_HEADSHOT:
-                case MT_BRUISERSHOT:
-                    return;
+                 if(thing->flags & MF_MISSILE)
+                     return;
+            }
+            else
+            {
+                // Things that should NOT trigger specials...
+                switch(thing->type)
+                {
+                    case MT_ROCKET:
+                    case MT_PLASMA:
+                    case MT_BFG:
+                    case MT_TROOPSHOT:
+                    case MT_HEADSHOT:
+                    case MT_BRUISERSHOT:
+                        return;
 
-                default: break;
+                    default: break;
+                }
             }
         }
     }
