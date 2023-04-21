@@ -150,6 +150,8 @@ or cloned via
 
 Brief instructions to set up a build system on Windows can be found [in the Crispy Doom Wiki](https://github.com/fabiangreffrath/crispy-doom/wiki/Building-on-Windows). A much more detailed guide is provided [in the Chocolate Doom Wiki](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Windows), but applies to So Doom as well for most parts.
 
+There are also instructions for building on [Linux](https://github.com/fabiangreffrath/crispy-doom/wiki/Building-on-Linux) and [MacOS](https://github.com/fabiangreffrath/crispy-doom/wiki/Building-on-Mac)
+
 Compilation on Debian systems (Debian 10 "buster" or later) should be as simple as
 
 ```
@@ -165,8 +167,6 @@ to install the prerequisites and then
  ./configure
  make
 ```
-
-After successful compilation the resulting binaries can be found in the `src/` directory.
 
 ## News
 
@@ -743,11 +743,13 @@ So Doom 5.6.3 is based on Crispy Doom 5.6.3 and has merged all changes to the Cr
 
  * Users who insist on the pure Vanilla experience that was formerly applied to the No Rest for the Living and The Masterlevels expansions or who need it to properly play back demos recorded with a previous release will have to rename their PWAD files and explicitly load them on the command line.
 
-## More documentation
+## Documentation
 
- * **[Changelog](https://github.com/fabiangreffrath/crispy-doom/wiki/Changelog)**
+ * **[New Cheat Codes](https://github.com/fabiangreffrath/crispy-doom/wiki/New-Cheats)**
+ * **[New Command-Line Parameters](https://github.com/fabiangreffrath/crispy-doom/wiki/New-Command-line-Parameters)**
+ * **[New Controls](https://github.com/fabiangreffrath/crispy-doom/wiki/New-Controls) (With default bindings)**
+ * **[Crispness](https://github.com/fabiangreffrath/crispy-doom/wiki/Crispness-Menu)**
  * **[Compatibility](https://github.com/fabiangreffrath/crispy-doom/wiki/Compatibility)**
- * **[Crispness](https://github.com/fabiangreffrath/crispy-doom/wiki/Crispness)**
  * **[FAQ](https://github.com/fabiangreffrath/crispy-doom/wiki/FAQ)**
 
 ## Versioning
