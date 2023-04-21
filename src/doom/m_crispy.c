@@ -480,6 +480,12 @@ void M_CrispyToggleDemoUseTimer(int choice)
     crispy->btusetimer = !crispy->btusetimer;
 }
 
+void M_CrispyToggleDoom2ProjTrigger(int choice)
+{
+    choice = 0;
+    crispy->doom2projtrigger = !crispy->doom2projtrigger;
+}
+
 void M_CrispyToggleEvadingInterOver(int choice)
 {
     choice = 0;
