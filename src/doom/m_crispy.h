@@ -69,6 +69,7 @@ extern void M_CrispyToggleDemoTimer(int choice);
 extern void M_CrispyToggleDemoTimerDir(int choice);
 extern void M_CrispyToggleDemoTimerPos(int choice);
 extern void M_CrispyToggleDemoUseTimer(int choice);
+extern void M_CrispyToggleDoom2ProjTrigger(int choice);
 extern void M_CrispyToggleEvadingInterOver(int choice);
 extern void M_CrispyToggleExtAutomap(int choice);
 extern void M_CrispyToggleFlipcorpses(int choice);
