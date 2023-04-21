@@ -627,6 +627,7 @@ enum
     crispness_jumping,
     crispness_overunder,
     crispness_recoil,
+    crispness_doom2projtrigger,
     crispness_sep_physical_,
 
     crispness_sep_interover,
@@ -639,7 +640,7 @@ enum
     crispness_demotimerdir,
     crispness_demobar,
     crispness_demousetimer,
-    crispness_sep_demos_,
+    // crispness_sep_demos_,
 
     crispness4_next,
     crispness4_prev,
@@ -654,6 +655,7 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleJumping,'a'},
     {3,"",	M_CrispyToggleOverunder,'o'},
     {3,"",	M_CrispyToggleRecoil,'r'},
+    {3,"",	M_CrispyToggleDoom2ProjTrigger,'g'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleEvadingInterOver,'i'},
@@ -664,7 +666,7 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleDemoTimerDir,'d'},
     {3,"",	M_CrispyToggleDemoBar,'w'},
     {3,"",	M_CrispyToggleDemoUseTimer,'u'},
-    {-1,"",0,'\0'},
+    // {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -1712,6 +1714,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_doom2projtrigger, "Doom 2-only shots trigger lines", crispy->doom2projtrigger, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
