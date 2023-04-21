@@ -23,6 +23,8 @@
 
 #include <stdlib.h>
 
+#include "crispy.h"
+
 #include "doomdef.h"
 #include "doomstat.h"
 
