@@ -334,7 +334,7 @@ static patch_t*		tallnum[10];
 static patch_t*		tallpercent;
 
 // 0-9, short, yellow (,different!) numbers
-static patch_t*		shortnum[10];
+patch_t*		shortnum[10]; // [So Doom] made extern
 
 // 3 key-cards, 3 skulls
 static patch_t*		keys[NUMCARDS+3]; // [crispy] support combined card and skull keys
