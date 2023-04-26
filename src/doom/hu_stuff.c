@@ -418,7 +418,7 @@ void ST_DrawDemoTimer (const int time)
 	if (crispy->demotimerpos == 1)
 	{
 	    x = (NONWIDEWIDTH >> crispy->hires)/2 + 16;
-	    y = (viewwindowy >> crispy->hires) + 8 + (chat_on ? 8 : 0);
+	    y = (viewwindowy >> crispy->hires) + (screenblocks >= 10 ? 8 : 0) + ((screenblocks >= 9 && chat_on) ? 8 : 0); // [So Doom] shift the centered demo timer down depending on chat line and decreased screenblocks
 	}
 	else
 	{
