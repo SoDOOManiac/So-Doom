@@ -1618,7 +1618,7 @@ void WI_drawStats(void)
     if ((demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK)) ||
         (demorecording && (crispy->demotimer & DEMOTIMER_RECORD)))
     {
-	ST_DrawDemoTimer(leveltime);
+	HU_DrawDemoTimer(leveltime);
     }
 
     // [crispy] demo progress bar

@@ -405,7 +405,7 @@ const char *mapnames_commercial[] =
 };
 
 // [crispy] Demo Timer widget
-void ST_DrawDemoTimer (const int time)
+void HU_DrawDemoTimer (const int time)
 {
 	char buffer[16];
 	const int mins = time / (60 * TICRATE);
@@ -967,12 +967,12 @@ void HU_Drawer(void)
     // [crispy] demo timer widget
     if (demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK))
     {
-	ST_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
+	HU_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
     }
     else
     if (demorecording && (crispy->demotimer & DEMOTIMER_RECORD))
     {
-	ST_DrawDemoTimer(leveltime);
+	HU_DrawDemoTimer(leveltime);
     }
 
     // [crispy] demo progress bar
