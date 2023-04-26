@@ -73,7 +73,8 @@ typedef enum
     
 } st_chatstateenum_t;
 
-
+// 0-9, short, yellow (,different!) numbers
+extern patch_t* shortnum[10];
 
 extern pixel_t *st_backing_screen;
 extern cheatseq_t cheat_mus;
