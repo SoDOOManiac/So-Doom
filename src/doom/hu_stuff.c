@@ -34,6 +34,7 @@
 #include "m_controls.h"
 #include "m_misc.h"
 #include "m_menu.h"
+#include "r_main.h" // viewwindowx, viewwindowy
 #include "w_wad.h"
 #include "m_argv.h" // [crispy] M_ParmExists()
 #include "st_stuff.h" // [crispy] ST_HEIGHT
