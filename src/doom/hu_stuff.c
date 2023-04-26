@@ -50,7 +50,6 @@
 
 #include "r_state.h" // [crispy] colormaps
 #include "v_video.h" // [crispy] V_DrawPatch() et al.
-#include "v_patch.h" // [So Doom] shortnum patches
 #include "v_trans.h" // [crispy] colored kills/items/secret/etc. messages
 
 //
