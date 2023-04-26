@@ -54,6 +54,10 @@ void HU_Drawer(void);
 char HU_dequeueChatChar(void);
 void HU_Erase(void);
 
+// [crispy] Demo Timer widget
+extern void ST_DrawDemoTimer (const int time);
+extern int defdemotics, deftotaldemotics;
+
 extern const char *player_names[4];
 extern char *chat_macros[10];
 
