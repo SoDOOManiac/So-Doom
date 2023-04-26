@@ -24,6 +24,7 @@
 #include "doomtype.h"
 #include "d_event.h"
 #include "m_cheat.h"
+#include "v_patch.h" // [So Doom] shortnum
 
 // Size of statusbar.
 // Now sensitive for scaling.
