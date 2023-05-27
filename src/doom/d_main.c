@@ -2027,6 +2027,7 @@ void D_DoomMain (void)
 	{
 		D_LoadNerveWad();
 		D_LoadMasterlevelsWad();
+		room_berserk = CheckRoomBerserkLoaded();
 	}
     }
 

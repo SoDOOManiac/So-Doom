@@ -31,6 +31,8 @@
 
 extern char *iwadfile;
 
+boolean room_berserk;
+
 // [crispy] auto-load SIGIL.WAD (and SIGIL_SHREDS.WAD) if available
 void D_LoadSigilWad (void)
 {
@@ -313,6 +315,18 @@ void D_LoadNerveWad (void)
 		// [crispy] else auto-load NERVE.WAD if available
 		CheckLoadNerve();
 	}
+}
+
+// [crispy] check if ROOM_BERSERK.WAD is already loaded as a PWAD
+boolean CheckRoomBerserkLoaded (void)
+{
+	int i;
+
+	if ((i = W_GetNumForName("MAP01")) != -1 &&
+	    !strcasecmp(W_WadNameForLump(lumpinfo[i]), "ROOM_BERSERK.WAD"))
+	return true;
+
+	return false;
 }
 
 // [crispy] check if the single MASTERLEVELS.WAD is already loaded as a PWAD

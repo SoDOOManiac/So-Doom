@@ -25,6 +25,9 @@
 #include "i_system.h"
 
 #include "doomdef.h"
+
+#include "d_pwad.h" // room_berserk
+
 #include "p_local.h"
 
 #include "s_sound.h"
@@ -1371,6 +1374,7 @@ void A_VileAttack (mobj_t* actor)
 {	
     mobj_t*	fire;
     int		an;
+	int     damage = 20;
 	
     if (!actor->target)
 	return;
@@ -1379,9 +1383,12 @@ void A_VileAttack (mobj_t* actor)
 
     if (!P_CheckSight (actor, actor->target) )
 	return;
-
+	
+    if (actor->target->player->powers[pw_strength] && room_berserk)	
+	damage *= 50; // ROOM_BERSERK.WAD berserk fist to gib 100%
+	
     S_StartSound (actor, sfx_barexp);
-    P_DamageMobj (actor->target, actor, actor, 20);
+    P_DamageMobj (actor->target, actor, actor, damage);
     actor->target->momz = 1000*FRACUNIT/actor->target->info->mass;
 	
     an = actor->angle >> ANGLETOFINESHIFT;

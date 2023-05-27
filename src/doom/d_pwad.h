@@ -24,6 +24,9 @@
 void D_LoadSigilWad(void);
 void D_LoadNerveWad(void);
 void D_LoadMasterlevelsWad(void);
+boolean CheckRoomBerserkLoaded (void);
+
+extern boolean room_berserk;
 
 #endif
 
