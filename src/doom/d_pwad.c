@@ -323,7 +323,8 @@ boolean CheckRoomBerserkLoaded (void)
 	int i;
 
 	if ((i = W_GetNumForName("MAP01")) != -1 &&
-	    !strcasecmp(W_WadNameForLump(lumpinfo[i]), "ROOM_BERSERK.WAD"))
+	    (!strcasecmp(W_WadNameForLump(lumpinfo[i]), "ROOM.WAD") ||
+	    !strcasecmp(W_WadNameForLump(lumpinfo[i]), "ROOM_BERSERK.WAD")))
 	return true;
 
 	return false;

@@ -26,7 +26,7 @@
 
 #include "doomdef.h"
 
-#include "d_pwad.h" // room_berserk
+#include "d_pwad.h" // ROOM mod berserk
 
 #include "p_local.h"
 
@@ -1374,7 +1374,7 @@ void A_VileAttack (mobj_t* actor)
 {	
     mobj_t*	fire;
     int		an;
-	int     damage = 20;
+    int     damage = 20;
 	
     if (!actor->target)
 	return;
