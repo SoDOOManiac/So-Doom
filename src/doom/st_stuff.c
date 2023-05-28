@@ -442,11 +442,23 @@ cheatseq_t	cheat_powerup2[8] = // [So Doom] tp = toggle powerup, equal to idbeho
     CHEAT("tp0", 0), // [So Doom] gp0
 };
 
-cheatseq_t	cheat_health[3] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
+cheatseq_t	cheat_health[7] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
 {
     CHEAT("hps", 0), // [So Doom] soulsphere
     CHEAT("hpm", 0), // [So Doom] megasphere
     CHEAT("hp", 0),  // [So Doom] health powerup hint
+    CHEAT("medb", 0), // [So Doom] bonus
+    CHEAT("meds", 0), // [So Doom] stimpack
+    CHEAT("medl", 0), // [So Doom] medikit
+    CHEAT("med", 0), // [So Doom] medikit cheat hint
+};
+
+cheatseq_t	cheat_armor[4] = // cheats giving armor
+{
+	CHEAT("armb", 0), // [So Doom] armor bonus
+	CHEAT("arml", 0), // [So Doom] light armor
+	CHEAT("armh", 0), // [So Doom] heavy armor
+	CHEAT("arm", 0), // [So Doom] armor cheat hint 
 };
 
 cheatseq_t cheat_choppers = CHEAT("idchoppers", 0);
@@ -517,7 +529,7 @@ cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
 
 cheatseq_t cheat_snow = CHEAT("snow", 0);
 
-static char msg[ST_MSGWIDTH];
+static char msg[4*ST_MSGWIDTH]; // [So Doom] increased size
 
 // [crispy] restrict cheat usage
 static inline int cht_CheckCheatSP (cheatseq_t *cht, char key)
@@ -1311,7 +1323,7 @@ ST_Responder (event_t* ev)
 	}
     }
 
-	// [So Doom] health powerup giving cheats
+	// [So Doom] health giving cheats
 
 	  if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
 	  {
@@ -1342,11 +1354,90 @@ ST_Responder (event_t* ev)
       if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
       {
 	if (gamemode == commercial)
-	M_snprintf(msg, sizeof(msg), "Max health: %sS%s, Max health+armor: %sM%s",
+	M_snprintf(msg, sizeof(msg), "Health powerup: %sS%s, health + armor powerup: %sM%s",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	else
-	M_snprintf(msg, sizeof(msg), "Max health: %sS%s",
+	M_snprintf(msg, sizeof(msg), "Health powerup: %sS%s",
 	           crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[3], ev->data2))
+      {
+	plyr->health++;		// can go over 100%
+	if (plyr->health > deh_max_health)
+	    plyr->health = deh_max_health;
+	plyr->mo->health = plyr->health;
+	plyr->message = DEH_String(GOTHTHBONUS);
+	S_StartSound (NULL, sfx_itemup);
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[4], ev->data2))
+      {
+	if (P_GiveBody (plyr, 10))
+	{
+	plyr->message = DEH_String(GOTSTIM);
+	S_StartSound (NULL, sfx_itemup);
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[5], ev->data2))
+      {
+	if (P_GiveBody (plyr, 25))
+	{
+	// [crispy] show "Picked up a Medikit that you really need" message as intended
+	if (plyr->health < 50)
+	    plyr->message = DEH_String(GOTMEDINEED);
+	else
+	    plyr->message = DEH_String(GOTMEDIKIT);
+	S_StartSound (NULL, sfx_itemup);
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[6], ev->data2))
+      {
+	M_snprintf(msg, sizeof(msg), "Health bonus: %sB%s, small medikit: %sS%s, large medikit: %sL%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	  }
+
+	// [So Doom] armor giving cheats
+
+	  if (cht_CheckCheatSP(&cheat_armor[0], ev->data2))
+	  {
+	plyr->armorpoints++;		// can go over 100%
+	if (plyr->armorpoints > deh_max_armor && gameversion > exe_doom_1_2)
+	    plyr->armorpoints = deh_max_armor;
+        // deh_green_armor_class only applies to the green armor shirt;
+        // for the armor helmets, armortype 1 is always used.
+	if (!plyr->armortype)
+	    plyr->armortype = 1;
+	plyr->message = DEH_String(GOTARMBONUS);
+	S_StartSound (NULL, sfx_itemup);
+	  }
+
+	  if (cht_CheckCheatSP(&cheat_armor[1], ev->data2))
+	  {
+	if (P_GiveArmor (plyr, deh_green_armor_class))
+	{
+	    plyr->message = DEH_String(GOTARMOR);
+	    S_StartSound (NULL, sfx_itemup);		
+	}
+	  }
+
+	  if (cht_CheckCheatSP(&cheat_armor[2], ev->data2))
+	  {
+	if (P_GiveArmor (plyr, deh_blue_armor_class))
+	{
+	    plyr->message = DEH_String(GOTMEGA);
+	    S_StartSound (NULL, sfx_itemup);		
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_armor[3], ev->data2))
+      {
+	M_snprintf(msg, sizeof(msg), "Armor bonus: %sB%s, light armor: %sL%s, heavy armor: %sH%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	plyr->message = msg;
 	  }
 
