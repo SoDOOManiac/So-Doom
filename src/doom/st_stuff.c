@@ -447,9 +447,9 @@ cheatseq_t	cheat_health[7] = // some cheats restoring health (hp = health poweru
     CHEAT("hps", 0), // [So Doom] soulsphere
     CHEAT("hpm", 0), // [So Doom] megasphere
     CHEAT("hp", 0),  // [So Doom] health powerup hint
-    CHEAT("medb", 0), // [So Doom] bonus
+    CHEAT("medb", 0), // [So Doom] health bonus
     CHEAT("meds", 0), // [So Doom] stimpack
-    CHEAT("medl", 0), // [So Doom] medikit
+    CHEAT("medm", 0), // [So Doom] medikit
     CHEAT("med", 0), // [So Doom] medikit cheat hint
 };
 
@@ -1396,7 +1396,7 @@ ST_Responder (event_t* ev)
 
       if (cht_CheckCheatSP(&cheat_health[6], ev->data2))
       {
-	M_snprintf(msg, sizeof(msg), "Health bonus: %sB%s, small medikit: %sS%s, large medikit: %sL%s",
+	M_snprintf(msg, sizeof(msg), "Health bonus: %sB%s, small health: %sS%s, medium health: %sM%s",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	plyr->message = msg;
 	  }
