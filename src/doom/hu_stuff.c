@@ -37,7 +37,7 @@
 #include "r_main.h" // viewwindowx, viewwindowy
 #include "w_wad.h"
 #include "m_argv.h" // [crispy] M_ParmExists()
-#include "st_stuff.h" // [crispy] ST_HEIGHT
+#include "st_stuff.h" // [crispy] ST_HEIGHT, [So Doom] also ST_WIDESCREENDELTA
 #include "p_setup.h" // maplumpinfo
 
 #include "s_sound.h"
@@ -1185,6 +1185,11 @@ void HU_Ticker(void)
     {
 	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
 
+	if (screenblocks == CRISPY_HUD + 1) // So Doomy HUD, status face above the main widgets
+	    w_kills.x = 44 - ST_WIDESCREENDELTA; // equal to ammo widget X position
+	else
+	    w_kills.x = HU_TITLEX;
+	
 	w_kills.y = HU_TITLEY;
 
 	//crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills); // in So Doom this is replaced with the smart totals-aware function
