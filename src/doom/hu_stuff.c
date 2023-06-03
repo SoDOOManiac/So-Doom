@@ -1188,7 +1188,7 @@ void HU_Ticker(void)
 	if (screenblocks == CRISPY_HUD + 1) // So Doomy HUD, status face above the main widgets
 	    w_kills.x = 44 - ST_WIDESCREENDELTA; // equal to ammo widget X position
 	else
-	    w_kills.x = HU_TITLEX;
+	    w_kills.x = - ST_WIDESCREENDELTA;
 	
 	w_kills.y = HU_TITLEY;
 
