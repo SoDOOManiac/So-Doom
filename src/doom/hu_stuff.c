@@ -920,7 +920,12 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_title, false);
     }
 
-    if ((crispy->automapstats == WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    {
+	HUlib_drawTextLine(&w_kills, false);
+    }
+    else
+    if ((crispy->automapstats & WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 	// [crispy] move obtrusive line out of player view
 	if (automapactive && (!crispy->automapoverlay || screenblocks < CRISPY_HUD - 1))
@@ -1049,7 +1054,7 @@ void HU_Ticker(void)
     char c;
     char str[32], *s;
 
-    const int chat_line = chat_on ? 8 : 0; // [So Doom] moved as there is no if condition anymore
+    const int chat_line = chat_on ? 8 : 0; // [So Doom] introduced conditional shifters at the beginning of HU_Ticker()
 	const int mapviewstats_shift_coords = crispy->mapviewstats ? 5*8 : 0;
 	
     // tick down message counter if message is up
@@ -1148,12 +1153,10 @@ void HU_Ticker(void)
 	}
     // [crispy] shift widgets one line down so chat typing line may appear
 
-    // [So Doom] commented out if condition as So Doom doesn't have WIDGETS_STBAR
+    if (crispy->automapstats != WIDGETS_STBAR)
+    {
 
-    // if (crispy->automapstats != WIDGETS_STBAR)
-    //{
-
-        w_kills.y += chat_line;
+        w_kills.y = HU_MSGY + 1 * 8 + chat_line; // kills line y position had been set explicitly before here in HU_Ticker() but let it be explicit here just in case
         w_items.y = HU_MSGY + 2 * 8 + chat_line;
         w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
         // [crispy] do not shift level time widget if no level stats widget is used
@@ -1162,11 +1165,11 @@ void HU_Ticker(void)
         w_visplanes.y = HU_MSGY + 2 * 8 + chat_line;
         w_sprites.y = HU_MSGY + 3 * 8 + chat_line;
 		w_openings.y = HU_MSGY + 4 * 8 + chat_line;
-        w_coordx.y += chat_line; // coord line y positions were set explicitly before in HU_Ticker()
+        w_coordx.y += chat_line; // coord line y positions had been set explicitly before here in HU_Ticker() taking mapviewstats_shift_coords into account
         w_coordy.y += chat_line;
         w_coorda.y += chat_line;
 
-    //}
+    }
     }
 
     if (automapactive)
@@ -1178,12 +1181,41 @@ void HU_Ticker(void)
 	    w_title.y = HU_TITLEY;
     }
 
-    if (crispy->automapstats == WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    {
+	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
+
+	w_kills.y = HU_TITLEY;
+
+	//crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills); // in So Doom this is replaced with the smart totals-aware function
+
+	if (crispy->smarttotals || extraspawns == 0)
+		crispy_statsline(str, sizeof(str), "K ", plr->killcount - plr->extrakills, totalkills, 0);
+	else
+		crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extraspawns);
+	
+	HUlib_clearTextLine(&w_kills);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	crispy_statsline(str, sizeof(str), "I ", plr->itemcount, totalitems, 0);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	crispy_statsline(str, sizeof(str), "S ", plr->secretcount, totalsecret, 0);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+    }
+    else
+    if (crispy->automapstats & WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 
 	// [crispy] count spawned monsters
 
-	/*if (crispy->smarttotals || extraspawns == 0)
+	/*if (crispy->smarttotals || extraspawns == 0) // old implementation before different stats functions were introduced
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount - plr->extrakills, totalkills);
 	else
