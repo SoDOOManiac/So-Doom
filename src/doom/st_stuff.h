@@ -32,7 +32,7 @@
 #define ST_WIDTH	ORIGWIDTH
 #define ST_Y		(ORIGHEIGHT - ST_HEIGHT)
 
-// [crispy] in non-widescreen mode WIDESCREENDELTA is 0 anyway
+// [So Doom] apply delta to Crispy HUD if crispy->widescreen == 1, i.e. HUD is wide
 #define ST_WIDESCREENDELTA ((crispy->widescreen == 1 && screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay)) ? WIDESCREENDELTA : 0)
 
 #define CRISPY_HUD 12

@@ -37,7 +37,7 @@
 #include "r_main.h" // viewwindowx, viewwindowy
 #include "w_wad.h"
 #include "m_argv.h" // [crispy] M_ParmExists()
-#include "st_stuff.h" // [crispy] ST_HEIGHT, [So Doom] also ST_WIDESCREENDELTA
+#include "st_stuff.h" // [crispy] ST_HEIGHT, ST_WIDESCREENDELTA
 #include "p_setup.h" // maplumpinfo
 
 #include "s_sound.h"
