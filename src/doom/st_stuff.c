@@ -852,10 +852,24 @@ ST_Responder (event_t* ev)
 	    plyr->mo->health = deh_god_mode_health;
 	  
 	  plyr->health = deh_god_mode_health;
-	  plyr->message = DEH_String(STSTR_DQDON);
+	  if (strcasecmp("Degreelessness mode on", DEH_String(STSTR_DQDON)))
+	      plyr->message = DEH_String(STSTR_DQDON);
+	  else
+	  {
+	      M_snprintf(msg, sizeof(msg), "Degreelessness mode %son", crstr[CR_GREEN]);
+	      plyr->message = msg;
+	  }
 	}
-	else 
-	  plyr->message = DEH_String(STSTR_DQDOFF);
+	else
+	{
+	  if (strcasecmp("Degreelessness mode off", DEH_String(STSTR_DQDOFF)))
+	      plyr->message = DEH_String(STSTR_DQDOFF);
+	  else
+	  {
+	      M_snprintf(msg, sizeof(msg), "Degreelessness mode %soff", crstr[CR_RED]);
+	      plyr->message = msg;
+	  }
+	}
 
 	// [crispy] eat key press when respawning
 	if (mt.type)
