@@ -1218,6 +1218,8 @@ void HU_Ticker(void)
     if (crispy->automapstats & WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 
+	w_kills.x = - HUD_WIDESCREENDELTA; // to handle switching from Status bar to Always and Automap kills line options
+
 	// [crispy] count spawned monsters
 
 	/*if (crispy->smarttotals || extraspawns == 0) // old implementation before different stats functions were introduced
