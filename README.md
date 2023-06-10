@@ -132,9 +132,9 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
 ## Download
 
-Source code and Windows binaries (compatible with both x86 and x64 editions) for the latest release can be found on the [Release](https://github.com/SoDOOManiac/So-Doom/releases/latest) page.
-
-To install on OSX, get macports and then run "sudo port install so-doom".
+* Windows: [Get binaries of the latest release](https://github.com/SoDOOManiac/So-Doom/releases/latest), compatible with both x86 and x64 editions.
+* MacOS: Use MacPorts: `sudo port install crispy-doom` or Homebrew: `brew install crispy-doom`.
+* Linux: To install on Ubuntu (“Eoan Ermine” 19.10 and later)/Debian (“Buster” 10 and later) based systems: `sudo apt-get install crispy-doom`
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
 

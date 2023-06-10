@@ -1306,22 +1306,6 @@ void PrintGameVersion(void)
     }
 }
 
-const char *D_GetGameVersionCmd(void)
-{
-    int i;
-
-    for (i = 0; gameversions[i].description; ++i)
-    {
-        if (gameversions[i].version == gameversion)
-        {
-            return gameversions[i].cmdline;
-            break;
-        }
-    }
-
-    return NULL;
-}
-
 // Function called at exit to display the ENDOOM screen
 
 static void D_Endoom(void)
@@ -1774,7 +1758,6 @@ void D_DoomMain (void)
 
     //!
     // @category game
-    // @category mod
     //
     // Automatic pistol start when advancing from one level to the next. At the
     // beginning of each level, the player's health is reset to 100, their
@@ -1787,7 +1770,6 @@ void D_DoomMain (void)
 
     //!
     // @category game
-    // @category mod
     //
     // Double ammo pickup rate. This option is not allowed when recording a
     // demo, playing back a demo or when starting a network game.
@@ -2013,6 +1995,13 @@ void D_DoomMain (void)
     W_GenerateHashTable();
 
     // [crispy] allow overriding of special-casing
+
+    //!
+    // @category mod
+    //
+    // Disable automatic loading of Master Levels, No Rest for the Living and
+    // Sigil.
+    //
     if (!M_ParmExists("-nosideload") && gamemode != shareware && !demolumpname[0])
     {
 	if (gamemode == retail &&
@@ -2027,19 +2016,20 @@ void D_DoomMain (void)
 	{
 		D_LoadNerveWad();
 		D_LoadMasterlevelsWad();
+		room_berserk = CheckRoomBerserkLoaded();
 	}
     }
 
     // Load DEHACKED lumps from WAD files - but only if we give the right
     // command line parameter.
 
+    // [crispy] load DEHACKED lumps by default, but allow overriding
+
     //!
     // @category mod
     //
-    // Load Dehacked patches from DEHACKED lumps contained in one of the
-    // loaded PWAD files.
+    // Disable automatic loading of embedded DEHACKED lumps in wad files.
     //
-    // [crispy] load DEHACKED lumps by default, but allow overriding
     if (!M_ParmExists("-nodehlump") && !M_ParmExists("-nodeh"))
     {
         int i, loaded = 0;

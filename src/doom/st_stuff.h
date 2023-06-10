@@ -24,6 +24,7 @@
 #include "doomtype.h"
 #include "d_event.h"
 #include "m_cheat.h"
+#include "v_patch.h" // [So Doom] shortnum
 
 // Size of statusbar.
 // Now sensitive for scaling.
@@ -31,11 +32,10 @@
 #define ST_WIDTH	ORIGWIDTH
 #define ST_Y		(ORIGHEIGHT - ST_HEIGHT)
 
-#define CRISPY_HUD 12
+// [So Doom] apply delta to Crispy HUD if crispy->widescreen == 1, i.e. HUD is wide
+#define ST_WIDESCREENDELTA ((crispy->widescreen == 1 && screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay)) ? WIDESCREENDELTA : 0)
 
-// [crispy] Demo Timer widget
-extern void ST_DrawDemoTimer (const int time);
-extern int defdemotics, deftotaldemotics;
+#define CRISPY_HUD 12
 
 //
 // STATUS BAR
@@ -77,7 +77,8 @@ typedef enum
     
 } st_chatstateenum_t;
 
-
+// 0-9, short, yellow (,different!) numbers
+extern patch_t* shortnum[10];
 
 extern pixel_t *st_backing_screen;
 extern cheatseq_t cheat_mus;

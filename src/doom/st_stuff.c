@@ -140,9 +140,6 @@ extern boolean inhelpscreens; // [crispy] prevent palette changes
 //       into a buffer,
 //       or into the frame buffer?
 
-// [crispy] in non-widescreen mode WIDESCREENDELTA is 0 anyway
-#define ST_WIDESCREENDELTA ((crispy->widescreen == 1 && screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay)) ? WIDESCREENDELTA : 0)
-
 // AMMO number pos.
 #define ST_AMMOWIDTH		3	
 #define ST_AMMOX			(44 - ST_WIDESCREENDELTA)
@@ -334,7 +331,7 @@ static patch_t*		tallnum[10];
 static patch_t*		tallpercent;
 
 // 0-9, short, yellow (,different!) numbers
-static patch_t*		shortnum[10];
+patch_t*		shortnum[10]; // [So Doom] made extern
 
 // 3 key-cards, 3 skulls
 static patch_t*		keys[NUMCARDS+3]; // [crispy] support combined card and skull keys
@@ -442,11 +439,23 @@ cheatseq_t	cheat_powerup2[8] = // [So Doom] tp = toggle powerup, equal to idbeho
     CHEAT("tp0", 0), // [So Doom] gp0
 };
 
-cheatseq_t	cheat_health[3] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
+cheatseq_t	cheat_health[7] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
 {
     CHEAT("hps", 0), // [So Doom] soulsphere
     CHEAT("hpm", 0), // [So Doom] megasphere
     CHEAT("hp", 0),  // [So Doom] health powerup hint
+    CHEAT("medb", 0), // [So Doom] health bonus
+    CHEAT("meds", 0), // [So Doom] stimpack
+    CHEAT("medm", 0), // [So Doom] medikit
+    CHEAT("med", 0), // [So Doom] medikit cheat hint
+};
+
+cheatseq_t	cheat_armor[4] = // cheats giving armor
+{
+	CHEAT("armb", 0), // [So Doom] armor bonus
+	CHEAT("arml", 0), // [So Doom] light armor
+	CHEAT("armh", 0), // [So Doom] heavy armor
+	CHEAT("arm", 0), // [So Doom] armor cheat hint 
 };
 
 cheatseq_t cheat_choppers = CHEAT("idchoppers", 0);
@@ -517,7 +526,7 @@ cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
 
 cheatseq_t cheat_snow = CHEAT("snow", 0);
 
-static char msg[ST_MSGWIDTH];
+static char msg[4*ST_MSGWIDTH]; // [So Doom] increased size
 
 // [crispy] restrict cheat usage
 static inline int cht_CheckCheatSP (cheatseq_t *cht, char key)
@@ -1311,7 +1320,7 @@ ST_Responder (event_t* ev)
 	}
     }
 
-	// [So Doom] health powerup giving cheats
+	// [So Doom] health giving cheats
 
 	  if (cht_CheckCheatSP(&cheat_health[0], ev->data2))
 	  {
@@ -1342,11 +1351,90 @@ ST_Responder (event_t* ev)
       if (cht_CheckCheatSP(&cheat_health[2], ev->data2))
       {
 	if (gamemode == commercial)
-	M_snprintf(msg, sizeof(msg), "Max health: %sS%s, Max health+armor: %sM%s",
+	M_snprintf(msg, sizeof(msg), "Health powerup: %sS%s, health + armor powerup: %sM%s",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	else
-	M_snprintf(msg, sizeof(msg), "Max health: %sS%s",
+	M_snprintf(msg, sizeof(msg), "Health powerup: %sS%s",
 	           crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[3], ev->data2))
+      {
+	plyr->health++;		// can go over 100%
+	if (plyr->health > deh_max_health)
+	    plyr->health = deh_max_health;
+	plyr->mo->health = plyr->health;
+	plyr->message = DEH_String(GOTHTHBONUS);
+	S_StartSound (NULL, sfx_itemup);
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[4], ev->data2))
+      {
+	if (P_GiveBody (plyr, 10))
+	{
+	plyr->message = DEH_String(GOTSTIM);
+	S_StartSound (NULL, sfx_itemup);
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[5], ev->data2))
+      {
+	if (P_GiveBody (plyr, 25))
+	{
+	// [crispy] show "Picked up a Medikit that you really need" message as intended
+	if (plyr->health < 50)
+	    plyr->message = DEH_String(GOTMEDINEED);
+	else
+	    plyr->message = DEH_String(GOTMEDIKIT);
+	S_StartSound (NULL, sfx_itemup);
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_health[6], ev->data2))
+      {
+	M_snprintf(msg, sizeof(msg), "Health bonus: %sB%s, small health: %sS%s, medium health: %sM%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
+	plyr->message = msg;
+	  }
+
+	// [So Doom] armor giving cheats
+
+	  if (cht_CheckCheatSP(&cheat_armor[0], ev->data2))
+	  {
+	plyr->armorpoints++;		// can go over 100%
+	if (plyr->armorpoints > deh_max_armor && gameversion > exe_doom_1_2)
+	    plyr->armorpoints = deh_max_armor;
+        // deh_green_armor_class only applies to the green armor shirt;
+        // for the armor helmets, armortype 1 is always used.
+	if (!plyr->armortype)
+	    plyr->armortype = 1;
+	plyr->message = DEH_String(GOTARMBONUS);
+	S_StartSound (NULL, sfx_itemup);
+	  }
+
+	  if (cht_CheckCheatSP(&cheat_armor[1], ev->data2))
+	  {
+	if (P_GiveArmor (plyr, deh_green_armor_class))
+	{
+	    plyr->message = DEH_String(GOTARMOR);
+	    S_StartSound (NULL, sfx_itemup);		
+	}
+	  }
+
+	  if (cht_CheckCheatSP(&cheat_armor[2], ev->data2))
+	  {
+	if (P_GiveArmor (plyr, deh_blue_armor_class))
+	{
+	    plyr->message = DEH_String(GOTMEGA);
+	    S_StartSound (NULL, sfx_itemup);		
+	}
+	  }
+
+      if (cht_CheckCheatSP(&cheat_armor[3], ev->data2))
+      {
+	M_snprintf(msg, sizeof(msg), "Armor bonus: %sB%s, light armor: %sL%s, heavy armor: %sH%s",
+	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);
 	plyr->message = msg;
 	  }
 
@@ -2777,45 +2865,3 @@ void ST_Init (void)
     ST_loadData();
     st_backing_screen = (pixel_t *) Z_Malloc(MAXWIDTH * (ST_HEIGHT << 1) * sizeof(*st_backing_screen), PU_STATIC, 0);
 }
-
-// [crispy] Demo Timer widget
-void ST_DrawDemoTimer (const int time)
-{
-	char buffer[16];
-	const int mins = time / (60 * TICRATE);
-	const float secs = (float)(time % (60 * TICRATE)) / TICRATE;
-	const int w = shortnum[0]->width;
-	int n, x, y;
-
-	n = M_snprintf(buffer, sizeof(buffer), "%02i %05.02f", mins, secs);
-	
-	if (crispy->demotimerpos == 1)
-	{
-		x = (NONWIDEWIDTH >> crispy->hires)/2 + 16;
-	    y = (viewwindowy >> crispy->hires) + 8;
-	}
-	else
-	{
-	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
-	    y = viewwindowy >> crispy->hires;
-	}
-	// [crispy] draw the Demo Timer widget with gray numbers
-	dp_translation = cr[CR_GRAY];
-	dp_translucent = (gamestate == GS_LEVEL);
-
-	while (n-- > 0)
-	{
-		const int c = buffer[n] - '0';
-
-		x -= w;
-
-		if (c >= 0 && c <= 9)
-		{
-			V_DrawPatch(x, y, shortnum[c]);
-		}
-	}
-
-	dp_translation = NULL;
-	dp_translucent = false;
-}
-

@@ -44,7 +44,7 @@
 // Needs access to LFB.
 #include "v_video.h"
 
-#include "st_stuff.h" // [crispy] ST_DrawDemoTimer()
+#include "hu_stuff.h" // [So Doom] HU_DrawDemoTimer()
 #include "wi_stuff.h"
 
 //
@@ -1618,7 +1618,7 @@ void WI_drawStats(void)
     if ((demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK)) ||
         (demorecording && (crispy->demotimer & DEMOTIMER_RECORD)))
     {
-	ST_DrawDemoTimer(leveltime);
+	HU_DrawDemoTimer(leveltime);
     }
 
     // [crispy] demo progress bar

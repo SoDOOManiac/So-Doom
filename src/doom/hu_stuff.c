@@ -34,9 +34,10 @@
 #include "m_controls.h"
 #include "m_misc.h"
 #include "m_menu.h"
+#include "r_main.h" // viewwindowx, viewwindowy
 #include "w_wad.h"
 #include "m_argv.h" // [crispy] M_ParmExists()
-#include "st_stuff.h" // [crispy] ST_HEIGHT
+#include "st_stuff.h" // [crispy] ST_HEIGHT, ST_WIDESCREENDELTA
 #include "p_setup.h" // maplumpinfo
 
 #include "s_sound.h"
@@ -402,6 +403,47 @@ const char *mapnames_commercial[] =
     MHUSTR_20,
     MHUSTR_21
 };
+
+// [crispy] Demo Timer widget
+void HU_DrawDemoTimer (const int time)
+{
+	char buffer[16];
+	const int mins = time / (60 * TICRATE);
+	const float secs = (float)(time % (60 * TICRATE)) / TICRATE;
+	const int w = shortnum[0]->width;
+	int n, x, y;
+
+	n = M_snprintf(buffer, sizeof(buffer), "%02i %05.02f", mins, secs);
+	
+	if (crispy->demotimerpos == 1)
+	{
+	    x = (NONWIDEWIDTH >> crispy->hires)/2 + 16;
+	    y = (viewwindowy >> crispy->hires) + (screenblocks >= 10 ? 8 : 0) + ((screenblocks >= 9 && chat_on) ? 8 : 0); // [So Doom] shift the centered demo timer down depending on chat line and decreased screenblocks
+	}
+	else
+	{
+	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
+	    y = viewwindowy >> crispy->hires;
+	}
+	// [crispy] draw the Demo Timer widget with gray numbers
+	dp_translation = cr[CR_GRAY];
+	dp_translucent = (gamestate == GS_LEVEL);
+
+	while (n-- > 0)
+	{
+		const int c = buffer[n] - '0';
+
+		x -= w;
+
+		if (c >= 0 && c <= 9)
+		{
+			V_DrawPatch(x, y, shortnum[c]);
+		}
+	}
+
+	dp_translation = NULL;
+	dp_translucent = false;
+}
 
 static void CrispyReplaceColor (const char *str, const int cr, const char *col)
 {
@@ -878,7 +920,12 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_title, false);
     }
 
-    if ((crispy->automapstats == WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    {
+	HUlib_drawTextLine(&w_kills, false);
+    }
+    else
+    if ((crispy->automapstats & WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 	// [crispy] move obtrusive line out of player view
 	if (automapactive && (!crispy->automapoverlay || screenblocks < CRISPY_HUD - 1))
@@ -925,12 +972,12 @@ void HU_Drawer(void)
     // [crispy] demo timer widget
     if (demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK))
     {
-	ST_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
+	HU_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
     }
     else
     if (demorecording && (crispy->demotimer & DEMOTIMER_RECORD))
     {
-	ST_DrawDemoTimer(leveltime);
+	HU_DrawDemoTimer(leveltime);
     }
 
     // [crispy] demo progress bar
@@ -1007,7 +1054,7 @@ void HU_Ticker(void)
     char c;
     char str[32], *s;
 
-    const int chat_line = chat_on ? 8 : 0; // [So Doom] moved as there is no if condition anymore
+    const int chat_line = chat_on ? 8 : 0; // [So Doom] introduced conditional shifters at the beginning of HU_Ticker()
 	const int mapviewstats_shift_coords = crispy->mapviewstats ? 5*8 : 0;
 	
     // tick down message counter if message is up
@@ -1106,12 +1153,10 @@ void HU_Ticker(void)
 	}
     // [crispy] shift widgets one line down so chat typing line may appear
 
-    // [So Doom] commented out if condition as So Doom doesn't have WIDGETS_STBAR
+    if (crispy->automapstats != WIDGETS_STBAR)
+    {
 
-    // if (crispy->automapstats != WIDGETS_STBAR)
-    //{
-
-        w_kills.y += chat_line;
+        w_kills.y = HU_MSGY + 1 * 8 + chat_line; // kills line y position had been set explicitly before here in HU_Ticker() but let it be explicit here just in case
         w_items.y = HU_MSGY + 2 * 8 + chat_line;
         w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
         // [crispy] do not shift level time widget if no level stats widget is used
@@ -1120,11 +1165,11 @@ void HU_Ticker(void)
         w_visplanes.y = HU_MSGY + 2 * 8 + chat_line;
         w_sprites.y = HU_MSGY + 3 * 8 + chat_line;
 		w_openings.y = HU_MSGY + 4 * 8 + chat_line;
-        w_coordx.y += chat_line; // coord line y positions were set explicitly before in HU_Ticker()
+        w_coordx.y += chat_line; // coord line y positions had been set explicitly before here in HU_Ticker() taking mapviewstats_shift_coords into account
         w_coordy.y += chat_line;
         w_coorda.y += chat_line;
 
-    //}
+    }
     }
 
     if (automapactive)
@@ -1136,12 +1181,46 @@ void HU_Ticker(void)
 	    w_title.y = HU_TITLEY;
     }
 
-    if (crispy->automapstats == WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    {
+	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
+
+	if (screenblocks == CRISPY_HUD + 1) // So Doomy HUD, status face above the main widgets
+	    w_kills.x = 44 - ST_WIDESCREENDELTA; // equal to ammo widget X position
+	else
+	    w_kills.x = - ST_WIDESCREENDELTA;
+	
+	w_kills.y = HU_TITLEY;
+
+	//crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills); // in So Doom this is replaced with the smart totals-aware function
+
+	if (crispy->smarttotals || extraspawns == 0)
+		crispy_statsline(str, sizeof(str), "K ", plr->killcount - plr->extrakills, totalkills, 0);
+	else
+		crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extraspawns);
+	
+	HUlib_clearTextLine(&w_kills);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	crispy_statsline(str, sizeof(str), "I ", plr->itemcount, totalitems, 0);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+
+	crispy_statsline(str, sizeof(str), "S ", plr->secretcount, totalsecret, 0);
+	s = str;
+	while (*s)
+	    HUlib_addCharToTextLine(&w_kills, *(s++));
+    }
+    else
+    if (crispy->automapstats & WIDGETS_ALWAYS || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 
 	// [crispy] count spawned monsters
 
-	/*if (crispy->smarttotals || extraspawns == 0)
+	/*if (crispy->smarttotals || extraspawns == 0) // old implementation before different stats functions were introduced
 	    M_snprintf(str, sizeof(str), "%s%s%s%d/%d", cr_stat, kills, crstr[CR_GRAY],
 	            plr->killcount - plr->extrakills, totalkills);
 	else

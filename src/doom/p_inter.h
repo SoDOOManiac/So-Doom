@@ -21,7 +21,9 @@
 #define __P_INTER__
 
 
+boolean	P_GiveArmor(player_t*, int);
 
+boolean	P_GiveBody(player_t*, int);
 
 boolean	P_GivePower(player_t*, int);
 
