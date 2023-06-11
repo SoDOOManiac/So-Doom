@@ -1233,6 +1233,9 @@ void HU_Ticker(void)
 		crispy_statsline(str, sizeof(str), kills, plr->killcount - plr->extrakills, totalkills, 0);
 	else
 		crispy_statsline(str, sizeof(str), kills, plr->killcount, totalkills, extraspawns);
+
+	w_kills.x = HU_TITLEX; // to handle switching from Status bar to Always and Automap kills line options
+
 	HUlib_clearTextLine(&w_kills);
 	s = str;
 	while (*s)
