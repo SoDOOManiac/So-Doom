@@ -115,7 +115,9 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
  * `HP` gives health powerup (`HPS` for maximum health in all IWADs and `HPM` for maximum health and armor in Doom II IWADs).
  * `TP` (toggle powerup) = `IDBEHOLD` toggles ability powerups.
  * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TW9` to play the SSG in Doom 1.
- * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo). 
+ * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo).
+ * `MEDB` gives a health bonus, `MEDS` gives a small health item (e.g. stimpack) and `MEDM` gives a medium health item (e.g. medikit).
+ * `ARMB` gives an armor bonus, `ARML` gives light armor (e.g. green) and `ARMH` gives heavy armor (e.g. blue).
  * `TNTEM`, `KILLEM` or `FHHALL` kill all monsters on the current map (and disables all cube spitters).
  * `SPECHITS` triggers all [Linedef actions](https://doomwiki.org/wiki/Linedef_type) on a map at once, no matter if they are enabled by pushing, walking over or shooting or whether they require a key or not. It also triggers all boss monster and Commander Keen actions if possible.
  * `NOTARGET` or `FHSHH` toggle deaf and blind monsters that do not act until attacked.
@@ -169,6 +171,28 @@ to install the prerequisites and then
 ```
 
 ## News
+
+### So Doom 6.0.1
+
+So Doom 6.0.1 has been released on June 11, 2023. It includes some improvements as well as an exclusive feature for an old but gold joke WAD [ROOM](https://moddb.com/mods/room).
+You can download its latest version [here](https://www.moddb.com/mods/room/downloads/room-berserk-edition).
+
+#### So Doom-specific changes
+
+**New Features and Improvements**
+
+* Crispy Doom's "Status Bar" option for level stats widget position has been brought back.
+* New cheat codes for obtaining health and armor items (see cheats section).
+* Demo timer in centered position now gives way to chat line.
+* IDDQD messages are now colorized if they had not been DEHACKED.
+* New Physical option: now game can be played with the [fixed oversight in triggering linedefs by projectiles](https://doomwiki.org/wiki/Projectiles_triggering_linedefs)
+* In ROOM and its Berserk Edition, punching oneself in the face is 50 times stronger with the Berserk powerup.
+
+#### Changes pulled from Crispy Doom
+
+**New Features and Improvements**
+
+* Instead of fixed indices, the colors nearest to magenta and bright green are now picked from PLAYPAL palette for IDDT-unrevealed and revealed secret sectors (relevant in BTSX).
 
 ### So Doom 6.0
 
