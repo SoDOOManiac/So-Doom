@@ -195,8 +195,8 @@ void R_MapPlane (int y, int x1, int x2)
     {
         cachedheight[y] = planeheight;
         distance = cacheddistance[y] = FixedMul (planeheight, yslope[y]);
-        ds_xstep = cachedxstep[y] = FixedMul (viewsin, planeheight) / dy;
-        ds_ystep = cachedystep[y] = FixedMul (viewcos, planeheight) / dy;
+        ds_xstep = cachedxstep[y] = FixedMul (viewsin, planeheight) / dy << detailshift;
+        ds_ystep = cachedystep[y] = FixedMul (viewcos, planeheight) / dy << detailshift;
     }
     else
     {
