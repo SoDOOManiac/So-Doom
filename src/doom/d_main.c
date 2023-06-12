@@ -460,7 +460,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
     M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
     M_BindIntVariable("crispy_demotimerpos",    &crispy->demotimerpos);
-    M_BindIntVariable("crispy_doom2projbypass",&crispy->doom2projbypass);
+    M_BindIntVariable("crispy_doom2projbypass", &crispy->doom2projbypass);
     M_BindIntVariable("crispy_evadinginterover",&crispy->evadinginterover);
     M_BindIntVariable("crispy_extautomap",      &crispy->extautomap);
     M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);
@@ -2016,7 +2016,7 @@ void D_DoomMain (void)
 	{
 		D_LoadNerveWad();
 		D_LoadMasterlevelsWad();
-		room_berserk = CheckRoomBerserkLoaded();
+		room_berserk = CheckRoomWadLoadedForBerserk();
 	}
     }
 

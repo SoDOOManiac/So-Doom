@@ -317,8 +317,8 @@ void D_LoadNerveWad (void)
 	}
 }
 
-// [crispy] check if ROOM_BERSERK.WAD is already loaded as a PWAD
-boolean CheckRoomBerserkLoaded (void)
+// [crispy] check if ROOM.WAD or ROOM_BERSERK.WAD is already loaded as a PWAD
+boolean CheckRoomWadLoadedForBerserk (void)
 {
 	int i;
 
