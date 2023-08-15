@@ -1387,7 +1387,7 @@ void A_VileAttack (mobj_t* actor)
     if (actor->target->player)
     {
         if (actor->target->player->powers[pw_strength] && room_berserk)
-            damage *= 50; // ROOM(_BERSERK).WAD berserk fist to gib 100%
+            damage *= 50; // ROOM.WAD and ROOM_BERSERK.WAD berserk fist to gib 100%
     }
 
     S_StartSound (actor, sfx_barexp);
