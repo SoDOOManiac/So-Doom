@@ -192,7 +192,7 @@ You can download its latest version [here](https://www.moddb.com/mods/room/downl
 
 **New Features and Improvements**
 
-* Plane distortion in the distance was spotted by JNechaevsky and fixed by rfomin with the fix from Eternity Engine. 
+* Plane distortion in the distance was spotted by JNechaevsky and fixed by rfomin with the fix from Eternity Engine, that also fixed the plane texture repeating bug in low detail.
 * Instead of fixed indices, the colors nearest to magenta and bright green are now picked from PLAYPAL palette for IDDT-unrevealed and revealed secret sectors (relevant in BTSX).
 
 ### So Doom 6.0

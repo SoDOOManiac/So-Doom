@@ -5,7 +5,9 @@ MANPAGE_GEN_FILES = environ.man           \
                     doom.template         \
                     docgen                \
                     default.cfg.template  \
-                    extra.cfg.template
+                    extra.cfg.template    \
+                    server.template       \
+                    setup.template
 
 doomdocsdir = ${docdir}/../${PROGRAM_PREFIX}doom
 hereticdocsdir = ${docdir}/../${PROGRAM_PREFIX}heretic
