@@ -28,8 +28,8 @@
 #define ORIGWIDTH  320 // [crispy]
 #define ORIGHEIGHT 200 // [crispy]
 
-#define MAXWIDTH  (ORIGWIDTH << 3) // [crispy]
-#define MAXHEIGHT (ORIGHEIGHT << 2) // [crispy]
+#define MAXWIDTH  (ORIGWIDTH << 3) // [So Doom] quadres + [crispy] widescreen
+#define MAXHEIGHT (ORIGHEIGHT << 2) // [So Doom] quadres
 
 extern int SCREENWIDTH;
 extern int SCREENHEIGHT;
@@ -42,7 +42,7 @@ void I_GetScreenDimensions (void); // [crispy] re-calculate WIDESCREENDELTA
 // Screen height used when aspect_ratio_correct=true.
 
 #define ORIGHEIGHT_4_3 240 // [crispy]
-#define MAXHEIGHT_4_3 (ORIGHEIGHT_4_3 << 1) // [crispy]
+#define MAXHEIGHT_4_3 (ORIGHEIGHT_4_3 << 2) // [So Doom] quadres
 
 extern int SCREENHEIGHT_4_3;
 
