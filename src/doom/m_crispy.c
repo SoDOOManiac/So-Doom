@@ -609,6 +609,7 @@ void M_CrispyToggleFullsounds(int choice)
 
 static void M_CrispyToggleHiresHook (void)
 {
+    ChangeSettingEnum(&crispy->hires, hookchoice, NUM_HIRES);
     // [crispy] re-initialize framebuffers, textures and renderer
     I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
     // [crispy] re-calculate framebuffer coordinates
@@ -623,7 +624,7 @@ static void M_CrispyToggleHiresHook (void)
 
 void M_CrispyToggleHires(int choice)
 {
-    ChangeSettingEnum(&crispy->hires, choice, NUM_HIRES);
+    hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyToggleHiresHook;
 }
