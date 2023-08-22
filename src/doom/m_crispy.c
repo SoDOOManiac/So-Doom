@@ -139,6 +139,13 @@ multiitem_t multiitem_freelook[NUM_FREELOOKS] =
     {FREELOOK_LOCK, "lock"},
 };
 
+multiitem_t multiitem_hires[NUM_HIRES] =
+{
+    {HIRES_OFF, "original"},
+    {HIRES_DOUBLE, "2x2"},
+    {HIRES_QUAD, "4x4"},
+};
+
 multiitem_t multiitem_jump[NUM_JUMPS] =
 {
     {JUMP_OFF, "off"},
@@ -602,8 +609,7 @@ void M_CrispyToggleFullsounds(int choice)
 
 static void M_CrispyToggleHiresHook (void)
 {
-    crispy->hires = !crispy->hires;
-
+    ChangeSettingEnum(&crispy->hires, hookchoice, NUM_HIRES);
     // [crispy] re-initialize framebuffers, textures and renderer
     I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
     // [crispy] re-calculate framebuffer coordinates
@@ -618,7 +624,7 @@ static void M_CrispyToggleHiresHook (void)
 
 void M_CrispyToggleHires(int choice)
 {
-    choice = 0;
+    hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyToggleHiresHook;
 }

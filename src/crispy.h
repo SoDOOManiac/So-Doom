@@ -265,6 +265,14 @@ enum
 
 enum
 {
+    HIRES_OFF,
+    HIRES_DOUBLE,
+    HIRES_QUAD,
+    NUM_HIRES
+};
+
+enum
+{
     JUMP_OFF,
     JUMP_LOW,
     JUMP_HIGH,

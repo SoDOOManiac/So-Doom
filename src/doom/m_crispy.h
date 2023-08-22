@@ -41,6 +41,7 @@ extern multiitem_t multiitem_demotimerpos[];
 extern multiitem_t multiitem_difficulties[NUM_SKILLS];
 extern multiitem_t multiitem_freeaim[NUM_FREEAIMS];
 extern multiitem_t multiitem_freelook[NUM_FREELOOKS];
+extern multiitem_t multiitem_hires[NUM_HIRES];
 extern multiitem_t multiitem_jump[NUM_JUMPS];
 extern multiitem_t multiitem_logo[NUM_LOGOS];
 extern multiitem_t multiitem_arlimit[NUM_RATIOS];

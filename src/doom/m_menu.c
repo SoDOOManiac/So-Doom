@@ -1618,7 +1618,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessHeader("SoDOOMy 1/4");
 
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
-    M_DrawCrispnessItem(crispness_hires, "High Resolution Rendering", crispy->hires, true);
+    M_DrawCrispnessMultiItem(crispness_hires, "Rendering Resolution", multiitem_hires, crispy->hires, true);
     M_DrawCrispnessMultiItem(crispness_widescreen, "Wide screen/see-thru HUD", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
     M_DrawCrispnessMultiItem(crispness_arlimit, "Aspect Ratio Limit", multiitem_arlimit, crispy->arlimit, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
