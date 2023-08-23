@@ -453,7 +453,7 @@ enum
 
     //crispness_sep_visual,
     //crispness_logo,
-	crispness_mapviewstats,
+    crispness_mapviewstats,
     crispness_screenwipe,
     crispness_coloredhud,
     crispness_translucency,
@@ -473,16 +473,16 @@ static menuitem_t Crispness1Menu[]=
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleHires,'h'},
     {3,"",	M_CrispyToggleWidescreen,'w'},
-    {3,"",  M_CrispyToggleAspectRatioLimit,'a'},
+    {3,"",	M_CrispyToggleAspectRatioLimit,'a'},
     {3,"",	M_CrispyTogglePixelAspectRatio,'f'},
     {3,"",	M_CrispyToggleUncapped,'u'},
     {4,"",	M_CrispyToggleFpsLimit,'f'},
     {3,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
 //    {-1,"",0,'\0'},
-//    {3,"",  M_CrispyToggleLogo,'o'},
-    {3,"",  M_CrispyToggleMapViewStats, 't'},
-    {3,"",  M_CrispyToggleScreenwipe,'o'},
+//    {3,"",	M_CrispyToggleLogo,'o'},
+    {3,"",	M_CrispyToggleMapViewStats, 't'},
+    {3,"",	M_CrispyToggleScreenwipe,'o'},
     {3,"",	M_CrispyToggleColoredhud,'c'},
     {3,"",	M_CrispyToggleTranslucency,'e'},
     {3,"",	M_CrispyToggleSmoothLighting,'l'},
@@ -636,7 +636,7 @@ enum
 
     crispness_sep_demos,
     crispness_demotimer,
-	crispness_demotimerpos,
+    crispness_demotimerpos,
     crispness_demotimerdir,
     crispness_demobar,
     crispness_demousetimer,
@@ -1628,7 +1628,7 @@ static void M_DrawCrispness1(void)
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     //M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
-	M_DrawCrispnessMultiItem(crispness_mapviewstats, "Map rendering stats", multiitem_mapviewstats, crispy->mapviewstats, true);
+    M_DrawCrispnessMultiItem(crispness_mapviewstats, "Map rendering stats", multiitem_mapviewstats, crispy->mapviewstats, true);
     M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe", crispy->screenwipe, true);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
@@ -1714,7 +1714,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_doom2projbypass, "Doom 2-only shots bypass lines", crispy->doom2projbypass, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_doom2projbypass, "Doom 2-only missiles bypass specs", crispy->doom2projbypass, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
@@ -1722,7 +1722,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessSeparator(crispness_sep_demos, "Demos");
 
     M_DrawCrispnessMultiItem(crispness_demotimer, "Show Demo Timer", multiitem_demotimer, crispy->demotimer, true);
-	M_DrawCrispnessMultiItem(crispness_demotimerpos, "Demo Timer Position", multiitem_demotimerpos, crispy->demotimerpos + 1, crispy->demotimer);
+    M_DrawCrispnessMultiItem(crispness_demotimerpos, "Demo Timer Position", multiitem_demotimerpos, crispy->demotimerpos + 1, crispy->demotimer);
     M_DrawCrispnessMultiItem(crispness_demotimerdir, "Playback Timer Direction", multiitem_demotimerdir, crispy->demotimerdir + 1, crispy->demotimer & DEMOTIMER_PLAYBACK);
     M_DrawCrispnessItem(crispness_demobar, "Show Demo Progress Bar", crispy->demobar, true);
     M_DrawCrispnessItem(crispness_demousetimer, "\"Use\" Button Timer", crispy->btusetimer, true);
