@@ -24,7 +24,7 @@
 static crispy_t crispy_s = {
 	0,
 	.extautomap = 1,
-	.hires = 1,
+	.hires = 2,
 	.screenwipe = 1,
 	.smoothscaling = 1,
 	.soundfix = 1,
