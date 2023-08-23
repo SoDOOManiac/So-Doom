@@ -2,7 +2,7 @@
 
 include ../config.make
 
-DOC_FILES += README.Strife.md NOT-BUGS.md
+DOC_FILES += NOT-BUGS.md
 
 export MACOSX_DEPLOYMENT_TARGET=10.7
 
@@ -64,24 +64,18 @@ $(STAGING_DIR): launcher $(TOPLEVEL_DOCS) app.icns wadfile.icns
 
 	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)doom "$(APP_BIN_DIR)"
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)doom"
-	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)heretic "$(APP_BIN_DIR)"
-	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)heretic"
-	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)hexen "$(APP_BIN_DIR)"
-	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)hexen"
-	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)strife "$(APP_BIN_DIR)"
-	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)strife"
 	./cp-with-libs $(TOPLEVEL)/src/$(PROGRAM_PREFIX)setup "$(APP_BIN_DIR)"
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)setup"
 
 	$(TOPLEVEL)/man/simplecpp -DPRECOMPILED -D__MACOSX__  \
-	                -DDOOM -DHERETIC -DHEXEN -DSTRIFE     \
+	                -DDOOM     \
 	             < $(TOPLEVEL)/man/INSTALL.template       \
 	             > "$(APP_DOC_DIR)/INSTALL"
 
 	mkdir -p "$(APP_BIN_DIR)/man/man5" "$(APP_BIN_DIR)/man/man6"
 	cp $(TOPLEVEL)/man/*.5 "$(APP_BIN_DIR)/man/man5"
 	cp $(TOPLEVEL)/man/*.6 "$(APP_BIN_DIR)/man/man6"
-	for game in doom heretic hexen strife; do       \
+	for game in doom; do       \
 		cp $(TOPLEVEL)/man/CMDLINE.$$game       \
 		   "$(APP_DOC_DIR)/CMDLINE-$$game";     \
 	done
