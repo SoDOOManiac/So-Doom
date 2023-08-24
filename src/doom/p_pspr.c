@@ -64,7 +64,7 @@ void A_Recoil (player_t* player)
 	if (player)
 	{
 
-		if (crispy->recoil && !(player->mo->flags & MF_NOCLIP))
+		if (critical->recoil && !(player->mo->flags & MF_NOCLIP))
 		{
 			P_Thrust(player, ANG180 + player->mo->angle, 2048 * recoil_values[player->readyweapon][0]);
 		}
