@@ -627,7 +627,7 @@ PIT_AddLineIntercepts (line_t* ld)
     intercept_p->frac = frac;
     intercept_p->isaline = true;
     intercept_p->d.line = ld;
-    if (!crispy->evadinginterover) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled
+    if (!crispy->evadinginterover || netgame) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled or in netgames
     {
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     // [crispy] intercepts overflow guard
@@ -706,7 +706,7 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
     intercept_p->frac = frac;
     intercept_p->isaline = false;
     intercept_p->d.thing = thing;
-    if (!crispy->evadinginterover) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled
+    if (!crispy->evadinginterover || netgame) // [So Doom] INTERCEPTS overflow emulation if evasion is disabled or in netgames
     {
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     // [crispy] intercepts overflow guard
