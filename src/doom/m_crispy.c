@@ -236,7 +236,7 @@ multiitem_t multiitem_vsync[NUM_VSYNC] =
 
 multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
 {
-    {WIDESCREEN_OFF, "off/narrow"},
+    {WIDESCREEN_OFF, "off/regular"},
     {WIDESCREEN_WIDE, "on/wide"},
     {WIDESCREEN_COMPACT, "on/compact"},
     {WIDESCREEN_COCKPIT, "on/cockpit"},
