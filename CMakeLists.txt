@@ -2,7 +2,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.7.2)
 
-project("So Doom" VERSION 6.0.2 LANGUAGES C)
+project("So Doom" VERSION 7.0.0 LANGUAGES C)
 
 # Autotools variables
 set(top_srcdir ${CMAKE_CURRENT_SOURCE_DIR})
