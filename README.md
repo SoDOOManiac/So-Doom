@@ -25,17 +25,18 @@ So Doom is a source port that aims to provide a faithful Doom gaming experience 
 
 Its distinguishing features are:
 
+ * Enhanced quadruple (1280x800), double (640x400) or original (320x200) display resolution available.
+ * Displaying the map rendering stats (segs, visplanes, sprites and openings, limits of all these are removed), useful in debugging maps.
  * Hot-swapping of Crispy Doom's Flipped Levels and Flipped Weapons features.
- * Option for INTERCEPTS overflow evasion in singleplayer, shadowed and disabled in netgames.
+ * Option for INTERCEPTS overflow evasion in singleplayer, shadowed and disabled in netgames, off by default. If the demo you're playing desyncs compared to Crispy Doom, check this setting.
  * In-game control of pixel aspect ratio correction (not having to edit the `so-doom.cfg` file manually).
  * Possibility to interpolate camera movement only ('Camera movement' setting of 'Uncapped framerate' menu item), so that monsters don't 'slide'.
  * Extra settings like optional screen wipe, map rendering stats and others.
  * Extra options for some Crispy settings (like weapon bobbing).
  * Extra cheat codes.
  
-So Doom inherits all the core features of its parent Crispy Doom:
- 
- * Enhanced 640x400 display resolution, with the original 320x200 resolution still available in the "High Resolution Rendering: Off" mode.
+So Doom inherits all the core features of its parent Crispy Doom: 
+
  * Widescreen rendering for using all the available horizontal space of screens with aspect ratios up to 24:9.
  * Uncapped rendering framerate with interpolation and optional vertical synchronization (VSync) with the screen refresh rate.
  * Intermediate gamma correction levels (0.5, 1.5, 2.5 and 3.5).
@@ -135,7 +136,7 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 ## Download
 
 * Windows: [Get binaries of the latest release](https://github.com/SoDOOManiac/So-Doom/releases/latest), compatible with both x86 and x64 editions.
-* MacOS: Use MacPorts: `sudo port install crispy-doom` or Homebrew: `brew install crispy-doom`.
+* MacOS: Use MacPorts: `sudo port install so-doom` or Homebrew: `brew install so-doom`.
 * Linux: To install on Ubuntu (“Eoan Ermine” 19.10 and later)/Debian (“Buster” 10 and later) based systems: `sudo apt-get install crispy-doom`
 
 So Doom can play nearly all variants of Doom. If you don't own any, you may download the [Shareware version of Doom](http://cdn.debian.net/debian/pool/non-free/d/doom-wad-shareware/doom-wad-shareware_1.9.fixed.orig.tar.gz), extract it and copy the DOOM1.WAD file into your So Doom directory. Alternatively, you may want to play So Doom with [Freedoom](https://www.chocolate-doom.org/wiki/index.php/Freedoom) and a MegaWAD.
@@ -171,6 +172,40 @@ to install the prerequisites and then
 ```
 
 ## News
+
+### So Doom 7.0.0
+
+So Doom 7.0.0 has been released on August 26, 2023. The main feature of this release is the enhanced 1280x800 framebuffer resolution, 4 times the original one by each dimension.
+A number of bugs has also been fixed.
+
+#### So Doom-specific changes
+
+**New Features and Improvements**
+
+* Enhanced 1280x800 framebuffer resolution, 4x4 of the original framebuffer.
+* Fast framerate with interpolation of all movements with vsync is now the default option.
+* SoDOOMy menu wording improvements.
+
+**Bug Fixes**
+
+* Recoil thrust and Doom 2-only projectile special line bypass settings are now correctly disabled in demos.
+* Intercepts overflow emulation is correctly forced in netgames regardless of its evasion setting.
+* Vsync setting toggle code has been fixed.
+* The bug of not NULL-checking target player pointer in Arch-vile attack, introduced in So Doom 6.0.1 in ROOM.WAD special handling, has been fixed.
+
+#### Changes pulled from Crispy Doom
+
+**New Features and Improvements**
+
+* Brightmaps for certain textures and sprites have been improved by JNechaevsky.
+* Savegame loading from PWADs with spaces in their file name is now supported.
+
+**Bug Fixes**
+
+* Freeaim and jump settings are now correctly disabled in demos.
+* Mid-air speed boost bug when using nocleap cheat has been fixed.
+* Complevel 3 in demo footer has been fixed.
+* Door interpolation in Doom 2 MAP19 has been fixed.
 
 ### So Doom 6.0.1
 
