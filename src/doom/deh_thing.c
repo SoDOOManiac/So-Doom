@@ -61,7 +61,7 @@ static const bex_thingbits_t bex_thingbitstable[] = {
     {"NOTDMATCH", MF_NOTDMATCH},
     {"TRANSLUCENT", MF_TRANSLUCENT},
     // [NS] Beta projectile bouncing.
-    // {"BOUNCES", MF_BOUNCES},
+    {"BOUNCES", MF_BOUNCES},
     // TRANSLATION consists of 2 bits, not 1
     {"TRANSLATION", 0x04000000},
     {"TRANSLATION1", 0x04000000},
