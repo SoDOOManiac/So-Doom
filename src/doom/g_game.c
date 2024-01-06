@@ -36,6 +36,7 @@
 #include "m_misc.h"
 #include "m_menu.h"
 #include "m_random.h"
+#include "i_joystick.h"
 #include "i_system.h"
 #include "i_timer.h"
 #include "i_input.h"
@@ -90,7 +91,6 @@ void	G_DoReborn (int playernum);
  
 void	G_DoLoadLevel (void); 
 void	G_DoNewGame (void); 
-void	G_DoPlayDemo (void); 
 void	G_DoCompleted (void); 
 void	G_DoVictory (void); 
 void	G_DoWorldDone (void); 
@@ -493,11 +493,20 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	    //	fprintf(stderr, "strafe left\n");
 	    side -= sidemove[speed]; 
 	}
-	if (joyxmove > 0) 
-	    side += sidemove[speed]; 
-	if (joyxmove < 0) 
-	    side -= sidemove[speed]; 
- 
+        if (use_analog && joyxmove)
+        {
+            joyxmove = joyxmove * joystick_move_sensitivity / 10;
+            joyxmove = (joyxmove > FRACUNIT) ? FRACUNIT : joyxmove;
+            joyxmove = (joyxmove < -FRACUNIT) ? -FRACUNIT : joyxmove;
+            side += FixedMul(sidemove[speed], joyxmove);
+        }
+        else if (joystick_move_sensitivity)
+        {
+            if (joyxmove > 0)
+                side += sidemove[speed];
+            if (joyxmove < 0)
+                side -= sidemove[speed];
+        }
     } 
     else 
     { 
@@ -505,10 +514,21 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	    cmd->angleturn -= angleturn[tspeed]; 
 	if (gamekeydown[key_left] || mousebuttons[mousebturnleft])
 	    cmd->angleturn += angleturn[tspeed]; 
-	if (joyxmove > 0) 
-	    cmd->angleturn -= angleturn[tspeed]; 
-	if (joyxmove < 0) 
-	    cmd->angleturn += angleturn[tspeed]; 
+        if (use_analog && joyxmove)
+        {
+            // Cubic response curve allows for finer control when stick
+            // deflection is small.
+            joyxmove = FixedMul(FixedMul(joyxmove, joyxmove), joyxmove);
+            joyxmove = joyxmove * joystick_turn_sensitivity / 10;
+            cmd->angleturn -= FixedMul(angleturn[1], joyxmove);
+        }
+        else if (joystick_turn_sensitivity)
+        {
+            if (joyxmove > 0)
+                cmd->angleturn -= angleturn[tspeed];
+            if (joyxmove < 0)
+                cmd->angleturn += angleturn[tspeed];
+        }
     } 
  
     if (gamekeydown[key_up] || gamekeydown[key_alt_up]) // [crispy] add key_alt_*
@@ -522,25 +542,48 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	forward -= forwardmove[speed]; 
     }
 
-    if (joyymove < 0) 
-        forward += forwardmove[speed]; 
-    if (joyymove > 0) 
-        forward -= forwardmove[speed]; 
+    if (use_analog && joyymove)
+    {
+        joyymove = joyymove * joystick_move_sensitivity / 10;
+        joyymove = (joyymove > FRACUNIT) ? FRACUNIT : joyymove;
+        joyymove = (joyymove < -FRACUNIT) ? -FRACUNIT : joyymove;
+        forward -= FixedMul(forwardmove[speed], joyymove);
+    }
+    else if (joystick_move_sensitivity)
+    {
+        if (joyymove < 0)
+            forward += forwardmove[speed];
+        if (joyymove > 0)
+            forward -= forwardmove[speed];
+    }
 
     if (gamekeydown[key_strafeleft] || gamekeydown[key_alt_strafeleft] // [crispy] add key_alt_*
      || joybuttons[joybstrafeleft]
-     || mousebuttons[mousebstrafeleft]
-     || joystrafemove < 0)
+     || mousebuttons[mousebstrafeleft])
     {
         side -= sidemove[speed];
     }
 
     if (gamekeydown[key_straferight] || gamekeydown[key_alt_straferight] // [crispy] add key_alt_*
      || joybuttons[joybstraferight]
-     || mousebuttons[mousebstraferight]
-     || joystrafemove > 0)
+     || mousebuttons[mousebstraferight])
     {
         side += sidemove[speed]; 
+    }
+
+    if (use_analog && joystrafemove)
+    {
+        joystrafemove = joystrafemove * joystick_move_sensitivity / 10;
+        joystrafemove = (joystrafemove > FRACUNIT) ? FRACUNIT : joystrafemove;
+        joystrafemove = (joystrafemove < -FRACUNIT) ? -FRACUNIT : joystrafemove;
+        side += FixedMul(sidemove[speed], joystrafemove);
+    }
+    else if (joystick_move_sensitivity)
+    {
+        if (joystrafemove < 0)
+            side -= sidemove[speed];
+        if (joystrafemove > 0)
+            side += sidemove[speed];
     }
 
     // [crispy] look up/down/center keys
@@ -1048,6 +1091,7 @@ boolean G_Responder (event_t* ev)
 	    if (!menuactive && crispy->soundfix)
 		S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_StartControlPanel (); 
+	    joywait = I_GetTime() + 5;
 	    return true; 
 	} 
 	return false; 
@@ -1691,7 +1735,7 @@ void G_ScreenShot (void)
 
 
 // DOOM Par Times
-static const int pars[6][10] =
+static const int pars[7][10] =
 { 
     {0}, 
     {0,30,75,120,90,165,180,180,30,165}, 
@@ -1701,6 +1745,8 @@ static const int pars[6][10] =
    ,{0,165,255,135,150,180,390,135,360,180}
     // [crispy] Episode 5 par times from Sigil v1.21
    ,{0,90,150,360,420,780,420,780,300,660}
+    // [crispy] Episode 6 par times from Sigil II v1.0
+   ,{0,480,300,240,420,510,840,960,390,450}
 }; 
 
 // DOOM II Par Times
@@ -1969,6 +2015,7 @@ void G_DoCompleted (void)
 	    switch (gameepisode) 
 	    { 
 	      case 1: 
+	      case 6:
 		wminfo.next = 3; 
 		break; 
 	      case 2: 
@@ -2030,7 +2077,9 @@ void G_DoCompleted (void)
         // [crispy] single player par times for episode 4
         (gameepisode == 4 && crispy->singleplayer) ||
         // [crispy] par times for Sigil
-        gameepisode == 5)
+        gameepisode == 5 ||
+        // [crispy] par times for Sigil II
+        gameepisode == 6)
     {
         // [crispy] support [PARS] sections in BEX files
         if (bex_pars[gameepisode][gamemap])
@@ -2539,6 +2588,14 @@ G_InitNew
 
     M_ClearRandom ();
 
+    // [crispy] Spider Mastermind gets increased health in Sigil II. Normally
+    // the Sigil II DEH handles this, but we don't load the DEH if the WAD gets
+    // sideloaded.
+    if (crispy->havesigil2 && crispy->havesigil2 != (char *)-1)
+    {
+        mobjinfo[MT_SPIDER].spawnhealth = (episode == 6) ? 9000 : 3000;
+    }
+
     if (skill == sk_nightmare || respawnparm )
 	respawnmonsters = true;
     else
@@ -2625,6 +2682,13 @@ G_InitNew
             break;
           case 5:        // [crispy] Sigil
             skytexturename = "SKY5_ZD";
+            if (R_CheckTextureNumForName(DEH_String(skytexturename)) == -1)
+            {
+                skytexturename = "SKY3";
+            }
+            break;
+          case 6:        // [crispy] Sigil II
+            skytexturename = "SKY6_ZD";
             if (R_CheckTextureNumForName(DEH_String(skytexturename)) == -1)
             {
                 skytexturename = "SKY3";
@@ -3375,5 +3439,23 @@ boolean G_CheckDemoStatus (void)
     return false; 
 } 
  
+//
+// G_DemoGotoNextLevel
+// [crispy] fast forward to next level while demo playback
+//
+
+boolean demo_gotonextlvl;
+
+void G_DemoGotoNextLevel (boolean start)
+{
+    // disable screen rendering while fast forwarding
+    nodrawers = start;
+
+    // switch to fast tics running mode if not in -timedemo
+    if (!timingdemo)
+    {
+        singletics = start;
+    }
+} 
  
  

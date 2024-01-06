@@ -70,6 +70,15 @@
 #define GAMMALVL3	"Gamma correction level 3"
 #define GAMMALVL4	"Gamma correction level 4"
 // [crispy] intermediate gamma levels
+#define GAMMALVL050	"Gamma correction level -4"
+#define GAMMALVL055	"Gamma correction level -3.6"
+#define GAMMALVL060	"Gamma correction level -3.2"
+#define GAMMALVL065	"Gamma correction level -2.8"
+#define GAMMALVL070	"Gamma correction level -2.4"
+#define GAMMALVL075	"Gamma correction level -2.0"
+#define GAMMALVL080	"Gamma correction level -1.6"
+#define GAMMALVL085	"Gamma correction level -1.2"
+#define GAMMALVL090	"Gamma correction level -0.8"
 #define GAMMALVL05	"Gamma correction level 0.5"
 #define GAMMALVL15	"Gamma correction level 1.5"
 #define GAMMALVL25	"Gamma correction level 2.5"
@@ -197,6 +206,16 @@
 #define HUSTR_E5M7	"E5M7: Nightmare Underworld"
 #define HUSTR_E5M8	"E5M8: Halls of Perdition"
 #define HUSTR_E5M9	"E5M9: Realm of Iblis"
+
+#define HUSTR_E6M1	"E6M1: Cursed Darkness"
+#define HUSTR_E6M2	"E6M2: Violent Hatred"
+#define HUSTR_E6M3	"E6M3: Twilight Desolation"
+#define HUSTR_E6M4	"E6M4: Fragments of Sanity"
+#define HUSTR_E6M5	"E6M5: Wrathful Reckoning"
+#define HUSTR_E6M6	"E6M6: Vengeance Unleashed"
+#define HUSTR_E6M7	"E6M7: Descent Into Terror"
+#define HUSTR_E6M8	"E6M8: Abyss of Despair"
+#define HUSTR_E6M9	"E6M9: Shattered Homecoming"
 
 #define HUSTR_1	"level 1: entryway"
 #define HUSTR_2	"level 2: underhalls"
@@ -501,6 +520,16 @@
 "\n"\
 "\n"\
 "Lock and load. Rip and tear."
+
+#define E6TEXT \
+"Satan erred in casting you to Hell's\n"\
+"darker depths. His plan failed. He has\n"\
+"tried for so long to destroy you, and he\n"\
+"has lost every single time. His only\n"\
+"option is to flood Earth with demons\n"\
+"and hope you go down fighting.\n"\
+"\n"\
+"Prepare for HELLION!"
 
 // after level 6, put this:
 

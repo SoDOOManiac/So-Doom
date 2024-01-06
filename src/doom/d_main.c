@@ -107,6 +107,7 @@ boolean		devparm;	// started game with -devparm
 boolean         nomonsters;	// checkparm of -nomonsters
 boolean         respawnparm;	// checkparm of -respawn
 boolean         fastparm;	// checkparm of -fast
+boolean         coop_spawns = false;	// [crispy] checkparm of -coop_spawns
 
 
 
@@ -123,9 +124,6 @@ boolean         storedemo;
 
 // If true, the main game loop has started.
 boolean         main_loop_started = false;
-
-char		wadfile[1024];		// primary wad file
-char		mapdir[1024];           // directory of development maps
 
 int             show_endoom = 0; // [crispy] disable
 int             show_diskicon = 1;
@@ -469,6 +467,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_fpslimit",        &crispy->fpslimit);
     M_BindIntVariable("crispy_freeaim",         &crispy->freeaim);
     M_BindIntVariable("crispy_freelook",        &crispy->freelook);
+    M_BindIntVariable("crispy_gamma",           &crispy->gamma);
     M_BindIntVariable("crispy_hires",           &crispy->hires);
     M_BindIntVariable("crispy_jump",            &crispy->jump);
     M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
@@ -1391,7 +1390,7 @@ static void LoadIwadDeh(void)
                     "The dehacked file is required in order to emulate\n"
                     "chex.exe correctly.  It can be found in your nearest\n"
                     "/idgames repository mirror at:\n\n"
-                    "   utils/exe_edit/patches/chexdeh.zip");
+                    "   themes/chex/chexdeh.zip");
         }
 
         if (!DEH_LoadFile(chex_deh))
@@ -1457,7 +1456,6 @@ void D_DoomMain (void)
     int p;
     char file[256];
     char demolumpname[9] = {0};
-    int numiwadlumps;
 
     // [crispy] unconditionally initialize DEH tables
     DEH_Init();
@@ -1681,7 +1679,6 @@ void D_DoomMain (void)
 
     DEH_printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
-    numiwadlumps = numlumps;
 
     W_CheckCorrectIWAD(doom);
 
@@ -2014,7 +2011,7 @@ void D_DoomMain (void)
 	    gamevariant != freedoom &&
 	    strncasecmp(M_BaseName(iwadfile), "rekkr", 5))
 	{
-		D_LoadSigilWad();
+		D_LoadSigilWads();
 	}
 
 	if (gamemission == doom2)
@@ -2038,6 +2035,12 @@ void D_DoomMain (void)
     if (!M_ParmExists("-nodehlump") && !M_ParmExists("-nodeh"))
     {
         int i, loaded = 0;
+        int numiwadlumps = numlumps;
+
+        while (!W_IsIWADLump(lumpinfo[numiwadlumps - 1]))
+        {
+            numiwadlumps--;
+        }
 
         for (i = numiwadlumps; i < numlumps; ++i)
         {
@@ -2126,7 +2129,7 @@ void D_DoomMain (void)
     I_CheckIsScreensaver();
     I_InitTimer();
     I_InitJoystick();
-    I_InitSound(true);
+    I_InitSound(doom);
     I_InitMusic();
 
     // [crispy] check for SSG resources
@@ -2147,6 +2150,12 @@ void D_DoomMain (void)
                        (W_CheckNumForName("m_epi5") != -1) &&
                        (W_CheckNumForName("e5m1") != -1) &&
                        (W_CheckNumForName("wilv40") != -1);
+
+    // [crispy] check for presence of a 6th episode
+    crispy->haved1e6 = (gameversion == exe_ultimate) &&
+                       (W_CheckNumForName("m_epi6") != -1) &&
+                       (W_CheckNumForName("e6m1") != -1) &&
+                       (W_CheckNumForName("wilv50") != -1);
 
     // [crispy] check for presence of E1M10
     crispy->havee1m10 = (gamemode == retail) &&
@@ -2378,6 +2387,19 @@ void D_DoomMain (void)
     {
         I_AtExit(StatDump, true);
         DEH_printf("External statistics registered.\n");
+    }
+
+    //!
+    // @category game
+    //
+    // Start single player game with items spawns as in cooperative netgame.
+    //
+
+    p = M_ParmExists("-coop_spawns");
+
+    if (p)
+    {
+        coop_spawns = true;
     }
 
     //!

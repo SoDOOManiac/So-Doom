@@ -78,16 +78,18 @@ void V_DrawFilledBox(int x, int y, int w, int h, int c);
 void V_DrawHorizLine(int x, int y, int w, int c);
 void V_DrawVertLine(int x, int y, int h, int c);
 void V_DrawBox(int x, int y, int w, int h, int c);
-void V_CopyScaledBuffer(pixel_t *dest, pixel_t *src, size_t size);
+void V_CopyScaledBuffer(pixel_t *dest, byte *src, size_t size);
 
 // Draw a raw screen lump
 
-void V_DrawRawScreen(pixel_t *raw);
+void V_DrawRawScreen(byte *raw);
 
 // Temporarily switch to using a different buffer to draw graphics, etc.
 
 void V_DrawFullscreenRawOrPatch(lumpindex_t index); // [crispy]
 void V_UseBuffer(pixel_t *buffer);
+void V_FillFlat(int y_start, int y_stop, int x_start, int x_stop,
+                const byte *src, pixel_t *dest);    // [crispy]
 
 // Return to using the normal screen buffer to draw graphics.
 

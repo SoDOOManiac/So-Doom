@@ -302,11 +302,23 @@ visplane_t *R_FindPlane (fixed_t height, int picnum, int lightlevel)
 
     if (picnum == skyflatnum)
     {
+/*<<<<<<< HEAD
         height = 0; // all skys map together
         // [JN] Don't modify lightlevel parameter of visplane with sky texture.
         // Otherwise hash function will consider it as unique one, forcing 
         // creation of new visplane.
         // lightlevel = 0;
+=======*/
+	lightlevel = 0;   // killough 7/19/98: most skies map together
+
+	// haleyjd 05/06/08: but not all. If height > viewpoint.z, set height to 1
+	// instead of 0, to keep ceilings mapping with ceilings, and floors mapping
+	// with floors.
+	if (height > viewz)
+	    height = 1;
+	else
+	    height = 0;
+//>>>>>>> 383984cf0b1a6d6c83fa328de1dc818765126a1a
     }
 
     // New visplane algorithm uses hash table -- killough
@@ -446,11 +458,6 @@ void R_DrawPlanes (void)
 		const side_t *s = *l->sidenum + sides;
 		texture = texturetranslation[s->toptexture];
 		dc_texturemid = s->rowoffset - 28*FRACUNIT;
-		// [crispy] stretch sky
-		if (crispy->stretchsky)
-		{
-		    dc_texturemid = dc_texturemid * (textureheight[texture]>>FRACBITS) / SKYSTRETCH_HEIGHT;
-		}
 		flip = (l->special == 272) ? 0u : ~0u;
 		an += s->textureoffset;
 	    }
@@ -468,11 +475,15 @@ void R_DrawPlanes (void)
 	    //  by INVUL inverse mapping.
 	    // [crispy] no brightmaps for sky
 	    dc_colormap[0] = dc_colormap[1] = colormaps;
-//	    dc_texturemid = skytexturemid;
 	    dc_texheight = textureheight[texture]>>FRACBITS; // [crispy] Tutti-Frutti fix
-	    // [crispy] stretch sky
-	    if (crispy->stretchsky)
+
+	    // [crispy] stretch short skies
+	    if (crispy->stretchsky && dc_texheight < 200)
+	    {
 	        dc_iscale = dc_iscale * dc_texheight / SKYSTRETCH_HEIGHT;
+	        dc_texturemid = dc_texturemid * dc_texheight / SKYSTRETCH_HEIGHT;
+	    }
+
 	    for (x=pl->minx ; x <= pl->maxx ; x++)
 	    {
 		dc_yl = pl->top[x];
@@ -482,7 +493,7 @@ void R_DrawPlanes (void)
 		{
 		    angle = ((an + xtoviewangle[x])^flip)>>ANGLETOSKYSHIFT;
 		    dc_x = x;
-		    dc_source = R_GetColumn(texture, angle);
+		    dc_source = R_GetColumnMod2(texture, angle);
 		    colfunc ();
 		}
 	    }

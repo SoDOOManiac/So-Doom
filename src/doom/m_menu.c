@@ -30,6 +30,7 @@
 #include "deh_main.h"
 
 #include "i_input.h"
+#include "i_joystick.h"
 #include "i_swap.h"
 #include "i_system.h"
 #include "i_timer.h"
@@ -101,8 +102,18 @@ boolean			messageNeedsInput;
 void    (*messageRoutine)(int response);
 
 // [crispy] intermediate gamma levels
-/*char gammamsg[5+4][26+2] =
+
+char gammamsg[5+13][26+2] =
 {
+    GAMMALVL050,
+    GAMMALVL055,
+    GAMMALVL060,
+    GAMMALVL065,
+    GAMMALVL070,
+    GAMMALVL075,
+    GAMMALVL080,
+    GAMMALVL085,
+    GAMMALVL090,
     GAMMALVL0,
     GAMMALVL05,
     GAMMALVL1,
@@ -112,10 +123,34 @@ void    (*messageRoutine)(int response);
     GAMMALVL3,
     GAMMALVL35,
     GAMMALVL4
-};*/
+};
+
+// [So Doom] strings of intermediate gamma values
+
+char gammavalue[5+13][5] =
+{
+	"-4",
+	"-3.6",
+	"-3.2",
+	"-2.8",
+	"-2.4",
+	"-2.0",
+	"-1.6",
+	"-1.2",
+	"-0.8",
+	"0",
+	"0.5",
+	"1",
+	"1.5",
+	"2",
+	"2.5",
+	"3",
+	"3.5",
+	"4"
+};
 
 //[So Doom] Colorized message string
-char		ColorMessageString[48];
+char		ColorMessageString[96];
 
 // we are going to be entering a savegame string
 int			saveStringEnter;              
@@ -164,9 +199,9 @@ typedef struct
     char	name[10];
     
     // choice = menu item #.
-    // if status = 2,
+    // if status = 2 or 3,
     //   choice=0:leftarrow,1:rightarrow
-    // [crispy] if status = 3,
+    // [crispy] if status = 4,
     //   choice=0:leftarrow,1:rightarrow,2:enter
     void	(*routine)(int choice);
     
@@ -310,6 +345,7 @@ enum
     ep3,
     ep4,
     ep5, // [crispy] Sigil
+    ep6, // [crispy] Sigil II
     ep_end
 } episodes_e;
 
@@ -320,6 +356,17 @@ menuitem_t EpisodeMenu[]=
     {1,"M_EPI3", M_Episode,'i'},
     {1,"M_EPI4", M_Episode,'t'}
    ,{1,"M_EPI5", M_Episode,'s'} // [crispy] Sigil
+   ,{1,"M_EPI6", M_Episode,'s'} // [crispy] Sigil II
+};
+
+// [crispy] have Sigil II but not Sigil
+menuitem_t EpisodeMenuSII[]=
+{
+    {1,"M_EPI1", M_Episode,'k'},
+    {1,"M_EPI2", M_Episode,'t'},
+    {1,"M_EPI3", M_Episode,'i'},
+    {1,"M_EPI4", M_Episode,'t'}
+   ,{1,"M_EPI6", M_Episode,'s'} // [crispy] Sigil II
 };
 
 menu_t  EpiDef =
@@ -1375,6 +1422,9 @@ void M_Episode(int choice)
     }
 
     epi = choice;
+    // [crispy] have Sigil II loaded but not Sigil
+    if (epi == 4 && crispy->haved1e6 && !crispy->haved1e5)
+        epi = 5;
     M_SetupNextMenu(&NewDef);
 }
 
@@ -1494,13 +1544,12 @@ static void M_DrawCrispnessBackground(void)
 
 	/*const byte *src = crispness_background;
 	pixel_t *dest;
-	int x, y;
 
 	// [NS] Try to load the background from a lump.
 	int lump = W_CheckNumForName("CRISPYBG");
 	if (lump != -1 && W_LumpLength(lump) >= 64*64)
 	{
-		src = W_CacheLumpNum(lump, PU_STATIC);
+		src = W_CacheLumpNum(lump, PU_CACHE);
 	}
 	dest = I_VideoBuffer;
 	*/
@@ -1545,6 +1594,8 @@ static void M_DrawCrispnessBackground(void)
 			i++;
 		}
 	}
+
+//	V_FillFlat(0, SCREENHEIGHT, 0, SCREENWIDTH, src, dest);
 
 	inhelpscreens = true;
 }
@@ -2301,12 +2352,13 @@ static int G_ReloadLevel(void)
 
 static int G_GotoNextLevel(void)
 {
-  byte doom_next[5][9] = {
+  byte doom_next[6][9] = {
     {12, 13, 19, 15, 16, 17, 18, 21, 14},
     {22, 23, 24, 25, 29, 27, 28, 31, 26},
     {32, 33, 34, 35, 36, 39, 38, 41, 37},
     {42, 49, 44, 45, 46, 47, 48, 51, 43},
-    {52, 53, 54, 55, 56, 59, 58, 11, 57},
+    {52, 53, 54, 55, 56, 59, 58, 61, 57},
+    {62, 63, 69, 65, 66, 67, 68, 11, 64},
   };
   byte doom2_next[33] = {
      2,  3,  4,  5,  6,  7,  8,  9, 10, 11,
@@ -2349,8 +2401,13 @@ static int G_GotoNextLevel(void)
       if (gamemode == registered)
         doom_next[2][7] = 11;
 
-      if (!crispy->haved1e5)
+      // [crispy] Sigil and Sigil II
+      if (!crispy->haved1e5 && !crispy->haved1e6)
         doom_next[3][7] = 11;
+      else if (!crispy->haved1e5 && crispy->haved1e6)
+        doom_next[3][7] = 61;
+      else if (crispy->haved1e5 && !crispy->haved1e6)
+        doom_next[4][7] = 11;
 
       if (gameversion == exe_chex)
       {
@@ -2417,6 +2474,7 @@ boolean M_Responder (event_t* ev)
     static  int     mousex = 0;
     static  int     lastx = 0;
     boolean mousextobutton = false;
+    int dir;
 
     // In testcontrols mode, none of the function keys should do anything
     // - the only key is escape to quit.
@@ -2464,25 +2522,38 @@ boolean M_Responder (event_t* ev)
 
         if (menuactive)
         {
-            if (ev->data3 < 0)
+            if (JOY_GET_DPAD(ev->data6) != JOY_DIR_NONE)
+            {
+                dir = JOY_GET_DPAD(ev->data6);
+            }
+            else if (JOY_GET_LSTICK(ev->data6) != JOY_DIR_NONE)
+            {
+                dir = JOY_GET_LSTICK(ev->data6);
+            }
+            else
+            {
+                dir = JOY_GET_RSTICK(ev->data6);
+            }
+
+            if (dir & JOY_DIR_UP)
             {
                 key = key_menu_up;
                 joywait = I_GetTime() + 5;
             }
-            else if (ev->data3 > 0)
+            else if (dir & JOY_DIR_DOWN)
             {
                 key = key_menu_down;
                 joywait = I_GetTime() + 5;
             }
-            if (ev->data2 < 0)
+            if (dir & JOY_DIR_LEFT)
             {
                 key = key_menu_left;
-                joywait = I_GetTime() + 2;
+                joywait = I_GetTime() + 5;
             }
-            else if (ev->data2 > 0)
+            else if (dir & JOY_DIR_RIGHT)
             {
                 key = key_menu_right;
-                joywait = I_GetTime() + 2;
+                joywait = I_GetTime() + 5;
             }
 
 #define JOY_BUTTON_MAPPED(x) ((x) >= 0)
@@ -2902,127 +2973,24 @@ boolean M_Responder (event_t* ev)
         }
         else if (key == key_menu_gamma)    // gamma toggle
         {
-	    usegamma++;
-	    if (usegamma > 4+4) // [crispy] intermediate gamma levels
-		usegamma = 0;
-        if (usegamma == 1)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL05)) // [So Doom] colorizing the gamma values if the messages had not been Dehacked
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL05);
-			
-        else
-        {
+	    crispy->gamma++;
+	    if (crispy->gamma > 4+13) // [crispy] intermediate gamma levels
+		crispy->gamma = 0;
+        if (DEH_HasStringReplacement(gammamsg[crispy->gamma]))
+            players[consoleplayer].message = DEH_String(gammamsg[crispy->gamma]);
+		else if (crispy->gamma != 9)
+		{
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "0.5");
+            crstr[CR_GREEN], gammavalue[crispy->gamma]);
             players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 2)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL1))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL1);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "1");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 3)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL15))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL15);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "1.5");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 4)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL2))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL2);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "2");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 5)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL25))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL25);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "2.5");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 6)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL3))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL3);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "3");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 7)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL35))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL35);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "3.5");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else if (usegamma == 8)
-        {
-        if (DEH_HasStringReplacement(GAMMALVL4))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL4);
-			
-        else
-        {
-            M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction level %s%s",
-            crstr[CR_GREEN], "4");
-            players[consoleplayer].message = ColorMessageString;
-        }
-        }
-        else
-        {
-        if (DEH_HasStringReplacement(GAMMALVL0))
-        
-            players[consoleplayer].message = DEH_String(GAMMALVL0);
-			
-        else
-        {
+		}
+		else
+		{
             M_snprintf(ColorMessageString, sizeof(ColorMessageString), "Gamma correction %s%s",
             crstr[CR_RED], "OFF");
             players[consoleplayer].message = ColorMessageString;
-        }
-        }
-	    //players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
+		}
+
 #ifndef CRISPY_TRUECOLOR
             I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
 #else
@@ -3039,13 +3007,35 @@ boolean M_Responder (event_t* ev)
 	}
         // [crispy] those two can be considered as shortcuts for the IDCLEV cheat
         // and should be treated as such, i.e. add "if (!netgame)"
-        else if (!netgame && key != 0 && key == key_menu_reloadlevel)
+        // hovewer, allow while multiplayer demos
+        else if ((!netgame || netdemo) && key != 0 && key == key_menu_reloadlevel)
         {
+	    if (demoplayback)         
+	    {
+		if (crispy->demowarp)
+		{
+		// [crispy] enable screen render back before replaying
+		nodrawers = false;
+		singletics = false;
+		}
+		// [crispy] replay demo lump or file
+		G_DoPlayDemo();
+		return true;
+	    }
+	    else
 	    if (G_ReloadLevel())
 		return true;
         }
-        else if (!netgame && key != 0 && key == key_menu_nextlevel)
+        else if ((!netgame || netdemo) && key != 0 && key == key_menu_nextlevel)
         {
+	    if (demoplayback)
+	    {
+		// [crispy] go to next level
+		demo_gotonextlvl = true;
+		G_DemoGotoNextLevel(true);
+		return true;
+	    }
+	    else
 	    if (G_GotoNextLevel())
 		return true;
         }
@@ -3161,6 +3151,11 @@ boolean M_Responder (event_t* ev)
 		currentMenu->menuitems[itemOn].routine(1);      // right arrow
 		S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    }
+            else if (currentMenu->menuitems[itemOn].status == 3)
+            {
+                currentMenu->menuitems[itemOn].routine(1); // right arrow
+                S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
+            }
             else if (currentMenu->menuitems[itemOn].status == 4) // [crispy]
             {
                 currentMenu->menuitems[itemOn].routine(2); // enter key
@@ -3567,9 +3562,17 @@ void M_Init (void)
     }
 
     // [crispy] Sigil
-    if (!crispy->haved1e5)
+    if (!crispy->haved1e5 && !crispy->haved1e6)
     {
         EpiDef.numitems = 4;
+    }
+    else if (crispy->haved1e5 != crispy->haved1e6)
+    {
+        EpiDef.numitems = 5;
+        if (crispy->haved1e6)
+        {
+            EpiDef.menuitems = EpisodeMenuSII;
+        }
     }
 
     // Versions of doom.exe before the Ultimate Doom release only had

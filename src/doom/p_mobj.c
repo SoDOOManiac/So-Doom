@@ -33,6 +33,7 @@
 #include "s_musinfo.h" // [crispy] S_ParseMusInfo()
 #include "i_swap.h" // [crispy] SHORT()
 #include "w_wad.h" // [crispy] W_CacheLumpNum()
+#include "g_game.h" // [crispy] demo_gotonextlvl
 
 #include "doomstat.h"
 
@@ -899,6 +900,13 @@ void P_SpawnPlayer (mapthing_t* mthing)
 
     int			i;
 
+    // [crispy] stop fast forward after entering new level while demo playback
+    if (demo_gotonextlvl)
+    {
+        demo_gotonextlvl = false;
+        G_DemoGotoNextLevel(false);
+    }
+
     if (mthing->type == 0)
     {
         return;
@@ -1006,7 +1014,7 @@ void P_SpawnMapThing (mapthing_t* mthing)
     }
 
     // check for appropriate skill level
-    if (!netgame && (mthing->options & 16) )
+    if (!coop_spawns && !netgame && (mthing->options & 16) )
 	return;
 		
     if (gameskill == sk_baby)

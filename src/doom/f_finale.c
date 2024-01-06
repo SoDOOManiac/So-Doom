@@ -76,6 +76,7 @@ static textscreen_t textscreens[] =
     { doom,      3, 8,  "MFLR8_4",   E3TEXT},
     { doom,      4, 8,  "MFLR8_3",   E4TEXT},
     { doom,      5, 8,  "FLOOR7_2",  E5TEXT}, // [crispy] Sigil
+    { doom,      6, 8,  "FLOOR7_2",  E6TEXT}, // [crispy] Sigil II
 
     { doom2,     1, 6,  "SLIME16",   C1TEXT},
     { doom2,     1, 11, "RROCK14",   C2TEXT},
@@ -272,7 +273,7 @@ void F_TextWrite (void)
     byte*	src;
     pixel_t*	dest;
     
-    int		x,y,w;
+    int		w;
     signed int	count;
     char *ch; // [crispy] un-const
     int		c;
@@ -283,26 +284,8 @@ void F_TextWrite (void)
     src = W_CacheLumpName ( finaleflat , PU_CACHE);
     dest = I_VideoBuffer;
 	
-    for (y=0 ; y<SCREENHEIGHT ; y++)
-    {
-#ifndef CRISPY_TRUECOLOR
-	for (x=0 ; x<SCREENWIDTH/64 ; x++)
-	{
-	    memcpy (dest, src+((y&63)<<6), 64);
-	    dest += 64;
-	}
-	if (SCREENWIDTH&63)
-	{
-	    memcpy (dest, src+((y&63)<<6), SCREENWIDTH&63);
-	    dest += (SCREENWIDTH&63);
-	}
-#else
-	for (x=0 ; x<SCREENWIDTH ; x++)
-	{
-		*dest++ = colormaps[src[((y&63)<<6) + (x&63)]];
-	}
-#endif
-    }
+    // [crispy] use unified flat filling function
+    V_FillFlat(0, SCREENHEIGHT, 0, SCREENWIDTH, src, dest);
 
     V_MarkRect (0, 0, SCREENWIDTH, SCREENHEIGHT);
     
@@ -1034,6 +1017,19 @@ static void F_ArtScreenDrawer(void)
                 if (W_CheckNumForName(DEH_String(lumpname)) == -1)
                 {
                     return;
+                }
+                break;
+            // [crispy] Sigil II
+            case 6:
+                lumpname = "SGL2END";
+                if (W_CheckNumForName(DEH_String(lumpname)) == -1)
+                {
+                    lumpname = "SIGILEND";
+
+                    if (W_CheckNumForName(DEH_String(lumpname)) == -1)
+                    {
+                        return;
+                    }
                 }
                 break;
             default:

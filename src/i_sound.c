@@ -125,7 +125,7 @@ static boolean SndDeviceInList(snddevice_t device, const snddevice_t *list,
 // Find and initialize a sound_module_t appropriate for the setting
 // in snd_sfxdevice.
 
-static void InitSfxModule(boolean use_sfx_prefix)
+static void InitSfxModule(GameMission_t mission)
 {
     int i;
 
@@ -142,7 +142,7 @@ static void InitSfxModule(boolean use_sfx_prefix)
         {
             // Initialize the module
 
-            if (sound_modules[i]->Init(use_sfx_prefix))
+            if (sound_modules[i]->Init(mission))
             {
                 sound_module = sound_modules[i];
                 return;
@@ -203,7 +203,7 @@ static void InitMusicModule(void)
 //  allocates channel buffer, sets S_sfx lookup.
 //
 
-void I_InitSound(boolean use_sfx_prefix)
+void I_InitSound(GameMission_t mission)
 {
     boolean nosound, nosfx, nomusic, nomusicpacks;
 
@@ -258,7 +258,7 @@ void I_InitSound(boolean use_sfx_prefix)
 
         if (!nosfx)
         {
-            InitSfxModule(use_sfx_prefix);
+            InitSfxModule(mission);
         }
 
         if (!nomusic)
@@ -415,14 +415,18 @@ void I_ShutdownMusic(void)
 
 void I_SetMusicVolume(int volume)
 {
-    if (active_music_module != NULL)
+    if (music_module != NULL)
     {
-        active_music_module->SetMusicVolume(volume);
+        music_module->SetMusicVolume(volume);
 
-        if (music_packs_active && active_music_module != &music_pack_module)
+#ifndef DISABLE_SDL2MIXER
+        // [crispy] always broadcast volume changes to SDL. This also covers
+        // the musicpack module.
+        if (music_module != &music_sdl_module)
         {
-            music_pack_module.SetMusicVolume(volume);
+            music_sdl_module.SetMusicVolume(volume);
         }
+#endif
     }
 }
 
@@ -573,6 +577,7 @@ void I_BindSoundVariables(void)
     M_BindFloatVariable("fsynth_reverb_level",      &fsynth_reverb_level);
     M_BindFloatVariable("fsynth_reverb_roomsize",   &fsynth_reverb_roomsize);
     M_BindFloatVariable("fsynth_reverb_width",      &fsynth_reverb_width);
+    M_BindFloatVariable("fsynth_gain",              &fsynth_gain);
     M_BindStringVariable("fsynth_sf_path",          &fsynth_sf_path);
 #endif // HAVE_FLUIDSYNTH
 
