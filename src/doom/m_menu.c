@@ -491,7 +491,7 @@ enum
     crispness_sep_rendering,
     crispness_hires,
     crispness_widescreen,
-    crispness_arlimit,
+    crispness_widehud,
     crispness_pixelaspectratio,
     crispness_uncapped,
     crispness_fpslimit,
@@ -520,7 +520,7 @@ static menuitem_t Crispness1Menu[]=
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleHires,'h'},
     {3,"",	M_CrispyToggleWidescreen,'w'},
-    {3,"",	M_CrispyToggleAspectRatioLimit,'a'},
+    {3,"",	M_CrispyToggleWideHUD,'a'},
     {3,"",	M_CrispyTogglePixelAspectRatio,'f'},
     {3,"",	M_CrispyToggleUncapped,'u'},
     {4,"",	M_CrispyToggleFpsLimit,'f'},
@@ -1670,8 +1670,8 @@ static void M_DrawCrispness1(void)
 
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
     M_DrawCrispnessMultiItem(crispness_hires, "Rendering Resolution", multiitem_hires, crispy->hires, true);
-    M_DrawCrispnessMultiItem(crispness_widescreen, "Wide screen/see-thru HUD", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
-    M_DrawCrispnessMultiItem(crispness_arlimit, "Aspect Ratio Limit", multiitem_arlimit, crispy->arlimit, aspect_ratio_correct && crispy->widescreen);
+    M_DrawCrispnessMultiItem(crispness_widescreen, "Widescreen Aspect Ratio", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
+    M_DrawCrispnessMultiItem(crispness_widehud, "Widescreen See-through HUD", multiitem_widehud, crispy->widehud, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Fast Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessNumericItem(crispness_fpslimit, "Framerate Limit", crispy->fpslimit, "None", crispy->uncapped, "35");

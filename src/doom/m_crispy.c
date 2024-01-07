@@ -161,18 +161,6 @@ multiitem_t multiitem_logo[NUM_LOGOS] =
     {LOGO_BOTH, "in both menus"},
 };
 
-multiitem_t multiitem_arlimit[NUM_RATIOS] =
-{
-    {RATIO_NON_WIDE, "Non-wide"},
-    {RATIO_MATCH_SCREEN, "Match screen"},
-    {RATIO_16_10, "16:10"},
-    {RATIO_17_10, "17:10"},
-    {RATIO_16_9, "16:9"},
-    {RATIO_17_9, "17:9"},
-    {RATIO_18_9, "18:9"},
-    {RATIO_21_9, "21:9"},
-};
-
 multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
 {
     {SECRETMESSAGE_OFF, "off"},
@@ -234,12 +222,23 @@ multiitem_t multiitem_vsync[NUM_VSYNC] =
     {VSYNC_CAPPED, "config FPS limit"},
 };
 
-multiitem_t multiitem_widescreen[NUM_WIDESCREEN] =
+multiitem_t multiitem_widehud[NUM_WIDEHUDS] =
 {
-    {WIDESCREEN_OFF, "off/regular"},
-    {WIDESCREEN_WIDE, "on/wide"},
-    {WIDESCREEN_COMPACT, "on/compact"},
-    {WIDESCREEN_COCKPIT, "on/cockpit"},
+    {WIDEHUD_OFF, "Non-wide"},
+    {WIDEHUD_WIDE, "Wide"},
+    {WIDEHUD_COMPACT, "Compact"},
+};
+
+multiitem_t multiitem_widescreen[NUM_RATIOS] =
+{
+    {RATIO_NON_WIDE, "Non-wide"},
+    {RATIO_MATCH_SCREEN, "Match screen"},
+    {RATIO_16_10, "16:10"},
+    {RATIO_17_10, "17:10"},
+    {RATIO_16_9, "16:9"},
+    {RATIO_17_9, "17:9"},
+    {RATIO_18_9, "18:9"},
+    {RATIO_21_9, "21:9"},
 };
 
 multiitem_t multiitem_widgets[NUM_WIDGETS] =
@@ -275,35 +274,6 @@ static void ChangeSettingEnum(int *setting, int choice, int num_values)
 
 static int hookchoice;
 
-static void M_CrispyToggleAspectRatioLimitHook (void)
-{
-    ChangeSettingEnum(&crispy->arlimit, hookchoice, NUM_RATIOS);
-
-    // [crispy] re-set logical rendering resolution
-
-    //I_ReInitGraphics(REINIT_ASPECTRATIO);
-    // [crispy] re-initialize screenSize_min
-    M_SizeDisplay(-1);
-    // [crispy] re-initialize framebuffers, textures and renderer
-    I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
-    // [crispy] re-calculate framebuffer coordinates
-    R_ExecuteSetViewSize();
-    // [crispy] re-draw bezel
-    R_FillBackScreen();
-    // [crispy] re-calculate disk icon coordinates
-    EnableLoadingDisk();
-    // [crispy] re-calculate automap coordinates
-    AM_LevelInit(true);
-
-    if (gamestate == GS_LEVEL && gamemap > 0)
-    {
-	// [crispy] re-arrange status bar widgets
-	ST_createWidgets();
-	// [crispy] re-arrange heads-up widgets
-	HU_Start();
-    }
-}
-
 static void M_CrispyTogglePixelAspectRatioHook (void)
 {
     ChangeSettingEnum(&aspect_ratio_correct, hookchoice, NUM_PIXELASPECTRATIOS);
@@ -338,13 +308,6 @@ void M_CrispyTogglePixelAspectRatio(int choice)
     hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyTogglePixelAspectRatioHook;
-}
-
-void M_CrispyToggleAspectRatioLimit(int choice)
-{
-    hookchoice = choice;
-
-    crispy->post_rendering_hook = M_CrispyToggleAspectRatioLimitHook;
 }
 
 void M_CrispyToggleAutomapstats(int choice)
@@ -851,9 +814,14 @@ void M_CrispyToggleWeaponSquat(int choice)
     crispy->weaponsquat = !crispy->weaponsquat;
 }
 
+void M_CrispyToggleWideHUD(int choice)
+{
+    ChangeSettingEnum(&crispy->widehud, choice, NUM_WIDEHUDS);
+}
+
 static void M_CrispyToggleWidescreenHook (void)
 {
-    ChangeSettingEnum(&crispy->widescreen, hookchoice, NUM_WIDESCREEN);
+    ChangeSettingEnum(&crispy->widescreen, hookchoice, NUM_RATIOS);
 
     // [crispy] no need to re-init when switching from wide to compact
     {

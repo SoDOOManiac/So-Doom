@@ -60,7 +60,6 @@ void BindCompatibilityVariables(void)
     // [crispy]
     if (gamemission == doom)
     {
-        M_BindIntVariable("crispy_arlimit",         &crispy->arlimit);
         M_BindIntVariable("crispy_automapoverlay",  &crispy->automapoverlay);
         M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
         M_BindIntVariable("crispy_automapstats",    &crispy->automapstats);
@@ -115,6 +114,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_uncapped",        &crispy->uncapped);
         M_BindIntVariable("crispy_vsync",           &crispy->vsync);
         M_BindIntVariable("crispy_weaponsquat",     &crispy->weaponsquat);
+        M_BindIntVariable("crispy_widehud",      	&crispy->widehud);
         M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
     }
     else if (gamemission == heretic)

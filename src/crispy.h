@@ -38,7 +38,6 @@
 typedef struct
 {
 	// [crispy] "crispness" config variables
-	int arlimit;
 	int automapoverlay;
 	int automaprotate;
 	int automapstats;
@@ -97,6 +96,7 @@ typedef struct
 	int uncapped;
 	int vsync;
 	int weaponsquat;
+	int widehud;
 	int widescreen;
 
 	// [crispy] in-game switches and variables
@@ -340,11 +340,10 @@ enum
 
 enum
 {
-    WIDESCREEN_OFF,
-    WIDESCREEN_WIDE,
-    WIDESCREEN_COMPACT,
-    WIDESCREEN_COCKPIT,
-    NUM_WIDESCREEN
+    WIDEHUD_OFF,
+    WIDEHUD_WIDE,
+    WIDEHUD_COMPACT,
+    NUM_WIDEHUDS
 };
 
 enum

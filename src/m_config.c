@@ -2209,14 +2209,6 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Aspect ratio limit.
-    //
-
-    CONFIG_VARIABLE_INT(crispy_arlimit),
-
-    //!
-    // @game doom
-    //
     // Automap overlay mode.
     //
 
@@ -2658,6 +2650,14 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_weaponsquat),
+
+    //!
+    // @game doom
+    //
+    // Widescreen Crispy HUD type: wide - spread along the screen, compact - status bar values in narrow screen boundary, but messages, FPS etc. at screen sides, cockpit - all desplayed alphanumerics within the narrow screen.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_widehud),
 
     //!
     // @game doom

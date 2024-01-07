@@ -38,7 +38,7 @@ extern int NONWIDEWIDTH; // [crispy] non-widescreen SCREENWIDTH
 extern int WIDESCREENDELTA; // [crispy] horizontal widescreen offset
 void I_ToggleVsync (void); // [crispy] calls native SDL vsync toggle
 void I_GetScreenDimensions (void); // [crispy] re-calculate WIDESCREENDELTA
-#define HUD_WIDESCREENDELTA (crispy->widescreen % 3 == 0 ? 0 : WIDESCREENDELTA) // for Cockpit HUD
+#define HUD_WIDESCREENDELTA (crispy->widehud == 0 ? 0 : WIDESCREENDELTA) // for Cockpit HUD
 
 // Screen height used when aspect_ratio_correct=true.
 
