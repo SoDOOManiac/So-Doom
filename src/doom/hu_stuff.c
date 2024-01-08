@@ -428,12 +428,13 @@ void HU_DrawDemoTimer (const int time)
 	
 	if (crispy->demotimerpos == 1)
 	{
-	    x = (NONWIDEWIDTH >> crispy->hires)/2 + 16;
+	    x = (NONWIDEWIDTH >> crispy->hires)/2 + 16; // demo timer horizontally centered in the middle of the screen 
 	    y = (viewwindowy >> crispy->hires) + (screenblocks >= 10 ? 8 : 0) + ((screenblocks >= 9 && chat_on) ? 8 : 0); // [So Doom] shift the centered demo timer down depending on chat line and decreased screenblocks
 	}
 	else
 	{
-	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for Cockpit HUD, draw demo timer widget within the narrow screen
+		// demo timer at the right edge of the (narrow) screen
+	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for non-wide HUD, draw demo timer widget within the narrow screen
 	    y = viewwindowy >> crispy->hires;
 	}
 	// [crispy] draw the Demo Timer widget with gray numbers
