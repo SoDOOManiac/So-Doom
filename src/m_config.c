@@ -2654,7 +2654,7 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Widescreen Crispy HUD type: wide - spread along the screen, compact - status bar values in narrow screen boundary, but messages, FPS etc. at screen sides.
+    // Widescreen Crispy HUD type: non-wide - everything aligned to narrow screen boundaries, wide - spread along the screen, compact - status bar values in narrow screen boundaries, but messages, FPS etc. at screen sides.
     //
 
     CONFIG_VARIABLE_INT(crispy_widehud),
