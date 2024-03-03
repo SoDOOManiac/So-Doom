@@ -1670,7 +1670,7 @@ static void M_DrawCrispness1(void)
 
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
     M_DrawCrispnessMultiItem(crispness_hires, "Rendering Resolution", multiitem_hires, crispy->hires, true);
-    M_DrawCrispnessMultiItem(crispness_widescreen, "Widescreen Aspect Ratio", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
+    M_DrawCrispnessMultiItem(crispness_widescreen, "Aspect Ratio", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
     M_DrawCrispnessMultiItem(crispness_widehud, "Widescreen See-through HUD", multiitem_widehud, crispy->widehud, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Fast Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
