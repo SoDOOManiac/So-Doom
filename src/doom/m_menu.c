@@ -257,7 +257,7 @@ static void M_MouseInvert(int choice); // [crispy] mouse sensitivity menu
 static void M_SfxVol(int choice);
 static void M_MusicVol(int choice);
 static void M_ChangeDetail(int choice);
-void M_SizeDisplay(int choice); // [So Doom] un-static for R_ExecuteSetViewSize(), M_CrispyTogglePixelAspectRatioHook() and M_CrispyToggleWidescreenHook()
+static void M_SizeDisplay(int choice);
 static void M_Mouse(int choice); // [crispy] mouse sensitivity menu
 static void M_Sound(int choice);
 

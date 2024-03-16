@@ -278,11 +278,6 @@ static void M_CrispyTogglePixelAspectRatioHook (void)
 {
     ChangeSettingEnum(&aspect_ratio_correct, hookchoice, NUM_PIXELASPECTRATIOS);
 
-    // [crispy] re-set logical rendering resolution
-
-    //I_ReInitGraphics(REINIT_ASPECTRATIO);
-    // [crispy] re-initialize screenSize_min
-    M_SizeDisplay(-1);
     // [crispy] re-initialize framebuffers, textures and renderer
     I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
     // [crispy] re-calculate framebuffer coordinates
