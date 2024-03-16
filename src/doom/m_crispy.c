@@ -256,7 +256,6 @@ extern void R_InitLightTables (void);
 extern void I_ReInitGraphics (int reinit);
 extern void ST_createWidgets(void);
 extern void HU_Start(void);
-extern void M_SizeDisplay(int choice);
 
 static void ChangeSettingEnum(int *setting, int choice, int num_values)
 {
