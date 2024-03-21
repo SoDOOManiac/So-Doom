@@ -255,19 +255,21 @@ void R_DrawColumnLow (void)
     // Zero length.
     if (count < 0) 
 	return; 
-				 
+
+  // Blocky mode, need to multiply by 2.
+
+    x = dc_x << 1;
+
 #ifdef RANGECHECK 
-    if ((unsigned)dc_x >= SCREENWIDTH
+    if ((unsigned)x >= SCREENWIDTH
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
 	
-	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
     }
     //	dccount++; 
 #endif 
-    // Blocky mode, need to multiply by 2.
-    x = dc_x << 1;
     
     dest = ylookup[dc_yl] + columnofs[flipviewwidth[x]];
     dest2 = ylookup[dc_yl] + columnofs[flipviewwidth[x+1]];
@@ -354,161 +356,222 @@ void R_SetFuzzPosDraw (void)
 	fuzzpos = fuzzpos_tic;
 }
 
-//
+// 
 // Framebuffer postprocessing.
 // Creates a fuzzy image by copying pixels
-//  from adjacent ones to left and right.
+//  from adjacent ones towards top and bottom.
 // Used with an all black colormap, this
 //  could create the SHADOW effect,
 //  i.e. spectres and invisible players.
-//
+// Originally modified by [FG] in Nugget Doom
+// for coarse-grained fuzz,
+// adapted by [SDM]
+
 void R_DrawFuzzColumn (void) 
 { 
-    int			count; 
-    pixel_t*		dest;
+    int			count, i; 
+    pixel_t*	dest;
+    pixel_t		fuzz;
     boolean		cutoff = false;
 
-    // Adjust borders. Low... 
-    if (!dc_yl) 
-	dc_yl = 1;
+    // temporary solution for fuzz to be coarse-grained in max resolution
+    int shift_to_scale = crispy->hires; // will be MIN(crispy->hires, crispy->maxfuzzscale) in So Doom - SoDOOManiac
+    int fuzz_pixel_size = 1 << shift_to_scale;
+    int max_fuzz_index = fuzz_pixel_size - 1;
 
-    // .. and high.
-    if (dc_yh == viewheight-1) 
+    // [FG, SDM] draw only fuzz_pixel_size multiple'th columns
+    if (dc_x & max_fuzz_index)
+        return;
+
+    // [FG, SDM] draw only fuzz_pixel_size multiple'th pixels
+    dc_yl &= (int)~max_fuzz_index;
+    dc_yh &= (int)~max_fuzz_index;
+
+    // Adjust borders. Low...
+    if (!dc_yl)
+        dc_yl = fuzz_pixel_size;
+
+    // ... and high.
+    if (dc_yh == viewheight - fuzz_pixel_size)
     {
-	dc_yh = viewheight - 2; 
-	cutoff = true;
+        dc_yh = viewheight - 2 * fuzz_pixel_size;
+        cutoff = true;
     }
-		 
-    count = dc_yh - dc_yl; 
 
-    // Zero length.
-    if (count < 0) 
-	return; 
+    count = dc_yh - dc_yl;
 
-#ifdef RANGECHECK 
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0 || dc_yh >= SCREENHEIGHT)
-    {
-	I_Error ("R_DrawFuzzColumn: %i to %i at %i",
-		 dc_yl, dc_yh, dc_x);
-    }
+    // Zero height.
+    if (count < 0)
+        return;
+
+#ifdef RANGECHECK
+    if ((unsigned) dc_x >= SCREENWIDTH
+        || dc_yl < 0
+        || dc_yh >= SCREENHEIGHT)
+        I_Error ("R_DrawFuzzColumn: %i to %i at %i",
+            dc_yl, dc_yh, dc_x);
 #endif
-    
+
     dest = ylookup[dc_yl] + columnofs[flipviewwidth[dc_x]];
+
+    count += fuzz_pixel_size;        // killough 1/99: minor tuning
+    count >>= shift_to_scale;
+
 
     // Looks like an attempt at dithering,
     //  using the colormap #6 (of 0-31, a bit
     //  brighter than average).
-    do 
+    do
     {
-	// Lookup framebuffer, and retrieve
-	//  a pixel that is either one column
-	//  left or right of the current one.
-	// Add index from colormap to index.
-#ifndef CRISPY_TRUECOLOR
-	*dest = colormaps[6*256+dest[SCREENWIDTH*fuzzoffset[fuzzpos]]]; 
-#else
-	*dest = I_BlendDark(dest[SCREENWIDTH*fuzzoffset[fuzzpos]], 0xD3);
-#endif
+    // Lookup framebuffer, and retrieve
+    //  a pixel that is either one pixel
+    //  up or down of the current one.
+    // Add index from colormap to index.
+    #ifndef CRISPY_TRUECOLOR
+	    fuzz = colormaps[6*256+dest[SCREENWIDTH*fuzzoffset[fuzzpos]]]; 
+    #else
+	    fuzz = I_BlendDark(dest[SCREENWIDTH*fuzzoffset[fuzzpos]], 0xD3);
+    #endif
+        // [FG, SDM] draw only even fuzz_pixel_size multiple'th pixels as fuzz_pixel_size x fuzz_pixel_size squares
+        // using the same fuzzoffset value
+        for (i = 0; i < fuzz_pixel_size; i++)
+        {
+            memset(dest, fuzz, fuzz_pixel_size);
+            dest += SCREENWIDTH;
+        }
 
-	// Clamp table lookup index.
-	if (++fuzzpos == FUZZTABLE) 
-	    fuzzpos = 0;
-	
-	dest += SCREENWIDTH;
-    } while (count--); 
+    // Clamp table lookup index.
+    if (++fuzzpos == FUZZTABLE) 
+        fuzzpos = 0;
+    }
+    while (--count);
 
     // [crispy] if the line at the bottom had to be cut off,
     // draw one extra line using only pixels of that line and the one above
     if (cutoff)
     {
-#ifndef CRISPY_TRUECOLOR
-	*dest = colormaps[6*256+dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2]];
-#else
-	*dest = I_BlendDark(dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2], 0xD3);
-#endif
+    #ifndef CRISPY_TRUECOLOR
+	    fuzz = colormaps[6*256+dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2]]; 
+    #else
+	    fuzz = I_BlendDark(dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2], 0xD3);
+    #endif
+        // [FG, SDM] draw only even fuzz_pixel_size multiple'th pixels as fuzz_pixel_size x fuzz_pixel_size squares
+        //      using the same fuzzoffset value
+        for (i = 0; i < fuzz_pixel_size; i++)
+        {
+           memset(dest, fuzz, fuzz_pixel_size);
+           dest += SCREENWIDTH;
+        }
     }
 } 
 
-// low detail mode version
+// low detail mode version.
+// Coarse-grained fuzz by [FG]
+// adapted by [SDM]
  
 void R_DrawFuzzColumnLow (void) 
 { 
-    int			count; 
-    pixel_t*		dest;
-    pixel_t*		dest2;
+    int			count, i; 
+    pixel_t*	dest;
+    pixel_t		fuzz;
     int x;
     boolean		cutoff = false;
 
-    // Adjust borders. Low... 
-    if (!dc_yl) 
-	dc_yl = 1;
-
-    // .. and high.
-    if (dc_yh == viewheight-1) 
-    {
-	dc_yh = viewheight - 2; 
-	cutoff = true;
-    }
-		 
-    count = dc_yh - dc_yl; 
-
-    // Zero length.
-    if (count < 0) 
-	return; 
+    // temporary solution for fuzz to be coarse-grained in max resolution
+    int shift_to_scale = crispy->hires; // will be MIN(crispy->hires, crispy->maxfuzzscale) in So Doom - SoDOOManiac
+    int fuzz_pixel_size = 1 << shift_to_scale;
+    int max_fuzz_index = fuzz_pixel_size - 1;
 
     // low detail mode, need to multiply by 2
     
     x = dc_x << 1;
+
+    // [FG, SDM] draw only fuzz_pixel_size multiple'th columns
+    if (x & max_fuzz_index)
+        return;
+
+    // [FG, SDM] draw only fuzz_pixel_size multiple'th pixels
+    dc_yl &= (int)~max_fuzz_index;
+    dc_yh &= (int)~max_fuzz_index;
+
+    // Adjust borders. Low...
+    if (!dc_yl)
+        dc_yl = fuzz_pixel_size;
+
+    // ... and high.
+    if (dc_yh == viewheight - fuzz_pixel_size)
+    {
+        dc_yh = viewheight - 2 * fuzz_pixel_size;
+        cutoff = true;
+    }
+
+    count = dc_yh - dc_yl;
+
+    // Zero height.
+    if (count < 0)
+        return;
+
+
     
 #ifdef RANGECHECK 
     if ((unsigned)x >= SCREENWIDTH
 	|| dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
 	I_Error ("R_DrawFuzzColumn: %i to %i at %i",
-		 dc_yl, dc_yh, dc_x);
+		 dc_yl, dc_yh, x);
     }
 #endif
     
-    dest = ylookup[dc_yl] + columnofs[flipviewwidth[x]];
-    dest2 = ylookup[dc_yl] + columnofs[flipviewwidth[x+1]];
+    dest = ylookup[dc_yl] + columnofs[crispy->fliplevels ? (flipviewwidth[x] & (int)~MAX(1, max_fuzz_index)) : flipviewwidth[x]];
+
+    count += fuzz_pixel_size;        // killough 1/99: minor tuning
+    count >>= shift_to_scale;
+
 
     // Looks like an attempt at dithering,
     //  using the colormap #6 (of 0-31, a bit
     //  brighter than average).
-    do 
+    do
     {
-	// Lookup framebuffer, and retrieve
-	//  a pixel that is either one column
-	//  left or right of the current one.
-	// Add index from colormap to index.
-#ifndef CRISPY_TRUECOLOR
-	*dest = colormaps[6*256+dest[SCREENWIDTH*fuzzoffset[fuzzpos]]];
-	*dest2 = colormaps[6*256+dest2[SCREENWIDTH*fuzzoffset[fuzzpos]]];
-#else
-	*dest = I_BlendDark(dest[SCREENWIDTH*fuzzoffset[fuzzpos]], 0xD3);
-	*dest2 = I_BlendDark(dest2[SCREENWIDTH*fuzzoffset[fuzzpos]], 0xD3);
-#endif
+    // Lookup framebuffer, and retrieve
+    //  a pixel that is either one pixel
+    //  up or down of the current one.
+    // Add index from colormap to index.
+    #ifndef CRISPY_TRUECOLOR
+	    fuzz = colormaps[6*256+dest[SCREENWIDTH*fuzzoffset[fuzzpos]]]; 
+    #else
+	    fuzz = I_BlendDark(dest[SCREENWIDTH*fuzzoffset[fuzzpos]], 0xD3);
+    #endif
+        // [FG, SDM] draw only even fuzz_pixel_size multiple'th pixels as MAX(2, fuzz_pixel_size) x fuzz_pixel_size rectangles/squares
+        // using the same fuzzoffset value
+        for (i = 0; i < fuzz_pixel_size; i++)
+        {
+            memset(dest, fuzz, MAX(2, fuzz_pixel_size));
+            dest += SCREENWIDTH;
+        }
 
-	// Clamp table lookup index.
-	if (++fuzzpos == FUZZTABLE) 
-	    fuzzpos = 0;
-	
-	dest += SCREENWIDTH;
-	dest2 += SCREENWIDTH;
-    } while (count--); 
+    // Clamp table lookup index.
+    if (++fuzzpos == FUZZTABLE) 
+        fuzzpos = 0;
+    }
+    while (--count);
 
     // [crispy] if the line at the bottom had to be cut off,
     // draw one extra line using only pixels of that line and the one above
     if (cutoff)
     {
-#ifndef CRISPY_TRUECOLOR
-	*dest = colormaps[6*256+dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2]];
-	*dest2 = colormaps[6*256+dest2[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2]];
-#else
-	*dest = I_BlendDark(dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2], 0xD3);
-	*dest2 = I_BlendDark(dest2[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2], 0xD3);
-#endif
+    #ifndef CRISPY_TRUECOLOR
+	    fuzz = colormaps[6*256+dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2]]; 
+    #else
+	    fuzz = I_BlendDark(dest[SCREENWIDTH*(fuzzoffset[fuzzpos]-FUZZOFF)/2], 0xD3);
+    #endif
+        // [FG, SDM] draw only even fuzz_pixel_size multiple'th pixels as MAX(2, fuzz_pixel_size) x fuzz_pixel_size rectangles/squares
+        //      using the same fuzzoffset value
+        for (i = 0; i < fuzz_pixel_size; i++)
+        {
+           memset(dest, fuzz, MAX(2, fuzz_pixel_size));
+           dest += SCREENWIDTH;
+        }
     }
 } 
  
@@ -564,7 +627,7 @@ void R_DrawTranslatedColumn (void)
 	//  to map certain colorramps to other ones,
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
-	//  is mapped to gray, red, black/indigo. 
+	//  is mapped to brown, red, black/indigo. 
 	// [crispy] brightmaps
 	const byte source = dc_source[frac>>FRACBITS];
 	*dest = dc_colormap[dc_brightmap[source]][dc_translation[source]];
@@ -588,6 +651,7 @@ void R_DrawTranslatedColumnLow (void)
 	return; 
 
     // low detail, need to scale by 2
+
     x = dc_x << 1;
 				 
 #ifdef RANGECHECK 
@@ -616,7 +680,7 @@ void R_DrawTranslatedColumnLow (void)
 	//  to map certain colorramps to other ones,
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
-	//  is mapped to gray, red, black/indigo. 
+	//  is mapped to brown, red, black/indigo. 
 	// [crispy] brightmaps
 	const byte source = dc_source[frac>>FRACBITS];
 	*dest = dc_colormap[dc_brightmap[source]][dc_translation[source]];
@@ -671,7 +735,7 @@ void R_DrawTLColumn (void)
     } while (count--);
 }
 
-// [crispy] draw translucent column, low-resolution version
+// [crispy] draw translucent column, low-detail version
 void R_DrawTLColumnLow (void)
 {
     int			count;
@@ -935,6 +999,12 @@ void R_DrawSpanLow (void)
     int count;
     int spot;
 
+    count = (ds_x2 - ds_x1);
+
+    // Blocky mode, need to multiply by 2.
+    ds_x1 <<= 1;
+    ds_x2 <<= 1;
+
 #ifdef RANGECHECK
     if (ds_x2 < ds_x1
 	|| ds_x1<0
@@ -953,12 +1023,6 @@ void R_DrawSpanLow (void)
     step = ((ds_xstep << 10) & 0xffff0000)
          | ((ds_ystep >> 6)  & 0x0000ffff);
 */
-
-    count = (ds_x2 - ds_x1);
-
-    // Blocky mode, need to multiply by 2.
-    ds_x1 <<= 1;
-    ds_x2 <<= 1;
 
 //  dest = ylookup[ds_y] + columnofs[ds_x1];
 
@@ -1019,6 +1083,12 @@ void R_DrawSpanSolidLow (void)
     pixel_t *dest;
     int count;
 
+    count = ds_x2 - ds_x1;
+
+    // Blocky mode, need to multiply by 2.
+    ds_x1 <<= 1;
+    ds_x2 <<= 1;
+
 #ifdef RANGECHECK
     if (ds_x2 < ds_x1
 	|| ds_x1<0
@@ -1029,12 +1099,6 @@ void R_DrawSpanSolidLow (void)
 		 ds_x1,ds_x2,ds_y);
     }
 #endif
-
-    count = ds_x2 - ds_x1;
-
-    // Blocky mode, need to multiply by 2.
-    ds_x1 <<= 1;
-    ds_x2 <<= 1;
 
     do
     {
