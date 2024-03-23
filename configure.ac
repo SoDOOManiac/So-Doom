@@ -1,14 +1,14 @@
-AC_INIT(So Doom, 7.0.0,
+AC_INIT(So Doom, 7.0.1,
         zodomaniac@gmail.com, so-doom)
 
 PACKAGE_SHORTNAME=${PACKAGE_NAME% Doom}
 PACKAGE_SHORTDESC="Limit-removing enhanced-resolution Doom source port"
 PACKAGE_COPYRIGHT="Copyright (C) 1993-2024"
 PACKAGE_LICENSE="GNU General Public License, version 2"
-PACKAGE_MAINTAINER="Zodomaniac"
-PACKAGE_URL="http://zodomaniac.github.io/so-doom"
-PACKAGE_RDNS="io.github.zodomaniac"
-PACKAGE_BUGREPORT="https://github.com/fabiangreffrath/crispy-doom/issues"
+PACKAGE_MAINTAINER="SoDOOManiac"
+PACKAGE_URL="http://SoDOOManiac.github.io/so-doom"
+PACKAGE_RDNS="io.github.SoDOOManiac"
+PACKAGE_BUGREPORT="https://github.com/SoDOOManiac/So-Doom/issues"
 
 AC_CONFIG_AUX_DIR(autotools)
 AC_CANONICAL_HOST
