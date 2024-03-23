@@ -32,8 +32,8 @@
 #define ST_WIDTH	ORIGWIDTH
 #define ST_Y		(ORIGHEIGHT - ST_HEIGHT)
 
-// [So Doom] apply delta to Crispy HUD if crispy->widehud == 1, i.e. HUD is wide
-#define ST_WIDESCREENDELTA ((crispy->widehud == 1 && screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay)) ? WIDESCREENDELTA : 0)
+// [So Doom] apply delta to Crispy HUD or no status bar (for Status Bar level stats position) if crispy->widehud == 1, i.e. HUD is wide
+#define ST_WIDESCREENDELTA ((crispy->widehud == 1 && screenblocks >= CRISPY_HUD - 1 && (!automapactive || crispy->automapoverlay)) ? WIDESCREENDELTA : 0)
 
 #define CRISPY_HUD 12
 
