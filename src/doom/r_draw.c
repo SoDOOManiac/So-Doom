@@ -266,7 +266,7 @@ void R_DrawColumnLow (void)
 	|| dc_yh >= SCREENHEIGHT)
     {
 	
-	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
+	I_Error ("R_DrawColumnLow: %i to %i at %i", dc_yl, dc_yh, x);
     }
     //	dccount++; 
 #endif 
@@ -517,7 +517,7 @@ void R_DrawFuzzColumnLow (void)
     if ((unsigned)x >= SCREENWIDTH
 	|| dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-	I_Error ("R_DrawFuzzColumn: %i to %i at %i",
+	I_Error ("R_DrawFuzzColumnLow: %i to %i at %i",
 		 dc_yl, dc_yh, x);
     }
 #endif
@@ -607,7 +607,7 @@ void R_DrawTranslatedColumn (void)
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
+	I_Error ( "R_DrawTranslatedColumn: %i to %i at %i",
 		  dc_yl, dc_yh, dc_x);
     }
     
@@ -659,7 +659,7 @@ void R_DrawTranslatedColumnLow (void)
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
+	I_Error ( "R_DrawTranslatedColumnLow: %i to %i at %i",
 		  dc_yl, dc_yh, x);
     }
     
@@ -708,7 +708,7 @@ void R_DrawTLColumn (void)
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
+	I_Error ( "R_DrawTLColumn: %i to %i at %i",
 		  dc_yl, dc_yh, dc_x);
     }
 #endif
@@ -756,7 +756,7 @@ void R_DrawTLColumnLow (void)
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
+	I_Error ( "R_DrawTLColumnLow: %i to %i at %i",
 		  dc_yl, dc_yh, x);
     }
 #endif
@@ -1011,7 +1011,7 @@ void R_DrawSpanLow (void)
 	|| ds_x2>=SCREENWIDTH
 	|| (unsigned)ds_y>SCREENHEIGHT)
     {
-	I_Error( "R_DrawSpan: %i to %i at %i",
+	I_Error( "R_DrawSpanLow: %i to %i at %i",
 		 ds_x1,ds_x2,ds_y);
     }
 //	dscount++; 
