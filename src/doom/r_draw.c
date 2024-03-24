@@ -412,7 +412,7 @@ void R_DrawFuzzColumn (void)
             dc_yl, dc_yh, dc_x);
 #endif
 
-    dest = ylookup[dc_yl] + columnofs[flipviewwidth[dc_x]];
+    dest = ylookup[dc_yl] + columnofs[crispy->fliplevels ? flipviewwidth[dc_x] & (int)~max_fuzz_index : flipviewwidth[dc_x]];
 
     count += fuzz_pixel_size;        // killough 1/99: minor tuning
     count >>= shift_to_scale;
