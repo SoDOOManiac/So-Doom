@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h> // [crispy] strftime, localtime
 
 
 #include "doomdef.h"
@@ -906,15 +907,10 @@ void M_ReadSaveStrings(void)
 }
 
 // [FG] support up to 8 pages of savegames
-void M_DrawSaveLoadBottomLine(void)
+static void M_DrawSaveLoadBottomLine(void)
 {
   char pagestr[16];
-  const int y = LoadDef.y+LINEHEIGHT*load_end;
-
-  // [crispy] force status bar refresh
-  inhelpscreens = true;
-
-  M_DrawSaveLoadBorder(LoadDef.x,y);
+  const int y = 152;
 
   dp_translation = cr[CR_GOLD];
 
@@ -925,6 +921,26 @@ void M_DrawSaveLoadBottomLine(void)
 
   M_snprintf(pagestr, sizeof(pagestr), "page %d/%d", savepage + 1, savepage_max + 1);
   M_WriteText(ORIGWIDTH/2-M_StringWidth(pagestr)/2, y, pagestr);
+
+  // [crispy] print "modified" (or created initially) time of savegame file
+  if (LoadMenu[itemOn].status)
+  {
+    struct stat st;
+    char filedate[32];
+
+    stat(P_SaveGameFile(itemOn), &st);
+
+// [FG] suppress the most useless compiler warning ever
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-y2k"
+#endif
+    strftime(filedate, sizeof(filedate), "%x %X", localtime(&st.st_mtime));
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+    M_WriteText(ORIGWIDTH/2-M_StringWidth(filedate)/2, y + 8, filedate);
+  }
 
   dp_translation = NULL;
 }
@@ -1392,7 +1408,8 @@ void M_DrawEpisode(void)
 
 void M_VerifyNightmare(int key)
 {
-    if (key != key_menu_confirm)
+    // [crispy] allow to confirm by pressing Enter key
+    if (key != key_menu_confirm && key != key_menu_forward)
 	return;
 		
     G_DeferedInitNew(nightmare,epi+1,1);
@@ -1877,7 +1894,8 @@ void M_ChangeMessages(int choice)
 //
 void M_EndGameResponse(int key)
 {
-    if (key != key_menu_confirm)
+    // [crispy] allow to confirm by pressing Enter key
+    if (key != key_menu_confirm && key != key_menu_forward)
 	return;
 		
     // [crispy] killough 5/26/98: make endgame quit if recording or playing back demo
@@ -1969,7 +1987,8 @@ void M_QuitResponse(int key)
 {
     extern int show_endoom;
 
-    if (key != key_menu_confirm)
+    // [crispy] allow to confirm by pressing Enter key
+    if (key != key_menu_confirm && key != key_menu_forward)
 	return;
     // [crispy] play quit sound only if the ENDOOM screen is also shown
     if (!netgame && show_endoom)
@@ -2648,13 +2667,13 @@ boolean M_Responder (event_t* ev)
 	    if (ev->data1&1)
 	    {
 		key = key_menu_forward;
-		mousewait = I_GetTime() + 15;
+		mousewait = I_GetTime() + 5;
 	    }
 			
 	    if (ev->data1&2)
 	    {
 		key = key_menu_back;
-		mousewait = I_GetTime() + 15;
+		mousewait = I_GetTime() + 5;
 	    }
 
 	    // [crispy] scroll menus with mouse wheel
@@ -2816,7 +2835,9 @@ boolean M_Responder (event_t* ev)
 	if (messageNeedsInput)
         {
             if (key != ' ' && key != KEY_ESCAPE
-             && key != key_menu_confirm && key != key_menu_abort)
+             && key != key_menu_confirm && key != key_menu_abort
+             // [crispy] allow to confirm nightmare, end game and quit by pressing Enter key
+             && key != key_menu_forward)
             {
                 return false;
             }
@@ -3684,7 +3705,7 @@ void M_Init (void)
 	{
 		LoadDef_y = vstep + captionheight - SHORT(patchl->height) + SHORT(patchl->topoffset);
 		SaveDef_y = vstep + captionheight - SHORT(patchs->height) + SHORT(patchs->topoffset);
-		LoadDef.y = SaveDef.y = vstep + captionheight + vstep + SHORT(patchm->topoffset) - 7; // [crispy] see M_DrawSaveLoadBorder()
+		LoadDef.y = SaveDef.y = vstep + captionheight + vstep + SHORT(patchm->topoffset) - 15; // [crispy] moved up, so savegame date/time may appear above status bar
 		MouseDef.y = LoadDef.y;
 	}
     }
