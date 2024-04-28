@@ -124,7 +124,7 @@ jobs:
           make distclean
           ./configure --enable-truecolor
           make -j4
-          do mv src/so-doom.exe src/so-doom-truecolor.exe ; done
+          mv src/so-doom.exe src/so-doom-truecolor.exe
           make distclean
           ./configure
       - name: Build
