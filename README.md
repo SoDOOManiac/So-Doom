@@ -846,8 +846,8 @@ PrBoom+ is © 1999 id Software, Chi Hoang, Lee Killough, Jim Flynn, Rand Phares,
 Chocolate Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard; 
 Chocolate Hexen is © 1993-1996 Id Software, Inc., © 1993-2008 Raven Software, © 2008 Simon Howard;
 Strawberry Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard, © 2008-2010 GhostlyDeath; 
-Crispy Doom is © 2014-2020 Fabian Greffrath;
-additionally So Doom is © 2019-2023 Vladislav Melnichuk;
+Crispy Doom is © 2014-2024 Fabian Greffrath;
+additionally So Doom is © 2019-2024 Vladislav Melnichuk;
 all of the above are released under the [GPL-2+](https://www.gnu.org/licenses/gpl-2.0.html).
 
 SDL 2.0, SDL_mixer 2.0 and SDL_net 2.0 are © 1997-2016 Sam Lantinga and are released under the [zlib license](http://www.gzip.org/zlib/zlib_license.html).
