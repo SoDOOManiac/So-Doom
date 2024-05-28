@@ -30,12 +30,12 @@ set(DEDSERV_FILES
     net_structrw.c      net_structrw.h
     z_native.c          z_zone.h)
 
-add_executable("${PROGRAM_PREFIX}server" WIN32 ${COMMON_SOURCE_FILES} ${DEDSERV_FILES})
-target_include_directories("${PROGRAM_PREFIX}server"
+add_executable("${PROGRAM_PREFIX}doom-server" WIN32 ${COMMON_SOURCE_FILES} ${DEDSERV_FILES})
+target_include_directories("${PROGRAM_PREFIX}doom-server"
                            PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/../")
-target_link_libraries("${PROGRAM_PREFIX}server" SDL2::SDL2main SDL2::SDL2)
+target_link_libraries("${PROGRAM_PREFIX}doom-server" SDL2::SDL2main SDL2::SDL2)
 if(ENABLE_SDL2_NET)
-    target_link_libraries("${PROGRAM_PREFIX}server" SDL2_net::SDL2_net)
+    target_link_libraries("${PROGRAM_PREFIX}doom-server" SDL2_net::SDL2_net)
 endif()
 
 # Source files used by the game binaries (chocolate-doom, etc.)
