@@ -4,7 +4,7 @@ SUBDIRS = doom setup # heretic hexen strife
 execgamesdir = ${bindir}
 
 execgames_PROGRAMS = @PROGRAM_PREFIX@doom     \
-                     @PROGRAM_PREFIX@server
+                     @PROGRAM_PREFIX@doom-server
 #EXTRA_PROGRAMS =     @PROGRAM_PREFIX@heretic  \
 #                     @PROGRAM_PREFIX@hexen    \
 #                     @PROGRAM_PREFIX@strife
@@ -51,8 +51,8 @@ net_server.c         net_server.h          \
 net_structrw.c       net_structrw.h        \
 z_native.c           z_zone.h
 
-@PROGRAM_PREFIX@server_SOURCES=$(COMMON_SOURCE_FILES) $(DEDSERV_FILES)
-@PROGRAM_PREFIX@server_LDADD = @LDFLAGS@ @SDLNET_LIBS@
+@PROGRAM_PREFIX@doom_server_SOURCES=$(COMMON_SOURCE_FILES) $(DEDSERV_FILES)
+@PROGRAM_PREFIX@doom_server_LDADD = @LDFLAGS@ @SDLNET_LIBS@
 
 # Source files used by the game binaries (chocolate-doom, etc.)
 
