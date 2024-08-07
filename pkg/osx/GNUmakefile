@@ -78,10 +78,10 @@ $(STAGING_DIR): launcher $(TOPLEVEL_DOCS) app.icns wadfile.icns
 		      --install-path "@executable_path/"                   \
 		      --dest-dir "$(APP_BIN_DIR)"                          \
 		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)doom"    \
-		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)heretic" \
-		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)hexen"   \
-		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)strife"  \
-		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)setup"
+#		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)heretic" \
+#		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)hexen"   \
+#		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)strife"  \
+		      --fix-file "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)doom-setup"
 
 	$(TOPLEVEL)/man/simplecpp -DPRECOMPILED -D__MACOSX__  \
 	                -DDOOM     \

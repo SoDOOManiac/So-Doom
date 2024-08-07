@@ -9,7 +9,7 @@ execgames_PROGRAMS = @PROGRAM_PREFIX@doom     \
 #                     @PROGRAM_PREFIX@hexen    \
 #                     @PROGRAM_PREFIX@strife
 
-noinst_PROGRAMS = @PROGRAM_PREFIX@setup
+noinst_PROGRAMS = @PROGRAM_PREFIX@doom-setup
 
 SETUP_BINARIES = @PROGRAM_PREFIX@doom-setup$(EXEEXT)    
 #                @PROGRAM_PREFIX@heretic-setup$(EXEEXT) \
@@ -188,8 +188,8 @@ endif
 
 #@PROGRAM_PREFIX@strife_LDADD = strife/libstrife.a $(EXTRA_LIBS)
 
-$(SETUP_BINARIES): @PROGRAM_PREFIX@setup$(EXEEXT)
-	cp @PROGRAM_PREFIX@setup$(EXEEXT) $@
+#$(SETUP_BINARIES): @PROGRAM_PREFIX@setup$(EXEEXT)
+#	cp @PROGRAM_PREFIX@setup$(EXEEXT) $@
 
 # Make "make" aware of convenience libraries in subdirectories
 
@@ -223,11 +223,11 @@ net_structrw.c       net_structrw.h        \
 z_native.c           z_zone.h
 
 if HAVE_WINDRES
-@PROGRAM_PREFIX@setup_SOURCES=$(SETUP_FILES) $(COMMON_SOURCE_FILES) setup-res.rc
+@PROGRAM_PREFIX@doom_setup_SOURCES=$(SETUP_FILES) $(COMMON_SOURCE_FILES) setup-res.rc
 else
-@PROGRAM_PREFIX@setup_SOURCES=$(SETUP_FILES) $(COMMON_SOURCE_FILES)
+@PROGRAM_PREFIX@doom_setup_SOURCES=$(SETUP_FILES) $(COMMON_SOURCE_FILES)
 endif
-@PROGRAM_PREFIX@setup_LDADD = setup/libsetup.a                             \
+@PROGRAM_PREFIX@doom_setup_LDADD = setup/libsetup.a                             \
                         $(top_builddir)/textscreen/libtextscreen.a   \
                         @LDFLAGS@ @SDL_LIBS@ @SDLMIXER_LIBS@ @SDLNET_LIBS@
 
