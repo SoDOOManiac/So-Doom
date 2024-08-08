@@ -71,8 +71,8 @@ $(STAGING_DIR): launcher $(TOPLEVEL_DOCS) app.icns wadfile.icns
 
 	$(CP) $(TOPLEVEL)/src/$(PROGRAM_PREFIX)doom "$(APP_BIN_DIR)"
 	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)doom"
-	$(CP) $(TOPLEVEL)/src/$(PROGRAM_PREFIX)setup "$(APP_BIN_DIR)"
-	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)setup"
+	$(CP) $(TOPLEVEL)/src/$(PROGRAM_PREFIX)doom-setup "$(APP_BIN_DIR)"
+	$(STRIP) "$(APP_BIN_DIR)/$(PROGRAM_PREFIX)doom-setup"
 
 	-dylibbundler --bundle-deps --overwrite-files                      \
 		      --install-path "@executable_path/"                   \
