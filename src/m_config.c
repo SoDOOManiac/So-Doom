@@ -2437,10 +2437,10 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Doom 2 - exclusive projectiles bypass linedefs.
+    // Non-Doom 1 projectiles bypass (don't trigger) special linedefs.
     //
 
-    CONFIG_VARIABLE_INT(crispy_doom2projbypass),
+    CONFIG_VARIABLE_INT(crispy_nondoom1projbypassnottriggerspeclines),
 
     //!
     // @game doom

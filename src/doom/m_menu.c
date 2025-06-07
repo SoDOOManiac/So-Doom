@@ -173,6 +173,7 @@ boolean			menuactive;
 
 #define SKULLXOFF		-32
 #define LINEHEIGHT		16
+#define CRISPY_SEPARATOR_AND_ARROW_XOFF		-8
 #define CRISPY_LINEHEIGHT	10 // [crispy] Crispness menu
 
 char			savegamestrings[10][SAVESTRINGSIZE];
@@ -548,7 +549,7 @@ static menu_t  Crispness1Def =
     &OptionsDef,
     Crispness1Menu,
     M_DrawCrispness1,
-    48,18,
+    24,18,
     1
 };
 
@@ -607,7 +608,7 @@ static menu_t  Crispness2Def =
     &OptionsDef,
     Crispness2Menu,
     M_DrawCrispness2,
-    48,18,
+    24,18,
     1
 };
 
@@ -664,7 +665,7 @@ static menu_t  Crispness3Def =
     &OptionsDef,
     Crispness3Menu,
     M_DrawCrispness3,
-    48,18,
+    24,18,
     1
 };
 
@@ -675,7 +676,7 @@ enum
     crispness_jumping,
     crispness_overunder,
     crispness_recoil,
-    crispness_doom2projbypass,
+    crispness_nondoom1projbypassnottriggerspeclines,
     crispness_sep_physical_,
 
     crispness_sep_interover,
@@ -703,7 +704,7 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleJumping,'a'},
     {3,"",	M_CrispyToggleOverunder,'o'},
     {3,"",	M_CrispyToggleRecoil,'r'},
-    {3,"",	M_CrispyToggleDoom2ProjBypass,'g'},
+    {3,"",	M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines,'g'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleEvadingInterOver,'i'},
@@ -725,7 +726,7 @@ static menu_t  Crispness4Def =
     &OptionsDef,
     Crispness4Menu,
     M_DrawCrispness4,
-    48,18,
+    24,18,
     1
 };
 
@@ -1630,7 +1631,7 @@ static void M_DrawCrispnessSeparator(int y, const char *item)
 {
     M_snprintf(crispy_menu_text, sizeof(crispy_menu_text),
                "%s%s", crstr[CR_GOLD], item);
-    M_WriteText(currentMenu->x - 8, currentMenu->y + CRISPY_LINEHEIGHT * y, crispy_menu_text);
+    M_WriteText(currentMenu->x + CRISPY_SEPARATOR_AND_ARROW_XOFF, currentMenu->y + CRISPY_LINEHEIGHT * y, crispy_menu_text);
 }
 
 static void M_DrawCrispnessItem(int y, const char *item, int feat, boolean cond)
@@ -1702,7 +1703,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
     M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
-    M_DrawCrispnessMultiItem(crispness_coloredblood, "Blood fixes", multiitem_coloredblood, crispy->coloredblood, gameversion != exe_chex);
+    M_DrawCrispnessMultiItem(crispness_coloredblood, "Blood", multiitem_coloredblood, crispy->coloredblood, gameversion != exe_chex);
     M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
 
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
@@ -1782,7 +1783,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_doom2projbypass, "Doom 2-only missiles bypass specs", crispy->doom2projbypass, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_nondoom1projbypassnottriggerspeclines, "Non-Doom 1 projectiles bypass specs", crispy->nondoom1projbypassnottriggerspeclines, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
     M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
@@ -3466,12 +3467,12 @@ void M_Drawer (void)
     }
 
     
-    // DRAW SKULL
+    // Draw menu selector: > in Crispness menu, skull in other menus
     if (currentMenu == CrispnessMenus[crispness_cur])
     {
 	char item[4];
 	M_snprintf(item, sizeof(item), "%s>", whichSkull ? crstr[CR_NONE] : crstr[CR_DARK]);
-	M_WriteText(currentMenu->x - 8, currentMenu->y + CRISPY_LINEHEIGHT * itemOn, item);
+	M_WriteText(currentMenu->x + CRISPY_SEPARATOR_AND_ARROW_XOFF, currentMenu->y + CRISPY_LINEHEIGHT * itemOn, item);
 	dp_translation = NULL;
     }
     else

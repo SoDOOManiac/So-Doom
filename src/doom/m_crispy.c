@@ -64,12 +64,12 @@ multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS] =
 
 multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] =
 {
-    {COLOREDBLOOD_OFF, "off"},
+    {COLOREDBLOOD_OFF, "unchanged sprites"},
     {COLOREDBLOOD_SKULLPUFFS, "~4skulls emit puffs"},
     {COLOREDBLOOD_RGB, "~5R~3G~6B"},
     {COLOREDBLOOD_SKULLPUFFS_RGB, "~4skulls emit puffs ~3+ ~5R~3G~6B"},
-    {COLOREDBLOOD_ALL, "~4puffs ~3+ ~5R~3G~6B ~3+ ~2invis. fuzz"},
-    {COLOREDBLOOD_PLUSCORPSES, "all + dead player colors"},
+    {COLOREDBLOOD_ALL, "~4puffs ~3+ ~5R~3G~6B ~3+ ~2invisibility fuzz"},
+    {COLOREDBLOOD_PLUSCORPSES, "all + player corpse colors"},
 };
 
 multiitem_t multiitem_centerweapon[NUM_CENTERWEAPON] =
@@ -445,10 +445,10 @@ void M_CrispyToggleDemoUseTimer(int choice)
     crispy->btusetimer = !crispy->btusetimer;
 }
 
-void M_CrispyToggleDoom2ProjBypass(int choice)
+void M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines(int choice)
 {
     choice = 0;
-    crispy->doom2projbypass = !crispy->doom2projbypass;
+    crispy->nondoom1projbypassnottriggerspeclines = !crispy->nondoom1projbypassnottriggerspeclines;
 }
 
 void M_CrispyToggleEvadingInterOver(int choice)
