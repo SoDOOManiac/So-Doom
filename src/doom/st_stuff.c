@@ -367,10 +367,10 @@ cheatseq_t	cheat_health[7] = // some cheats restoring health (hp = health poweru
     CHEAT("hps", 0), // [So Doom] soulsphere
     CHEAT("hpm", 0), // [So Doom] megasphere
     CHEAT("hp", 0),  // [So Doom] health powerup hint
-    CHEAT("medb", 0), // [So Doom] health bonus
-    CHEAT("meds", 0), // [So Doom] stimpack
-    CHEAT("medm", 0), // [So Doom] medikit
-    CHEAT("med", 0), // [So Doom] medikit cheat hint
+    CHEAT("hib", 0), // [So Doom] health item - bonus (e.g. blue flask in Doom)
+    CHEAT("his", 0), // [So Doom] health item - small (e.g. stimpack in Doom)
+    CHEAT("him", 0), // [So Doom] health item - medium (e.g. medikit in Doom)
+    CHEAT("hi", 0), // [So Doom] health item cheat hint
 };
 
 cheatseq_t	cheat_armor[4] = // cheats giving armor
