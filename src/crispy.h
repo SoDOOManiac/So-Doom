@@ -45,6 +45,7 @@ typedef struct
 	int brightmaps;
 	int btusetimer;
 	int centerweapon;
+	int chainsawberserk;
 	int coloredblood;
 	int coloredhud;
 	int crosshair;

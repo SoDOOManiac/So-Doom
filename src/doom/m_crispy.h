@@ -58,6 +58,7 @@ extern void M_CrispyToggleAutomapstats(int choice);
 extern void M_CrispyToggleBobfactor(int choice);
 extern void M_CrispyToggleBrightmaps(int choice);
 extern void M_CrispyToggleCenterweapon(int choice);
+extern void M_CrispyToggleChainsawBerserk(int choice);
 extern void M_CrispyToggleColoredblood(int choice);
 extern void M_CrispyToggleColoredhud(int choice);
 extern void M_CrispyToggleCrosshair(int choice);

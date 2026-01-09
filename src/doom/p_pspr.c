@@ -573,6 +573,10 @@ A_Saw
 
     if (!player) return; // [crispy] let pspr action pointers get called from mobj states
     damage = 2*(P_Random ()%10+1);
+
+    if (player->powers[pw_strength] && crispy->chainsawberserk)
+	damage *= 10;
+
     angle = player->mo->angle;
     angle += P_SubRandom() << 18;
     

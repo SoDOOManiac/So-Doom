@@ -676,8 +676,9 @@ enum
     crispness_jumping,
     crispness_overunder,
     crispness_recoil,
+    crispness_chainsawberserk,
     crispness_nondoom1projbypassnottriggerspeclines,
-    crispness_sep_physical_,
+    //crispness_sep_physical_,
 
     crispness_sep_interover,
     crispness_evadinginterover,
@@ -704,14 +705,15 @@ static menuitem_t Crispness4Menu[]=
     {3,"",	M_CrispyToggleJumping,'a'},
     {3,"",	M_CrispyToggleOverunder,'o'},
     {3,"",	M_CrispyToggleRecoil,'r'},
+    {3,"",	M_CrispyToggleChainsawBerserk,'b'},
     {3,"",	M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines,'g'},
-    {-1,"",0,'\0'},
+    // {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleEvadingInterOver,'i'},
     {-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleDemoTimer,'t'},
-    {3,"",	M_CrispyToggleDemoTimerPos,'P'},
+    {3,"",	M_CrispyToggleDemoTimerPos,'s'},
     {3,"",	M_CrispyToggleDemoTimerDir,'d'},
     {3,"",	M_CrispyToggleDemoBar,'w'},
     {3,"",	M_CrispyToggleDemoUseTimer,'u'},
@@ -1783,6 +1785,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
+    M_DrawCrispnessItem(crispness_chainsawberserk, "Berserk buffs chainsaw/replacement", crispy->chainsawberserk, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_nondoom1projbypassnottriggerspeclines, "Non-Doom 1 projectiles bypass specs", crispy->nondoom1projbypassnottriggerspeclines, crispy->singleplayer);
 
     M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");

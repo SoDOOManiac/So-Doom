@@ -2349,6 +2349,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Apply berserk powerup to chainsaw (or replacement, in some WADs it makes sense e.g. in REKKR where chainsaw is replaced by axe).
+    //
+
+    CONFIG_VARIABLE_INT(crispy_chainsawberserk),
+
+    //!
+    // @game doom
+    //
     // Enable Colored Blood.
     //
 

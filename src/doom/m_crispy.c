@@ -324,6 +324,13 @@ void M_CrispyToggleCenterweapon(int choice)
     ChangeSettingEnum(&crispy->centerweapon, choice, NUM_CENTERWEAPON);
 }
 
+void M_CrispyToggleChainsawBerserk(int choice)
+{
+    hookchoice = choice;
+
+    crispy->chainsawberserk = !crispy->chainsawberserk;
+}
+
 void M_CrispyToggleColoredblood(int choice)
 {
     thinker_t *th;
