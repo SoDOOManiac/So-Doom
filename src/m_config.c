@@ -2445,14 +2445,6 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Non-Doom 1 projectiles bypass (don't trigger) special linedefs.
-    //
-
-    CONFIG_VARIABLE_INT(crispy_nondoom1projbypassnottriggerspeclines),
-
-    //!
-    // @game doom
-    //
     // Evasion of INTERCEPTS overflow.
     //
 
@@ -2541,6 +2533,15 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Last 3 Physical & World fixes menu options, chainsaw (replacement) berserk, non-doom 1 projectiles not to trigger special lines
+    // and INTERCEPTS overflow evasion, to be allowed in singleplayer demos.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_last3physallowedinspdemos),
+
+    //!
+    // @game doom
+    //
     // Show level time.
     //
 
@@ -2576,6 +2577,14 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_neghealth),
+
+    //!
+    // @game doom
+    //
+    // Non-Doom 1 projectiles bypass (don't trigger) special linedefs.
+    //
+
+    CONFIG_VARIABLE_INT(crispy_nondoom1projbypassnottriggerspeclines),
 
     //!
     // @game doom

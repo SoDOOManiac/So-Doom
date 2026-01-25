@@ -452,12 +452,6 @@ void M_CrispyToggleDemoUseTimer(int choice)
     crispy->btusetimer = !crispy->btusetimer;
 }
 
-void M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines(int choice)
-{
-    choice = 0;
-    crispy->nondoom1projbypassnottriggerspeclines = !crispy->nondoom1projbypassnottriggerspeclines;
-}
-
 void M_CrispyToggleEvadingInterOver(int choice)
 {
     choice = 0;
@@ -606,6 +600,13 @@ void M_CrispyToggleJumping(int choice)
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 }
 
+void M_CrispyToggleLast3PhysAllowedInSingleplayerDemos(int choice)
+{
+    hookchoice = choice;
+
+    crispy->last3physallowedinspdemos = !crispy->last3physallowedinspdemos;
+}
+
 void M_CrispyToggleLeveltime(int choice)
 {
     ChangeSettingEnum(&crispy->leveltime, choice, NUM_WIDGETS - 1);
@@ -628,6 +629,12 @@ void M_CrispyToggleNeghealth(int choice)
 {
     choice = 0;
     crispy->neghealth = !crispy->neghealth;
+}
+
+void M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines(int choice)
+{
+    choice = 0;
+    crispy->nondoom1projbypassnottriggerspeclines = !crispy->nondoom1projbypassnottriggerspeclines;
 }
 
 void M_CrispyToggleDefaultSkill(int choice)

@@ -57,7 +57,6 @@ typedef struct
 	int demotimerdir;
 	int demotimerpos;
 	int demobar;
-	int nondoom1projbypassnottriggerspeclines;
 	int evadinginterover;
 	int extautomap;
 	int flipcorpses;
@@ -70,6 +69,7 @@ typedef struct
 	int gamma;
 	int hires;
 	int jump;
+	int last3physallowedinspdemos;
 	int leveltime;
 	int logo;
 	int mouselook;
@@ -81,6 +81,7 @@ typedef struct
 	int screenwipe;
 	int mapsecrets;
 	int mapviewstats;
+	int nondoom1projbypassnottriggerspeclines;
 	int secretmessage;
 	int smarttotals;
 	int smoothlight;

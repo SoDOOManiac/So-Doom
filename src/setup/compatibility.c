@@ -79,7 +79,6 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_demotimer",       &crispy->demotimer);
         M_BindIntVariable("crispy_demotimerdir",    &crispy->demotimerdir);
         M_BindIntVariable("crispy_demotimerpos",    &crispy->demotimerpos);
-        M_BindIntVariable("crispy_nondoom1projbypassnottriggerspeclines", &crispy->nondoom1projbypassnottriggerspeclines);
         M_BindIntVariable("crispy_evadinginterover",&crispy->evadinginterover);
         M_BindIntVariable("crispy_extautomap",      &crispy->extautomap);
         M_BindIntVariable("crispy_flipcorpses",     &crispy->flipcorpses);
@@ -89,10 +88,12 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_gamma",           &crispy->gamma);
         M_BindIntVariable("crispy_hires",           &crispy->hires);
         M_BindIntVariable("crispy_jump",            &crispy->jump);
+        M_BindIntVariable("crispy_last3physallowedinspdemos", &crispy->last3physallowedinspdemos);
         M_BindIntVariable("crispy_leveltime",       &crispy->leveltime);
         M_BindIntVariable("crispy_mapviewstats",    &crispy->mapviewstats);
         M_BindIntVariable("crispy_mouselook",       &crispy->mouselook);
         M_BindIntVariable("crispy_neghealth",       &crispy->neghealth);
+        M_BindIntVariable("crispy_nondoom1projbypassnottriggerspeclines", &crispy->nondoom1projbypassnottriggerspeclines);
         M_BindIntVariable("crispy_overunder",       &crispy->overunder);
         M_BindIntVariable("crispy_pitch",           &crispy->pitch);
         M_BindIntVariable("crispy_playercoords",    &crispy->playercoords);

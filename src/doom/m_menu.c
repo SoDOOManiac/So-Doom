@@ -678,11 +678,12 @@ enum
     crispness_recoil,
     crispness_chainsawberserk,
     crispness_nondoom1projbypassnottriggerspeclines,
+    crispness_evadinginterover,
     //crispness_sep_physical_,
 
-    crispness_sep_interover,
-    crispness_evadinginterover,
-    crispness_sep_interover_,
+    crispness_sep_spdemosallow,
+    crispness_last3physallowedinspdemos,
+    //crispness_sep_spdemosallow_,
 
     crispness_sep_demos,
     crispness_demotimer,
@@ -702,15 +703,16 @@ static menuitem_t Crispness4Menu[]=
 {
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleFreeaim,'v'},
-    {3,"",	M_CrispyToggleJumping,'a'},
+    {3,"",	M_CrispyToggleJumping,'j'},
     {3,"",	M_CrispyToggleOverunder,'o'},
     {3,"",	M_CrispyToggleRecoil,'r'},
     {3,"",	M_CrispyToggleChainsawBerserk,'b'},
     {3,"",	M_CrispyToggleNonDoom1ProjBypassNotTriggerSpecLines,'g'},
+    {3,"",	M_CrispyToggleEvadingInterOver,'i'},
     // {-1,"",0,'\0'},
     {-1,"",0,'\0'},
-    {3,"",	M_CrispyToggleEvadingInterOver,'i'},
-    {-1,"",0,'\0'},
+    {3,"",	M_CrispyToggleLast3PhysAllowedInSingleplayerDemos,'a'},
+    //{-1,"",0,'\0'},
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleDemoTimer,'t'},
     {3,"",	M_CrispyToggleDemoTimerPos,'s'},
@@ -1779,17 +1781,21 @@ static void M_DrawCrispness4(void)
 
     M_DrawCrispnessHeader("SoDOOMy 4/4");
 
-    M_DrawCrispnessSeparator(crispness_sep_physical, "Physical");
+    M_DrawCrispnessSeparator(crispness_sep_physical, "Physical & World fixes");
 
     M_DrawCrispnessMultiItem(crispness_freeaim, "Vertical Aiming", multiitem_freeaim, crispy->freeaim, crispy->singleplayer);
     M_DrawCrispnessMultiItem(crispness_jumping, "Allow Jumping", multiitem_jump, crispy->jump, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_overunder, "Walk over/under Monsters", crispy->overunder, crispy->singleplayer);
     M_DrawCrispnessItem(crispness_recoil, "Weapon Recoil Thrust", crispy->recoil, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_chainsawberserk, "Berserk buffs chainsaw/replacement", crispy->chainsawberserk, crispy->singleplayer);
-    M_DrawCrispnessItem(crispness_nondoom1projbypassnottriggerspeclines, "Non-Doom 1 projectiles bypass specs", crispy->nondoom1projbypassnottriggerspeclines, crispy->singleplayer);
-
-    M_DrawCrispnessSeparator(crispness_sep_interover, "INTERCEPTS overflow");
-    M_DrawCrispnessItem(crispness_evadinginterover, "Evasion", crispy->evadinginterover, !netgame);
+    M_DrawCrispnessItem(crispness_chainsawberserk, "Berserk buffs chainsaw/replacement", crispy->chainsawberserk,
+	                    crispy->singleplayer || ((demorecording || demoplayback) && crispy->last3physallowedinspdemos && !netgame));
+    M_DrawCrispnessItem(crispness_nondoom1projbypassnottriggerspeclines, "Non-Doom 1 projectiles bypass specs", crispy->nondoom1projbypassnottriggerspeclines,
+                        crispy->singleplayer || ((demorecording || demoplayback) && crispy->last3physallowedinspdemos && !netgame));
+    M_DrawCrispnessItem(crispness_evadinginterover, "INTERCEPTS overflow evasion", crispy->evadinginterover,
+	                    crispy->singleplayer || ((demorecording || demoplayback) && crispy->last3physallowedinspdemos && !netgame));
+	
+    M_DrawCrispnessSeparator(crispness_sep_spdemosallow, "Singleplayer demos allow");
+    M_DrawCrispnessItem(crispness_last3physallowedinspdemos, "Last 3 Physical options", crispy->last3physallowedinspdemos, !netgame);
 
     M_DrawCrispnessSeparator(crispness_sep_demos, "Demos");
 

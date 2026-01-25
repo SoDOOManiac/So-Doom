@@ -27,6 +27,7 @@ static crispy_t crispy_s = {
 	.hires = 2,
 	.screenwipe = 1,
 	.gamma = 9,  // default level is "OFF" for intermediate gamma levels
+	.last3physallowedinspdemos = 1,
 	.smoothscaling = 1,
 	.soundfix = 1,
 #ifdef CRISPY_TRUECOLOR
