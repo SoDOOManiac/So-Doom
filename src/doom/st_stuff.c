@@ -362,15 +362,19 @@ cheatseq_t	cheat_powerup2[8] = // [So Doom] tp = toggle powerup, equal to idbeho
     CHEAT("tp0", 0), // [So Doom] gp0
 };
 
-cheatseq_t	cheat_health[7] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
+cheatseq_t	cheat_health[11] = // some cheats restoring health (hp = health powerup) without making the player see red like the berserk pack does
 {
-    CHEAT("hps", 0), // [So Doom] soulsphere
-    CHEAT("hpm", 0), // [So Doom] megasphere
-    CHEAT("hp", 0),  // [So Doom] health powerup hint
-    CHEAT("hib", 0), // [So Doom] health item - bonus (e.g. blue flask in Doom)
-    CHEAT("his", 0), // [So Doom] health item - small (e.g. stimpack in Doom)
-    CHEAT("him", 0), // [So Doom] health item - medium (e.g. medikit in Doom)
-    CHEAT("hi", 0), // [So Doom] health item cheat hint
+    CHEAT("hps", 0),  // [So Doom] soulsphere
+    CHEAT("hpm", 0),  // [So Doom] megasphere
+    CHEAT("hp", 0),   // [So Doom] health powerup hint
+    CHEAT("hib", 0),  // [So Doom] health item - bonus (e.g. blue flask in Doom)
+    CHEAT("his", 0),  // [So Doom] health item - small (e.g. stimpack in Doom)
+    CHEAT("him", 0),  // [So Doom] health item - medium (e.g. medikit in Doom)
+    CHEAT("hi", 0),   // [So Doom] health item cheat hint
+    CHEAT("medb", 0), // [So Doom] health item - bonus, "medication" wording
+    CHEAT("meds", 0), // [So Doom] health item - small, "medication" wording
+    CHEAT("medm", 0), // [So Doom] health item - medium, "medication" wording
+    CHEAT("med", 0),  // [So Doom] health item cheat hint, "medication" wording
 };
 
 cheatseq_t	cheat_armor[4] = // cheats giving armor
@@ -405,7 +409,7 @@ cheatseq_t cheat_weapon [11] =
     CHEAT("tntweap", 0),
 };
 
-cheatseq_t cheat_weapon2 [11] = // [So Doom] TNTWEAPx is too long IMO - Zodomaniac
+cheatseq_t cheat_weapon2 [11] = // [So Doom] TNTWEAPx is too long IMO - SoDOOManiac
 {
     CHEAT("tw0", 0), // [So Doom] cheat giving specific weapon
     CHEAT("tw1", 0),
@@ -433,7 +437,7 @@ cheatseq_t cheat_nomomentum3 = CHEAT("snail", 0);
 cheatseq_t cheat_showfps = CHEAT("fps", 0); // [So Doom] shorter version of Crispy Doom's showfps
 cheatseq_t cheat_showfps2 = CHEAT("idrate", 0); // [crispy] PrBoom+
 cheatseq_t cheat_goobers = CHEAT("goobers", 0);
-cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] Russian Doom
+cheatseq_t cheat_version = CHEAT("version", 0); // [crispy] International Doom
 cheatseq_t cheat_skill = CHEAT("skill", 0);
 
 cheatseq_t	cheat_specificammo[7] = // [So Doom] cheat giving specific ammo
@@ -1276,7 +1280,7 @@ ST_Responder (event_t* ev)
 	plyr->message = msg;
 	  }
 
-      if (cht_CheckCheatSP(&cheat_health[3], ev->data2))
+      if ((cht_CheckCheatSP(&cheat_health[3], ev->data2)) || (cht_CheckCheatSP(&cheat_health[7], ev->data2)))
       {
 	plyr->health++;		// can go over 100%
 	if (plyr->health > deh_max_health)
@@ -1286,7 +1290,7 @@ ST_Responder (event_t* ev)
 	S_StartSound (NULL, sfx_itemup);
 	  }
 
-      if (cht_CheckCheatSP(&cheat_health[4], ev->data2))
+      if ((cht_CheckCheatSP(&cheat_health[4], ev->data2)) || (cht_CheckCheatSP(&cheat_health[8], ev->data2)))
       {
 	if (P_GiveBody (plyr, 10))
 	{
@@ -1295,7 +1299,7 @@ ST_Responder (event_t* ev)
 	}
 	  }
 
-      if (cht_CheckCheatSP(&cheat_health[5], ev->data2))
+      if ((cht_CheckCheatSP(&cheat_health[5], ev->data2)) || (cht_CheckCheatSP(&cheat_health[9], ev->data2)))
       {
 	if (P_GiveBody (plyr, 25))
 	{
@@ -1308,7 +1312,7 @@ ST_Responder (event_t* ev)
 	}
 	  }
 
-      if (cht_CheckCheatSP(&cheat_health[6], ev->data2))
+      if ((cht_CheckCheatSP(&cheat_health[6], ev->data2)) || (cht_CheckCheatSP(&cheat_health[10], ev->data2)))
       {
 	M_snprintf(msg, sizeof(msg), "Health bonus: %sB%s, small health: %sS%s, medium health: %sM%s",
 	           crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE],crstr[CR_GOLD],crstr[CR_NONE]);

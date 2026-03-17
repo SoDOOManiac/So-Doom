@@ -115,7 +115,8 @@ Many additional less user-visible features have been implemented, e.g. fixed eng
 
  * `HP` (health powerup): `HPS` gives a soul sphere and `HPM` gives a megasphere.
  * `TP` (toggle powerup) = `IDBEHOLD` toggles ability powerups.
- * `HI` (health item): `HIB` gives a health bonus, `HIS` gives a small health item (e.g. stimpack) and `HIM` gives a medium health item (e.g. medikit) (`MEDB`, `MEDS` and `MEDM` respectively in So Doom versions 7.0.0 and lower).
+ * `HI` (health item): `HIB` gives a health bonus, `HIS` gives a small health item (e.g. stimpack) and `HIM` gives a medium health item (e.g. medikit) (this shorter version added after So Doom 7.0.0).
+ * `MED` (medication): `MEDB`, `MEDS` and `MEDM` give health items same as the previous cheat code.
  * `ARM` (armor): `ARMB` gives an armor bonus, `ARML` gives light armor (e.g. green) and `ARMH` gives heavy armor (e.g. blue).
  * `TNTWEAP` or `TW` followed by a weapon number gives or removes this weapon (1 = berserk pack, 8 = Chainsaw, 9 = SSG). `TNTWEAP0` or `TW0` takes away all weapons and ammo except for the pistol and 50 bullets. Try to load Doom 1 with `DOOM2.WAD` as a PWAD and type `TW9` to play the SSG in Doom 1.
  * `TA` followed by a number gives the specified type of ammo (1 = berserk pack, 2-5 = ammo corresponding to 1-4 lines in HUD, 0 takes away all ammo).
@@ -846,8 +847,8 @@ PrBoom+ is © 1999 id Software, Chi Hoang, Lee Killough, Jim Flynn, Rand Phares,
 Chocolate Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard; 
 Chocolate Hexen is © 1993-1996 Id Software, Inc., © 1993-2008 Raven Software, © 2008 Simon Howard;
 Strawberry Doom is © 1993-1996 Id Software, Inc., © 2005 Simon Howard, © 2008-2010 GhostlyDeath; 
-Crispy Doom is © 2014-2025 Fabian Greffrath;
-additionally So Doom is © 2019-2025 Vladislav Melnichuk;
+Crispy Doom is © 2014-2026 Fabian Greffrath;
+additionally So Doom is © 2019-2026 Vladislav Melnichuk;
 all of the above are released under the [GPL-2+](https://www.gnu.org/licenses/gpl-2.0.html).
 
 SDL 2.0, SDL_mixer 2.0 and SDL_net 2.0 are © 1997-2016 Sam Lantinga and are released under the [zlib license](http://www.gzip.org/zlib/zlib_license.html).
