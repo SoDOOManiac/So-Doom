@@ -48,6 +48,7 @@ typedef struct
 	int chainsawberserk;
 	int coloredblood;
 	int coloredhud;
+	int coloredmarinecorpses;
 	int crosshair;
 	int crosshairhealth;
 	int crosshairtarget;
@@ -159,11 +160,12 @@ enum
     UNCAPPEDFRAMERATE_OFF,
     UNCAPPEDFRAMERATE_FULL,
     UNCAPPEDFRAMERATE_CAMERAMOVEMENT,
-    UNCAPPEDFRAMERATE_FULL_VSYNC,
-    UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC,
+    // UNCAPPEDFRAMERATE_FULL_VSYNC,
+    // UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC,
     NUM_UNCAPPEDFRAMERATES,
 };
 
+/*
 enum
 {
     VSYNC_OFF,
@@ -171,6 +173,7 @@ enum
     VSYNC_CAPPED,
     NUM_VSYNC,
 };
+*/
 
 enum
 {
@@ -205,7 +208,7 @@ enum
 	COLOREDBLOOD_RGB,
 	COLOREDBLOOD_SKULLPUFFS_RGB,
 	COLOREDBLOOD_ALL,
-	COLOREDBLOOD_PLUSCORPSES,
+	// COLOREDBLOOD_PLUSCORPSES,
 	NUM_COLOREDBLOOD,
 };
 

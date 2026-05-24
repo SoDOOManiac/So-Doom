@@ -35,8 +35,8 @@ multiitem_t multiitem_uncappedframerate[NUM_UNCAPPEDFRAMERATES] =
     {UNCAPPEDFRAMERATE_OFF, "off"},
     {UNCAPPEDFRAMERATE_FULL, "all movements"},
     {UNCAPPEDFRAMERATE_CAMERAMOVEMENT, "camera movement"},
-    {UNCAPPEDFRAMERATE_FULL_VSYNC, "all movements + vsync"},
-    {UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC, "cam movement + vsync"},
+    //{UNCAPPEDFRAMERATE_FULL_VSYNC, "all movements + vsync"},
+    //{UNCAPPEDFRAMERATE_CAMERAMOVEMENT_VSYNC, "cam movement + vsync"},
 };
 
 multiitem_t multiitem_pixelaspectratio[NUM_PIXELASPECTRATIOS] =
@@ -69,7 +69,7 @@ multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] =
     {COLOREDBLOOD_RGB, "~5R~3G~6B"},
     {COLOREDBLOOD_SKULLPUFFS_RGB, "~4skulls emit puffs ~3+ ~5R~3G~6B"},
     {COLOREDBLOOD_ALL, "~4puffs ~3+ ~5R~3G~6B ~3+ ~2invisibility fuzz"},
-    {COLOREDBLOOD_PLUSCORPSES, "all + player corpse colors"},
+    //{COLOREDBLOOD_PLUSCORPSES, "all + player corpse colors"},
 };
 
 multiitem_t multiitem_centerweapon[NUM_CENTERWEAPON] =
@@ -215,12 +215,14 @@ multiitem_t multiitem_sndchannels[4] =
     {32, "32"},
 };
 
+/*
 multiitem_t multiitem_vsync[NUM_VSYNC] =
 {
     {VSYNC_OFF, "off"},
     {VSYNC_ON, "vsync"},
     {VSYNC_CAPPED, "config FPS limit"},
 };
+*/
 
 multiitem_t multiitem_widehud[NUM_WIDEHUDS] =
 {
@@ -342,41 +344,76 @@ void M_CrispyToggleColoredblood(int choice)
 
     ChangeSettingEnum(&crispy->coloredblood, choice, NUM_COLOREDBLOOD);
 
-    // [crispy] switch NOBLOOD flag for Lost Souls
     for (th = thinkercap.next; th && th != &thinkercap; th = th->next)
     {
-	if (th->function.acp1 == (actionf_p1)P_MobjThinker)
-	{
-		mobj_t *mobj = (mobj_t *)th;
-
-		if (mobj->type == MT_SKULL)
+		if (th->function.acp1 == (actionf_p1)P_MobjThinker)
 		{
-			if ((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood >= COLOREDBLOOD_SKULLPUFFS_RGB))
-			{
-				mobj->flags |= MF_NOBLOOD;
-			}
-			else
-			{
-				mobj->flags &= ~MF_NOBLOOD;
-			}
-		}
+			mobj_t *mobj = (mobj_t *)th;
 
-	// [crispy] randomly colorize space marine corpse objects
+		// [crispy] switch NOBLOOD flag for Lost Souls
+			if (mobj->type == MT_SKULL)
+			{
+				if ((crispy->coloredblood == COLOREDBLOOD_SKULLPUFFS) || (crispy->coloredblood >= COLOREDBLOOD_SKULLPUFFS_RGB))
+				{
+					mobj->flags |= MF_NOBLOOD;
+				}
+				else
+				{
+					mobj->flags &= ~MF_NOBLOOD;
+				}
+			}
+	/*
+    // [crispy] randomly colorize space marine corpse objects
 	if (!netgame && (mobj->info->spawnstate == S_PLAY_DIE7 ||
 	mobj->info->spawnstate == S_PLAY_XDIE9))
 	{
-	if (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES)
-	{
-		mobj->flags |= (Crispy_Random() & 3) << MF_TRANSSHIFT;
+		if (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES)
+		{
+			mobj->flags |= (Crispy_Random() & 3) << MF_TRANSSHIFT;
+		}
+		else
+		{
+			mobj->flags &= ~MF_TRANSLATION;
+		}
 	}
-	else
-	{
-		mobj->flags &= ~MF_TRANSLATION;
-	}
-	}
-
-	}
+	*/
+		}
     }
+}
+
+void M_CrispyToggleColoredMarineCorpses(int choice)
+{
+    thinker_t *th;
+
+    if (gameversion == exe_chex)
+    {
+	return;
+    }
+
+    choice = 0;
+    crispy->coloredmarinecorpses = !crispy->coloredmarinecorpses;
+
+    for (th = thinkercap.next; th && th != &thinkercap; th = th->next)
+    {
+		if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+		{
+			mobj_t *mobj = (mobj_t *)th;
+
+		// [crispy] randomly colorize space marine corpse objects
+			if (!netgame && (mobj->info->spawnstate == S_PLAY_DIE7 ||
+			mobj->info->spawnstate == S_PLAY_XDIE9))
+			{
+				if (crispy->coloredmarinecorpses)
+				{
+					mobj->flags |= (Crispy_Random() & 3) << MF_TRANSSHIFT;
+				}
+				else
+				{
+					mobj->flags &= ~MF_TRANSLATION;
+				}
+			}
+		}
+	}
 }
 
 void M_CrispyToggleColoredhud(int choice)
@@ -782,6 +819,27 @@ void M_CrispyToggleVsyncHook (void)
     I_ToggleVsync();
 }
 
+void M_CrispyToggleVsync(int choice)
+{
+    choice = 0;
+
+    if (force_software_renderer)
+    {
+	    return;
+    }
+
+    crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
+}
+
+void M_CrispyToggleUncapped(int choice)
+{
+    ChangeSettingEnum(&crispy->uncapped, choice, NUM_UNCAPPEDFRAMERATES); // [So Doom]  
+}
+
+// Old version of M_CrispyToggleUncapped coupled with toggling vsync to squish 2 menu items into 1 in order to fit into the Rendering submenu.
+// In v8.0.0 Rendering and Visual are separate submenus, no need to tie these settings to each other anymore.
+
+/*
 void M_CrispyToggleUncapped(int choice)
 {
     int new_crispy_vsync;
@@ -803,18 +861,7 @@ void M_CrispyToggleUncapped(int choice)
     if (new_crispy_vsync != crispy->vsync)
         crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
 }
-
-void M_CrispyToggleVsync(int choice)
-{
-    choice = 0;
-
-    if (force_software_renderer)
-    {
-	    return;
-    }
-
-    crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
-}
+*/
 
 void M_CrispyToggleWeaponSquat(int choice)
 {

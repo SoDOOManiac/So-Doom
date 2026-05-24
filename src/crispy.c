@@ -33,7 +33,7 @@ static crispy_t crispy_s = {
 #ifdef CRISPY_TRUECOLOR
 	.truecolor = 1,
 #endif
-	.uncapped = 3,
+	.uncapped = 1,
 	.vsync = 1,
 };
 crispy_t *const crispy = &crispy_s;

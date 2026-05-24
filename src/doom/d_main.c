@@ -448,6 +448,7 @@ void D_BindVariables(void)
     M_BindIntVariable("crispy_centerweapon",    &crispy->centerweapon);
     M_BindIntVariable("crispy_chainsawberserk", &crispy->chainsawberserk);
     M_BindIntVariable("crispy_coloredblood",    &crispy->coloredblood);
+    M_BindIntVariable("crispy_coloredmarinecorpses",    &crispy->coloredmarinecorpses);
     M_BindIntVariable("crispy_coloredhud",      &crispy->coloredhud);
     M_BindIntVariable("crispy_crosshair",       &crispy->crosshair);
     M_BindIntVariable("crispy_crosshairhealth", &crispy->crosshairhealth);

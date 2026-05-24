@@ -1101,7 +1101,7 @@ void P_SpawnMapThing (mapthing_t* mthing)
         mobj->flags |= MF_NOBLOOD;
 
     // [crispy] randomly colorize space marine corpse objects
-    if (!netgame && (crispy->coloredblood == COLOREDBLOOD_PLUSCORPSES) &&
+    if (!netgame && crispy->coloredmarinecorpses &&
         (mobj->info->spawnstate == S_PLAY_DIE7 ||
         mobj->info->spawnstate == S_PLAY_XDIE9))
     {

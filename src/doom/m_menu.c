@@ -298,7 +298,7 @@ static void M_DrawCrispness1(void);
 static void M_DrawCrispness2(void);
 static void M_DrawCrispness3(void);
 static void M_DrawCrispness4(void);
-
+static void M_DrawCrispness5(void);
 
 
 //
@@ -497,20 +497,14 @@ enum
     crispness_pixelaspectratio,
     crispness_uncapped,
     crispness_fpslimit,
+    crispness_vsync,
     crispness_smoothscaling,
     //crispness_sep_rendering_,
 
     //crispness_sep_visual,
     //crispness_logo,
     crispness_mapviewstats,
-    crispness_screenwipe,
-    crispness_coloredhud,
-    crispness_translucency,
-    crispness_smoothlight,
-    crispness_brightmaps,
-    crispness_coloredblood,
-    crispness_flipcorpses,
-    //crispness_sep_visual_,
+    crispness_sep_rendering_,
 
     crispness1_next,
     crispness1_prev,
@@ -526,19 +520,13 @@ static menuitem_t Crispness1Menu[]=
     {3,"",	M_CrispyTogglePixelAspectRatio,'f'},
     {3,"",	M_CrispyToggleUncapped,'u'},
     {4,"",	M_CrispyToggleFpsLimit,'f'},
+    {3,"",	M_CrispyToggleVsync,'v'},
     {3,"",	M_CrispyToggleSmoothScaling,'s'},
 //    {-1,"",0,'\0'},
 //    {-1,"",0,'\0'},
 //    {3,"",	M_CrispyToggleLogo,'o'},
     {3,"",	M_CrispyToggleMapViewStats, 't'},
-    {3,"",	M_CrispyToggleScreenwipe,'o'},
-    {3,"",	M_CrispyToggleColoredhud,'c'},
-    {3,"",	M_CrispyToggleTranslucency,'e'},
-    {3,"",	M_CrispyToggleSmoothLighting,'l'},
-    {3,"",	M_CrispyToggleBrightmaps,'b'},
-    {3,"",	M_CrispyToggleColoredblood,'d'},
-    {3,"",	M_CrispyToggleFlipcorpses,'r'},
-//    {-1,"",0,'\0'},
+    {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
     {1,"",	M_CrispnessPrev,'p'},
 };
@@ -549,6 +537,51 @@ static menu_t  Crispness1Def =
     &OptionsDef,
     Crispness1Menu,
     M_DrawCrispness1,
+    24,18,
+    1
+};
+
+enum
+{
+    crispness_sep_visual,
+    crispness_coloredhud,
+    crispness_translucency,
+    crispness_smoothlight,
+    crispness_brightmaps,
+    crispness_coloredblood,
+    crispness_coloredmarinecorpses,
+    crispness_flipcorpses,
+    crispness_screenwipe,
+    crispness_logo,
+    crispness_sep_visual_,
+    crispness2_next,
+    crispness2_prev,
+    crispness2_end
+} crispness2_e;
+
+static menuitem_t Crispness2Menu[]=
+{
+    {-1,"",0,'\0'},
+    {3,"",	M_CrispyToggleColoredhud,'c'},
+    {3,"",	M_CrispyToggleTranslucency,'e'},
+    {3,"",	M_CrispyToggleSmoothLighting,'l'},
+    {3,"",	M_CrispyToggleBrightmaps,'b'},
+    {3,"",	M_CrispyToggleColoredblood,'d'},
+    {3,"",	M_CrispyToggleColoredMarineCorpses,'m'},
+    {3,"",	M_CrispyToggleFlipcorpses,'r'},
+    {3,"",	M_CrispyToggleScreenwipe,'o'},
+    {3,"",	M_CrispyToggleLogo,'o'},
+    {-1,"",0,'\0'},
+    {1,"",	M_CrispnessNext,'n'},
+    {1,"",	M_CrispnessPrev,'p'},
+};
+
+static menu_t  Crispness2Def =
+{
+    crispness2_end,
+    &OptionsDef,
+    Crispness2Menu,
+    M_DrawCrispness2,
     24,18,
     1
 };
@@ -574,12 +607,12 @@ enum
     crispness_mapsecrets,
     //crispness_sep_navigational_,
 
-    crispness2_next,
-    crispness2_prev,
-    crispness2_end
-} crispness2_e;
+    crispness3_next,
+    crispness3_prev,
+    crispness3_end
+} crispness3_e;
 
-static menuitem_t Crispness2Menu[]=
+static menuitem_t Crispness3Menu[]=
 {
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleFullsounds,'f'},
@@ -602,12 +635,12 @@ static menuitem_t Crispness2Menu[]=
     {1,"",	M_CrispnessPrev,'p'},
 };
 
-static menu_t  Crispness2Def =
+static menu_t  Crispness3Def =
 {
-    crispness2_end,
+    crispness3_end,
     &OptionsDef,
-    Crispness2Menu,
-    M_DrawCrispness2,
+    Crispness3Menu,
+    M_DrawCrispness3,
     24,18,
     1
 };
@@ -632,12 +665,12 @@ enum
     crispness_crosshairtarget,
     crispness_sep_crosshair_,
 
-    crispness3_next,
-    crispness3_prev,
-    crispness3_end
-} crispness3_e;
+    crispness4_next,
+    crispness4_prev,
+    crispness4_end
+} crispness4_e;
 
-static menuitem_t Crispness3Menu[]=
+static menuitem_t Crispness4Menu[]=
 {
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleFreelook,'a'},
@@ -659,12 +692,12 @@ static menuitem_t Crispness3Menu[]=
     {1,"",	M_CrispnessPrev,'p'},
 };
 
-static menu_t  Crispness3Def =
+static menu_t  Crispness4Def =
 {
-    crispness3_end,
+    crispness4_end,
     &OptionsDef,
-    Crispness3Menu,
-    M_DrawCrispness3,
+    Crispness4Menu,
+    M_DrawCrispness4,
     24,18,
     1
 };
@@ -693,13 +726,13 @@ enum
     crispness_demousetimer,
     // crispness_sep_demos_,
 
-    crispness4_next,
-    crispness4_prev,
-    crispness4_end
-} crispness4_e;
+    crispness5_next,
+    crispness5_prev,
+    crispness5_end
+} crispness5_e;
 
 
-static menuitem_t Crispness4Menu[]=
+static menuitem_t Crispness5Menu[]=
 {
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleFreeaim,'v'},
@@ -724,12 +757,12 @@ static menuitem_t Crispness4Menu[]=
     {1,"",	M_CrispnessPrev,'p'},
 };
 
-static menu_t  Crispness4Def =
+static menu_t  Crispness5Def =
 {
-    crispness4_end,
+    crispness5_end,
     &OptionsDef,
-    Crispness4Menu,
-    M_DrawCrispness4,
+    Crispness5Menu,
+    M_DrawCrispness5,
     24,18,
     1
 };
@@ -740,6 +773,7 @@ static menu_t *CrispnessMenus[] =
 	&Crispness2Def,
 	&Crispness3Def,
 	&Crispness4Def,
+	&Crispness5Def,
 };
 
 static int crispness_cur;
@@ -1688,27 +1722,21 @@ static void M_DrawCrispness1(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("SoDOOMy 1/4");
+    M_DrawCrispnessHeader("SoDOOMy 1/5");
 
-    M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering & Visual");
+    M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering");
     M_DrawCrispnessMultiItem(crispness_hires, "Rendering Resolution", multiitem_hires, crispy->hires, true);
     M_DrawCrispnessMultiItem(crispness_widescreen, "Aspect Ratio", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
     M_DrawCrispnessMultiItem(crispness_widehud, "Widescreen See-through HUD", multiitem_widehud, crispy->widehud, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Fast Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessNumericItem(crispness_fpslimit, "Framerate Limit", crispy->fpslimit, "None", crispy->uncapped, "35");
+    M_DrawCrispnessItem(crispness_vsync, "Enable VSync", crispy->vsync, !force_software_renderer);
     M_DrawCrispnessItem(crispness_smoothscaling, "Smooth Pixel Scaling", crispy->smoothscaling, !force_software_renderer);
 
     //M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
     //M_DrawCrispnessMultiItem(crispness_logo, "Port logo", multiitem_logo, crispy->logo, true);
     M_DrawCrispnessMultiItem(crispness_mapviewstats, "Map rendering stats", multiitem_mapviewstats, crispy->mapviewstats, true);
-    M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe", crispy->screenwipe, true);
-    M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
-    M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
-    M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
-    M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
-    M_DrawCrispnessMultiItem(crispness_coloredblood, "Blood", multiitem_coloredblood, crispy->coloredblood, gameversion != exe_chex);
-    M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
 
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
     M_DrawCrispnessGoto(crispness1_prev, "< Last Page");
@@ -1720,7 +1748,31 @@ static void M_DrawCrispness2(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("SoDOOMy 2/4");
+    M_DrawCrispnessHeader("SoDOOMy 2/5");
+
+    M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
+    M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
+    M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
+    M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
+    M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
+    M_DrawCrispnessMultiItem(crispness_coloredblood, "Blood", multiitem_coloredblood, crispy->coloredblood, gameversion != exe_chex);
+    M_DrawCrispnessItem(crispness_coloredmarinecorpses, "Randomly Colored Marine Corpses", crispy->coloredmarinecorpses, !netgame);
+    M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
+    M_DrawCrispnessItem(crispness_screenwipe, "Screen Wipe on Level Start", crispy->screenwipe, true);
+    M_DrawCrispnessMultiItem(crispness_logo, "So Doom Logo", multiitem_logo, crispy->logo, true);
+
+
+    M_DrawCrispnessGoto(crispness2_next, "Next Page >");
+    M_DrawCrispnessGoto(crispness2_prev, "< Last Page");
+
+    dp_translation = NULL;
+}
+
+static void M_DrawCrispness3(void)
+{
+    M_DrawCrispnessBackground();
+
+    M_DrawCrispnessHeader("SoDOOMy 3/5");
 
     M_DrawCrispnessSeparator(crispness_sep_audible, "Audible");
     M_DrawCrispnessItem(crispness_soundfull, "Play sounds in full length", crispy->soundfull, true);
@@ -1739,17 +1791,17 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessMultiItem(crispness_secretmessage, "Report Revealed Secrets", multiitem_secretmessage, crispy->secretmessage, true);
     M_DrawCrispnessMultiItem(crispness_mapsecrets, "Map Secrets", multiitem_mapsecrets, crispy->mapsecrets, true);
 
-    M_DrawCrispnessGoto(crispness2_next, "Next Page >");
-    M_DrawCrispnessGoto(crispness2_prev, "< Prev Page");
+    M_DrawCrispnessGoto(crispness3_next, "Next Page >");
+    M_DrawCrispnessGoto(crispness3_prev, "< Prev Page");
 
     dp_translation = NULL;
 }
 
-static void M_DrawCrispness3(void)
+static void M_DrawCrispness4(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("SoDOOMy 3/4");
+    M_DrawCrispnessHeader("SoDOOMy 4/5");
 
     M_DrawCrispnessSeparator(crispness_sep_tactical, "Tactical");
 
@@ -1769,17 +1821,17 @@ static void M_DrawCrispness3(void)
     M_DrawCrispnessItem(crispness_crosshairhealth, "Color indicates Health", crispy->crosshairhealth, crispy->crosshair);
     M_DrawCrispnessItem(crispness_crosshairtarget, "Highlight on target", crispy->crosshairtarget, crispy->crosshair);
 
-    M_DrawCrispnessGoto(crispness3_next, "Next Page >");
-    M_DrawCrispnessGoto(crispness3_prev, "< Prev Page");
+    M_DrawCrispnessGoto(crispness4_next, "Next Page >");
+    M_DrawCrispnessGoto(crispness4_prev, "< Prev Page");
 
     dp_translation = NULL;
 }
 
-static void M_DrawCrispness4(void)
+static void M_DrawCrispness5(void)
 {
     M_DrawCrispnessBackground();
 
-    M_DrawCrispnessHeader("SoDOOMy 4/4");
+    M_DrawCrispnessHeader("SoDOOMy 5/5");
 
     M_DrawCrispnessSeparator(crispness_sep_physical, "Physical & World fixes");
 
@@ -1805,8 +1857,8 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessItem(crispness_demobar, "Show Demo Progress Bar", crispy->demobar, true);
     M_DrawCrispnessItem(crispness_demousetimer, "\"Use\" Button Timer", crispy->btusetimer, true);
 
-    M_DrawCrispnessGoto(crispness4_next, "First Page >");
-    M_DrawCrispnessGoto(crispness4_prev, "< Prev Page");
+    M_DrawCrispnessGoto(crispness5_next, "First Page >");
+    M_DrawCrispnessGoto(crispness5_prev, "< Prev Page");
 
     dp_translation = NULL;
 }

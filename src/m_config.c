@@ -2365,6 +2365,14 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
+    // Enable randomly colored marine corpses (non-netgame, no matter demo or not demo).
+    //
+
+    CONFIG_VARIABLE_INT(crispy_coloredmarinecorpses),
+
+    //!
+    // @game doom
+    //
     // Show colored numbers in the status bar.
     //
 
