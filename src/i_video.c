@@ -153,7 +153,7 @@ int fullscreen = true;
 
 // Aspect ratio correction mode
 
-int aspect_ratio_correct = true;
+int aspect_ratio_correct = 1;
 static int actualheight;
 
 // Force integer scales for resolution-independent rendering
@@ -1179,7 +1179,7 @@ static void SetScaleFactor(int factor)
     int height;
 
     // Pick 320x200 or 320x240, depending on aspect ratio correct
-    if (aspect_ratio_correct)
+    if (aspect_ratio_correct == 1)
     {
         height = SCREENHEIGHT_4_3;
     }
@@ -1578,7 +1578,11 @@ static void SetVideoMode(void)
     // time this also defines the aspect ratio that is preserved while scaling
     // and stretching the texture into the window.
 
-    if (aspect_ratio_correct || integer_scaling)
+    // if aspect ratio correction is on while we are not in a fullscreen mode of a narrow (e.g. 1280x1024 in case of aspect_ratio_correct == 1
+    // and less than 16:10 in case of aspect_ratio_correct == 2 ) display with Aspect Ratio = Match Screen
+
+    if ( ( aspect_ratio_correct && ! ( fullscreen && (crispy->widescreen == RATIO_MATCH_SCREEN) &&
+    ( w * (aspect_ratio_correct == 1 ? 3 : 10) <= h * (aspect_ratio_correct == 1 ? 4 : 16) ) ) ) || integer_scaling )
     {
         SDL_RenderSetLogicalSize(renderer,
                                  SCREENWIDTH,
@@ -1990,7 +1994,11 @@ void I_ReInitGraphics (int reinit)
 			actualheight = SCREENHEIGHT;
 		}
 
-		if (aspect_ratio_correct || integer_scaling)
+		// if aspect ratio correction is on while we are not in a fullscreen mode of a narrow (e.g. 1280x1024 in case of aspect_ratio_correct == 1
+		// and less than 16:10 in case of aspect_ratio_correct == 2 ) display with Aspect Ratio = Match Screen
+
+		if ( ( aspect_ratio_correct && ! ( fullscreen && (crispy->widescreen == RATIO_MATCH_SCREEN) &&
+		( fullscreen_width * (aspect_ratio_correct == 1 ? 3 : 10) <= fullscreen_height * (aspect_ratio_correct == 1 ? 4 : 16) ) ) ) || integer_scaling )
 		{
 			SDL_RenderSetLogicalSize(renderer,
 			                         SCREENWIDTH,
@@ -2023,7 +2031,12 @@ void I_RenderReadPixels(byte **data, int *w, int *h, int *p)
 	// [crispy] adjust cropping rectangle if necessary
 	rect.x = rect.y = 0;
 	SDL_GetRendererOutputSize(renderer, &rect.w, &rect.h);
-	if (aspect_ratio_correct || integer_scaling)
+
+	// if aspect ratio correction is on while we are not in a fullscreen mode of a narrow (e.g. 1280x1024 in case of aspect_ratio_correct == 1
+	// and less than 16:10 in case of aspect_ratio_correct == 2 ) display with Aspect Ratio = Match Screen
+
+	if ( ( aspect_ratio_correct && ! ( fullscreen && (crispy->widescreen == RATIO_MATCH_SCREEN) &&
+	( fullscreen_width * (aspect_ratio_correct == 1 ? 3 : 10) <= fullscreen_height * (aspect_ratio_correct == 1 ? 4 : 16) ) ) ) || integer_scaling )
 	{
 		if (integer_scaling)
 		{
