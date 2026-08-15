@@ -1707,7 +1707,7 @@ static void SetVideoMode(void)
 void I_GetScreenDimensions (void)
 {
 	SDL_DisplayMode mode;
-	int w = 16, h = 10;
+	int w = 16, w_mode_backup = 16, h = 10, h_mode_backup = 10;
 	int ah;
 
 	SCREENWIDTH = ORIGWIDTH << crispy->hires;
@@ -1719,6 +1719,9 @@ void I_GetScreenDimensions (void)
 
 	if (SDL_GetCurrentDisplayMode(video_display, &mode) == 0)
 	{
+		w_mode_backup = mode.w;
+		h_mode_backup = mode.h;
+
 		// [crispy] sanity check: really widescreen display?
 		if (mode.w * ah >= mode.h * SCREENWIDTH)
 		{
@@ -1756,11 +1759,15 @@ void I_GetScreenDimensions (void)
 				w = 21;
 				h = 9;
 				break;
-			default:
+			default:       // Match screen or non-wide screen, the latter is handled further with w * ah / h for different aspect ratio correction (pixel aspect ratio)
 				break;
 		}
 
-		SCREENWIDTH = w * ah / h;
+		// So Doom - if crispy->widescreen == RATIO_MATCH_SCREEN, aspect_ratio_correct == 1 and the screen is narrower than 4:3, don't expand the framebuffer from 4:3 to widescreen 16:10
+		if (!((crispy->widescreen == RATIO_MATCH_SCREEN) && (aspect_ratio_correct == 1) && (w_mode_backup * 3 <= h_mode_backup * 4)))
+		{
+		    SCREENWIDTH = w * ah / h;
+		}
 		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
 		SCREENWIDTH = (SCREENWIDTH + (crispy->hires ? 0 : 3)) & (int)~3;
 		// [crispy] ... but never exceeds MAXWIDTH (array size!)
