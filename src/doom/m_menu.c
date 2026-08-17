@@ -1763,7 +1763,7 @@ static void M_DrawCrispness2(void)
 
 
     M_DrawCrispnessGoto(crispness2_next, "Next Page >");
-    M_DrawCrispnessGoto(crispness2_prev, "< Last Page");
+    M_DrawCrispnessGoto(crispness2_prev, "< Prev Page");
 
     dp_translation = NULL;
 }
