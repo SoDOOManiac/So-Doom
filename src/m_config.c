@@ -1859,6 +1859,12 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_KEY(key_menu_flipweapons),
 
     //!
+    // Keyboard shortcut to toggle wide spacing of HUD texts (e.g. messages).
+    //
+	
+    CONFIG_VARIABLE_KEY(key_menu_widehudtexts),
+
+    //!
     // Keyboard shortcut to save a screenshot.
     //
 
@@ -2763,10 +2769,10 @@ static default_t extra_defaults_list[] =
     //!
     // @game doom
     //
-    // Widescreen Crispy HUD type: non-wide - everything aligned to narrow screen boundaries, wide - spread along the screen, compact - status bar values in narrow screen boundaries, but messages, FPS etc. at screen sides.
+    // HUD texts (e.g. messages) layout: wide - aligned to the screen boundaries in case of widescreen rendering, narrow - kept in narrow screen boundaries even in widescreen mode.
     //
 
-    CONFIG_VARIABLE_INT(crispy_widehud),
+    CONFIG_VARIABLE_INT(crispy_widehudtexts),
 
     //!
     // @game doom

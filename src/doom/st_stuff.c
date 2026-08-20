@@ -2285,7 +2285,7 @@ void ST_drawWidgets(boolean refresh)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
     // [crispy] draw the actual face widget background
-    if (st_crispyhud && screenblocks == CRISPY_HUD)
+    if (st_crispyhud && ((screenblocks == CRISPY_HUD) || (screenblocks == CRISPY_HUD + 4)))
     {
 		if (netgame)
 		V_DrawPatch(ST_FX, ST_Y + 1, faceback[displayplayer]);
@@ -2293,7 +2293,7 @@ void ST_drawWidgets(boolean refresh)
 		V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback[0]->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
     }
     // [So Doom] draw the translucent face widget background in So Doomy HUD above the ammo widget in multiplayer only
-    if (st_crispyhud && screenblocks == CRISPY_HUD + 1)
+    if (st_crispyhud && ((screenblocks == CRISPY_HUD + 1) || (screenblocks == CRISPY_HUD + 5)))
     {
     if (netgame)
     {
@@ -2344,7 +2344,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
     // [crispy] distinguish classic status bar with background and player face from Crispy HUD
     st_crispyhud = screenblocks >= CRISPY_HUD && (!automapactive || crispy->automapoverlay);
     st_classicstatusbar = st_statusbaron && !st_crispyhud;
-    st_statusbarface = st_classicstatusbar || (st_crispyhud && screenblocks == CRISPY_HUD); 
+    st_statusbarface = st_classicstatusbar || (st_crispyhud && ((screenblocks == CRISPY_HUD) || (screenblocks == CRISPY_HUD + 4))); 
 
     // [crispy] re-calculate widget coordinates on demand
     if (st_widescreendelta != ST_WIDESCREENDELTA)
@@ -2357,7 +2357,7 @@ void ST_Drawer (boolean fullscreen, boolean refresh)
         return;
 
     // [crispy] translucent HUD
-    if (st_crispyhud && screenblocks == CRISPY_HUD + 3)
+    if (st_crispyhud && ((screenblocks == CRISPY_HUD + 3) || (screenblocks == CRISPY_HUD + 7)))
 	dp_translucent = true;
 
     // If just after ST_Start(), refresh all

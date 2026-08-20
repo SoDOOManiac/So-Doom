@@ -224,11 +224,10 @@ multiitem_t multiitem_vsync[NUM_VSYNC] =
 };
 */
 
-multiitem_t multiitem_widehud[NUM_WIDEHUDS] =
+multiitem_t multiitem_widehudtexts[NUM_WIDEHUDTEXTS] =
 {
-    {WIDEHUD_OFF, "Non-wide"},
-    {WIDEHUD_WIDE, "Wide"},
-    {WIDEHUD_COMPACT, "Compact"},
+    {WIDEHUDTEXTS_OFF, "Narrow"},
+    {WIDEHUDTEXTS_WIDE, "Wide"},
 };
 
 multiitem_t multiitem_widescreen[NUM_RATIOS] =
@@ -249,6 +248,7 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
     {WIDGETS_AUTOMAP, "in Automap"},
     {WIDGETS_ALWAYS, "always"},
     {WIDGETS_STBAR, "status bar"},
+    {WIDGETS_STBAR_LEFT, "if no st.bar, far left"},
 };
 
 extern void AM_LevelInit (boolean reinit);
@@ -869,9 +869,9 @@ void M_CrispyToggleWeaponSquat(int choice)
     crispy->weaponsquat = !crispy->weaponsquat;
 }
 
-void M_CrispyToggleWideHUD(int choice)
+void M_CrispyToggleWideHUDTexts(int choice)
 {
-    ChangeSettingEnum(&crispy->widehud, choice, NUM_WIDEHUDS);
+    ChangeSettingEnum(&crispy->widehudtexts, choice, NUM_WIDEHUDTEXTS);
 }
 
 static void M_CrispyToggleWidescreenHook (void)

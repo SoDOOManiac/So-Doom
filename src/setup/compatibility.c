@@ -117,7 +117,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_uncapped",        &crispy->uncapped);
         M_BindIntVariable("crispy_vsync",           &crispy->vsync);
         M_BindIntVariable("crispy_weaponsquat",     &crispy->weaponsquat);
-        M_BindIntVariable("crispy_widehud",      	&crispy->widehud);
+        M_BindIntVariable("crispy_widehudtexts",    &crispy->widehudtexts);
         M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
     }
     else if (gamemission == heretic)

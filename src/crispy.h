@@ -99,7 +99,7 @@ typedef struct
 	int uncapped;
 	int vsync;
 	int weaponsquat;
-	int widehud;
+	int widehudtexts;
 	int widescreen;
 
 	// [crispy] in-game switches and variables
@@ -345,10 +345,9 @@ enum
 
 enum
 {
-    WIDEHUD_OFF,
-    WIDEHUD_WIDE,
-    WIDEHUD_COMPACT,
-    NUM_WIDEHUDS
+    WIDEHUDTEXTS_OFF,
+    WIDEHUDTEXTS_WIDE,
+    NUM_WIDEHUDTEXTS
 };
 
 enum
@@ -357,6 +356,7 @@ enum
     WIDGETS_AUTOMAP,
     WIDGETS_ALWAYS,
     WIDGETS_STBAR,
+    WIDGETS_STBAR_LEFT,
     NUM_WIDGETS
 };
 

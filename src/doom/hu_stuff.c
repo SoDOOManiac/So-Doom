@@ -63,7 +63,7 @@
 #define HU_TITLEM	(mapnames_commercial[gamemap-1 + 105 + 3])
 #define HU_TITLE_CHEX   (mapnames_chex[(gameepisode-1)*9+gamemap-1])
 #define HU_TITLEHEIGHT	1
-#define HU_TITLEX	(0 - HUD_WIDESCREENDELTA)
+#define HU_TITLEX	(0 - HUDTEXTS_WIDESCREENDELTA)
 #define HU_TITLEY	(167 - SHORT(hu_font[0]->height))
 
 #define HU_INPUTTOGGLE	't'
@@ -72,8 +72,8 @@
 #define HU_INPUTWIDTH	64
 #define HU_INPUTHEIGHT	1
 
-#define HU_COORDX	((ORIGWIDTH - 7 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
-#define HU_FPSX	((ORIGWIDTH - 9 * hu_font['A'-HU_FONTSTART]->width) + HUD_WIDESCREENDELTA)
+#define HU_COORDX	((ORIGWIDTH - 7 * hu_font['A'-HU_FONTSTART]->width) + HUDTEXTS_WIDESCREENDELTA)
+#define HU_FPSX	((ORIGWIDTH - 9 * hu_font['A'-HU_FONTSTART]->width) + HUDTEXTS_WIDESCREENDELTA)
 
 char *chat_macros[10];
 
@@ -434,7 +434,7 @@ void HU_DrawDemoTimer (const int time)
 	else
 	{
 		// demo timer at the right edge of the (narrow) screen
-	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUD_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for non-wide HUD, draw demo timer widget within the narrow screen
+	    x = MIN((NONWIDEWIDTH >> crispy->hires) + HUDTEXTS_WIDESCREENDELTA, (viewwindowx >> crispy->hires) + (scaledviewwidth >> crispy->hires) - WIDESCREENDELTA); // [So Doom] for non-wide HUD, draw demo timer widget within the narrow screen
 	    y = viewwindowy >> crispy->hires;
 	}
 	// [crispy] draw the Demo Timer widget with gray numbers
@@ -660,7 +660,7 @@ void HU_Start(void)
 
     // [crispy] re-calculate WIDESCREENDELTA
     I_GetScreenDimensions();
-    hu_widescreendelta = HUD_WIDESCREENDELTA;
+    hu_widescreendelta = HUDTEXTS_WIDESCREENDELTA;
 
     // create the message widget
     HUlib_initSText(&w_message,
@@ -902,13 +902,13 @@ void HU_Drawer(void)
     }
 
     // [crispy] re-calculate widget coordinates on demand
-    if (hu_widescreendelta != HUD_WIDESCREENDELTA)
+    if (hu_widescreendelta != HUDTEXTS_WIDESCREENDELTA)
     {
         HU_Start();
     }
 
     // [crispy] translucent messages for translucent HUD
-    if (screenblocks == CRISPY_HUD + 3 && (!automapactive || crispy->automapoverlay)) // [So Doom] in So Doom there are 3 variations of non-translucent status bar-less HUD
+    if (((screenblocks == CRISPY_HUD + 3) || (screenblocks == CRISPY_HUD + 7)) && (!automapactive || crispy->automapoverlay)) // [So Doom] in So Doom there are 3 variations of non-translucent status bar-less HUD
 	dp_translucent = true;
 
     if (secret_on && !menuactive)
@@ -932,7 +932,7 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_title, false);
     }
 
-    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    if (crispy->automapstats >= WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
     {
 	HUlib_drawTextLine(&w_kills, false);
     }
@@ -1165,7 +1165,7 @@ void HU_Ticker(void)
 	}
     // [crispy] shift widgets one line down so chat typing line may appear
 
-    if (crispy->automapstats != WIDGETS_STBAR)
+    if (crispy->automapstats < WIDGETS_STBAR)
     {
 
         w_kills.y = HU_MSGY + 1 * 8 + chat_line; // kills line y position had been set explicitly before here in HU_Ticker() but let it be explicit here just in case
@@ -1193,13 +1193,15 @@ void HU_Ticker(void)
 	    w_title.y = HU_TITLEY;
     }
 
-    if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
+    if ((crispy->automapstats >= WIDGETS_STBAR) && (!automapactive || w_title.y != HU_TITLEY))
     {
 	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
 
-	if (screenblocks == CRISPY_HUD + 1) // So Doomy HUD, status face above the main widgets
+	if ((screenblocks == CRISPY_HUD + 1) || (screenblocks == CRISPY_HUD + 5)) // So Doomy HUD, status face above the main widgets
 	    w_kills.x = 44 - ST_WIDESCREENDELTA; // equal to ammo widget X position
-	else
+	else if ((screenblocks == CRISPY_HUD - 1) && (crispy->automapstats == WIDGETS_STBAR_LEFT))
+        w_kills.x = - WIDESCREENDELTA;
+    else
 	    w_kills.x = - ST_WIDESCREENDELTA;
 	
 	w_kills.y = HU_TITLEY;

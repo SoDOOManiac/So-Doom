@@ -493,7 +493,6 @@ enum
     crispness_sep_rendering,
     crispness_hires,
     crispness_widescreen,
-    crispness_widehud,
     crispness_pixelaspectratio,
     crispness_uncapped,
     crispness_fpslimit,
@@ -516,7 +515,6 @@ static menuitem_t Crispness1Menu[]=
     {-1,"",0,'\0'},
     {3,"",	M_CrispyToggleHires,'h'},
     {3,"",	M_CrispyToggleWidescreen,'w'},
-    {3,"",	M_CrispyToggleWideHUD,'a'},
     {3,"",	M_CrispyTogglePixelAspectRatio,'f'},
     {3,"",	M_CrispyToggleUncapped,'u'},
     {4,"",	M_CrispyToggleFpsLimit,'f'},
@@ -544,6 +542,7 @@ static menu_t  Crispness1Def =
 enum
 {
     crispness_sep_visual,
+    crispness_widehudtexts,
     crispness_coloredhud,
     crispness_translucency,
     crispness_smoothlight,
@@ -562,6 +561,7 @@ enum
 static menuitem_t Crispness2Menu[]=
 {
     {-1,"",0,'\0'},
+    {3,"",	M_CrispyToggleWideHUDTexts,'a'},
     {3,"",	M_CrispyToggleColoredhud,'c'},
     {3,"",	M_CrispyToggleTranslucency,'e'},
     {3,"",	M_CrispyToggleSmoothLighting,'l'},
@@ -569,7 +569,7 @@ static menuitem_t Crispness2Menu[]=
     {3,"",	M_CrispyToggleColoredblood,'d'},
     {3,"",	M_CrispyToggleColoredMarineCorpses,'m'},
     {3,"",	M_CrispyToggleFlipcorpses,'r'},
-    {3,"",	M_CrispyToggleScreenwipe,'o'},
+    {3,"",	M_CrispyToggleScreenwipe,'s'},
     {3,"",	M_CrispyToggleLogo,'o'},
     {-1,"",0,'\0'},
     {1,"",	M_CrispnessNext,'n'},
@@ -1727,7 +1727,6 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessSeparator(crispness_sep_rendering, "Rendering");
     M_DrawCrispnessMultiItem(crispness_hires, "Rendering Resolution", multiitem_hires, crispy->hires, true);
     M_DrawCrispnessMultiItem(crispness_widescreen, "Aspect Ratio", multiitem_widescreen, crispy->widescreen, aspect_ratio_correct);
-    M_DrawCrispnessMultiItem(crispness_widehud, "Widescreen See-through HUD", multiitem_widehud, crispy->widehud, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_pixelaspectratio, "Pixel Aspect Ratio", multiitem_pixelaspectratio, aspect_ratio_correct, true);
     M_DrawCrispnessMultiItem(crispness_uncapped, "Fast Framerate", multiitem_uncappedframerate, crispy->uncapped, true);
     M_DrawCrispnessNumericItem(crispness_fpslimit, "Framerate Limit", crispy->fpslimit, "None", crispy->uncapped, "35");
@@ -1751,6 +1750,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessHeader("SoDOOMy 2/5");
 
     M_DrawCrispnessSeparator(crispness_sep_visual, "Visual");
+    M_DrawCrispnessMultiItem(crispness_widehudtexts, "Messages etc. HUD Texts Layout", multiitem_widehudtexts, crispy->widehudtexts, aspect_ratio_correct && crispy->widescreen);
     M_DrawCrispnessMultiItem(crispness_coloredhud, "Colorize HUD Elements", multiitem_coloredhud, crispy->coloredhud, true);
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
@@ -2205,7 +2205,7 @@ void M_SizeDisplay(int choice)
 	}
 	break;
       case 1:
-	if (screenSize < 8 + 4) // [crispy] Crispy and [So Doom] So Doomy HUDs
+	if (screenSize < 8 + 4 + 4) // [crispy] Crispy and [So Doom] So Doomy HUDs
 	{
 	    screenblocks++;
 	    screenSize++;
@@ -2925,6 +2925,23 @@ boolean M_Responder (event_t* ev)
 	crispy->cleanscreenshot = (screenblocks > 10) ? 2 : 1;
     }
 
+    // [So Doom] toggle wide/narrow HUD texts (e.g. messages) layout, distinctly visible in case of widescreen rendering
+    if (key == key_menu_widehudtexts)
+    {
+        crispy->widehudtexts = !crispy->widehudtexts;		
+
+        R_ExecuteSetViewSize();
+
+        /*M_snprintf(ColorMessageString, sizeof(ColorMessageString), "%s%s%s HUD TEXTS LAYOUT",
+            (crispy->widehudtexts) ? crstr[CR_GREEN] : crstr[CR_RED],
+            (crispy->widehudtexts) ? "WIDE" : "NARROW",
+            crstr[CR_NONE]);
+        players[consoleplayer].message = ColorMessageString;*/
+
+        S_StartSound(NULL,sfx_swtchn);		
+        return true;		
+    }
+
     // [So Doom] flip levels
     if (key == key_menu_fliplevels)
     {
@@ -3602,9 +3619,9 @@ void M_Init (void)
     itemOn = currentMenu->lastOn;
     whichSkull = 0;
     skullAnimCounter = 10;
-    if (screenblocks > 15)
+    if (screenblocks > 19)
     {
-        screenblocks = 15; // [So Doom] if configs are shared with Crispy Doom, So Doom won't support screenblocks > 15, in this case set it to 15
+        screenblocks = 19; // [So Doom] 4 variations of Crispy HUD instead of 3, wide and narrow
     }
     screenSize = screenblocks - 3;
     messageToPrint = 0;
