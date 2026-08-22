@@ -2930,13 +2930,13 @@ boolean M_Responder (event_t* ev)
     {
         crispy->widehudtexts = !crispy->widehudtexts;		
 
-        R_ExecuteSetViewSize();
+        HU_Start(); // update HUDTEXTS_WIDESCREENDELTA
 
-        /*M_snprintf(ColorMessageString, sizeof(ColorMessageString), "%s%s%s HUD TEXTS LAYOUT",
+        M_snprintf(ColorMessageString, sizeof(ColorMessageString), "%s%s%s HUD TEXTS LAYOUT",
             (crispy->widehudtexts) ? crstr[CR_GREEN] : crstr[CR_RED],
             (crispy->widehudtexts) ? "WIDE" : "NARROW",
             crstr[CR_NONE]);
-        players[consoleplayer].message = ColorMessageString;*/
+        players[consoleplayer].message = ColorMessageString;
 
         S_StartSound(NULL,sfx_swtchn);		
         return true;		
