@@ -248,7 +248,7 @@ multiitem_t multiitem_widgets[NUM_WIDGETS] =
     {WIDGETS_AUTOMAP, "in Automap"},
     {WIDGETS_ALWAYS, "always"},
     {WIDGETS_STBAR, "status bar"},
-    {WIDGETS_STBAR_LEFT, "if no st.bar, far left"},
+    {WIDGETS_STBAR_LEFT, "st.bar, if it's off, <-left"},
 };
 
 extern void AM_LevelInit (boolean reinit);
@@ -646,7 +646,8 @@ void M_CrispyToggleLast3PhysAllowedInSingleplayerDemos(int choice)
 
 void M_CrispyToggleLeveltime(int choice)
 {
-    ChangeSettingEnum(&crispy->leveltime, choice, NUM_WIDGETS - 1);
+    // [So Doom] disable "status bar" and "st.bar, if it's off, <-left" settings
+    ChangeSettingEnum(&crispy->leveltime, choice, NUM_WIDGETS - 2);
 }
 
 void M_CrispyToggleLogo(int choice)
@@ -704,8 +705,8 @@ void M_CrispyTogglePitch(int choice)
 
 void M_CrispyTogglePlayerCoords(int choice)
 {
-    // [crispy] disable "always" setting
-    ChangeSettingEnum(&crispy->playercoords, choice, NUM_WIDGETS - 1);
+    // [So Doom] disable "status bar" and "st.bar, if it's off, <-left" settings
+    ChangeSettingEnum(&crispy->playercoords, choice, NUM_WIDGETS - 2);
 }
 
 void M_CrispyToggleRecoil(int choice)
