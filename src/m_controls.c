@@ -246,7 +246,7 @@ int joybflycenter = -1;
 // Control whether if a mouse button is double clicked, it acts like 
 // "use" has been pressed
 
-int dclick_use = 1;
+int dclick_use = 0; // [So Doom] changed the default value from 1 to 0 for the sake of convenience, this behavior was counter-intuitive when enabled by default
  
 // 
 // Bind all of the common controls used by Doom and all other games.
