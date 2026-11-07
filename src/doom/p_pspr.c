@@ -24,7 +24,7 @@
 #include "deh_misc.h"
 
 #include "g_game.h"        // [So Doom] mousebuttons variable for vertical aim modifier button
-#include "../m_controls.h" //  [So Doom] mousebvertaimmod variable
+#include "../m_controls.h" // [So Doom] mousebvertaimmod variable
 
 #include "m_random.h"
 #include "p_local.h"

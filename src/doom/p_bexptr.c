@@ -23,7 +23,7 @@
 #include "s_sound.h"
 
 #include "g_game.h"        // [So Doom] mousebuttons variable for vertical aim modifier button
-#include "../m_controls.h" //  [So Doom] mousebvertaimmod variable
+#include "../m_controls.h" // [So Doom] mousebvertaimmod variable
 
 extern void A_Explode();
 extern void A_FaceTarget();

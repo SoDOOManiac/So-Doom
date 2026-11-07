@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 #include "g_game.h"        // [So Doom] mousebuttons variable for vertical aim modifier button
-#include "../m_controls.h" //  [So Doom] mousebvertaimmod variable
+#include "../m_controls.h" // [So Doom] mousebvertaimmod variable
 
 #include "i_system.h"
 #include "z_zone.h"
