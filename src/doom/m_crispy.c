@@ -108,6 +108,8 @@ multiitem_t multiitem_freeaim[NUM_FREEAIMS] =
     {FREEAIM_AUTO, "autoaim"},
     {FREEAIM_DIRECT, "direct"},
     {FREEAIM_BOTH, "both"},
+    {FREEAIM_AUTO_MOD_DIRECT, "auto, mod button direct"},
+    {FREEAIM_DIRECT_MOD_AUTO, "direct, mod button auto"},
 };
 
 multiitem_t multiitem_demotimer[NUM_DEMOTIMERS] =

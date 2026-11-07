@@ -510,6 +510,14 @@ static default_t	doom_defaults_list[] =
     //!
     // @game doom
     //
+    // [So Doom] Vertical aiming modifier (if held, makes vertical aiming auto if it's configured to direct, and direct if it's configured to autoaim).
+    //
+
+    CONFIG_VARIABLE_INT(mouseb_vertaimmod),
+
+    //!
+    // @game doom
+    //
     // Quick 180° reverse.
     //
 
@@ -2568,6 +2576,7 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(crispy_logo),
+
     //!
     // @game doom
     //

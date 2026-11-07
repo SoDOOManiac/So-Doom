@@ -127,6 +127,7 @@ int mousebbackward = -1;
 int mousebuse = -1;
 int mousebmouselook = -1; // [crispy]
 int mousebreverse = -1; // [crispy]
+int mousebvertaimmod = -1;// [So Doom]
 
 int mousebmapzoomin = 3; // [crispy]
 int mousebmapzoomout = 4; // [crispy]
@@ -306,6 +307,7 @@ void M_BindBaseControls(void)
     M_BindIntVariable("joyb_jump",          &joybjump); // [crispy]
 
     M_BindIntVariable("mouseb_mouselook",   &mousebmouselook); // [crispy]
+    M_BindIntVariable("mouseb_vertaimmod",  &mousebvertaimmod); // [So Doom] vertical aiming modifier
     M_BindIntVariable("mouseb_reverse",     &mousebreverse); // [crispy]
     M_BindIntVariable("key_reverse",        &key_reverse); // [crispy]
     M_BindIntVariable("key_toggleautorun",  &key_toggleautorun); // [crispy]

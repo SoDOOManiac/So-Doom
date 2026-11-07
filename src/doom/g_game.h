@@ -89,6 +89,7 @@ extern fixed_t sidemove[2];
 
 extern boolean sendpause;
 
+extern boolean *mousebuttons; // [So Doom] vertical aim modifier button
 
 #endif
 

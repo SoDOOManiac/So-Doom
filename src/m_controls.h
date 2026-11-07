@@ -164,6 +164,7 @@ extern int mousebturnright;
 extern int mousebbackward;
 extern int mousebuse;
 extern int mousebmouselook;
+extern int mousebvertaimmod; // [So Doom]
 extern int mousebreverse;
 
 extern int mousebprevweapon;

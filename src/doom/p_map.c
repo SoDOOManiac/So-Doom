@@ -33,6 +33,9 @@
 
 #include "s_sound.h"
 
+#include "g_game.h"        // [So Doom] mousebuttons variable for vertical aim modifier button
+#include "../m_controls.h" //  [So Doom] mousebvertaimmod variable
+
 // State.
 #include "doomstat.h"
 #include "r_state.h"
@@ -339,7 +342,10 @@ boolean PIT_CheckThing (mobj_t* thing)
     {
 	// [crispy] mobj or actual sprite height
 	const fixed_t thingheight = (tmthing->target && tmthing->target->player &&
-	                            critical->freeaim == FREEAIM_DIRECT) ?
+	                            (critical->freeaim == FREEAIM_DIRECT ||
+	(critical->freeaim == FREEAIM_AUTO_MOD_DIRECT && mousebuttons[mousebvertaimmod]) || // [So Doom] introduced a mouse button changing autoaim to direct and vice versa
+	(critical->freeaim == FREEAIM_DIRECT_MOD_AUTO && !mousebuttons[mousebvertaimmod]) ) // while held in case of respective freeaim setting values
+	                            ) ?
 	                            thing->info->actualheight : thing->height;
 	// see if it went over / under
 	if (tmthing->z > thing->z + thingheight)
@@ -1152,7 +1158,9 @@ boolean PTR_ShootTraverse (intercept_t* in)
     // check angles to see if the thing can be aimed at
     dist = FixedMul (attackrange, in->frac);
     // [crispy] mobj or actual sprite height
-    thingheight = (shootthing->player && critical->freeaim == FREEAIM_DIRECT) ?
+    thingheight = (shootthing->player && (critical->freeaim == FREEAIM_DIRECT ||
+	(critical->freeaim == FREEAIM_AUTO_MOD_DIRECT && mousebuttons[mousebvertaimmod]) || // [So Doom] introduced a mouse button changing autoaim to direct and vice versa
+	(critical->freeaim == FREEAIM_DIRECT_MOD_AUTO && !mousebuttons[mousebvertaimmod]) )) ? // while held in case of respective freeaim setting values
                   th->info->actualheight : th->height;
     thingtopslope = FixedDiv (th->z+thingheight - shootz , dist);
 
@@ -1299,7 +1307,9 @@ P_LineLaser
     // [crispy] set the linetarget pointer
     lslope = P_AimLineAttack(t1, angle, distance);
 
-    if (critical->freeaim == FREEAIM_DIRECT)
+    if (critical->freeaim == FREEAIM_DIRECT ||
+       (critical->freeaim == FREEAIM_AUTO_MOD_DIRECT && mousebuttons[mousebvertaimmod]) || // [So Doom] introduced a mouse button changing autoaim to direct and vice versa
+       (critical->freeaim == FREEAIM_DIRECT_MOD_AUTO && !mousebuttons[mousebvertaimmod]) ) // while held in case of respective freeaim setting values
     {
 	lslope = slope;
     }
@@ -1330,7 +1340,9 @@ P_LineLaser
     if ((crispy->crosshair & ~CROSSHAIR_INTERCEPT) == CROSSHAIR_PROJECTED)
     {
 	// [crispy] don't aim at Spectres
-	if (linetarget && !(linetarget->flags & MF_SHADOW) && (critical->freeaim != FREEAIM_DIRECT))
+	if (linetarget && !(linetarget->flags & MF_SHADOW) && !(critical->freeaim == FREEAIM_DIRECT ||
+	(critical->freeaim == FREEAIM_AUTO_MOD_DIRECT && mousebuttons[mousebvertaimmod]) || // [So Doom] introduced a mouse button changing autoaim to direct and vice versa
+	(critical->freeaim == FREEAIM_DIRECT_MOD_AUTO && !mousebuttons[mousebvertaimmod]) )) // while held in case of respective freeaim setting values
 		P_LineAttack(t1, angle, distance, aimslope, INT_MIN);
 	else
 		// [crispy] double the auto aim distance

@@ -211,7 +211,7 @@ static int      turnheld;		// for accelerative turning
 static int      lookheld;		// [crispy] for accelerative looking
  
 static boolean  mousearray[MAX_MOUSE_BUTTONS + 1];
-static boolean *mousebuttons = &mousearray[1];  // allow [-1]
+boolean *mousebuttons = &mousearray[1];  // allow [-1] and un-static for [So Doom] vertical aim modifier button
 
 // mouse values are used once 
 int             mousex;

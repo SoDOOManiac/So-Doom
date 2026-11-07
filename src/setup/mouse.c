@@ -147,7 +147,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
                    buttons_table = TXT_NewTable(4),
                    NULL);
 
-    TXT_SetColumnWidths(buttons_table, 16, 11, 16, 10);
+    TXT_SetColumnWidths(buttons_table, 24, 12, 24, 11);
 
     AddMouseControl(buttons_table, "Move forward", &mousebforward);
     AddMouseControl(buttons_table, "Strafe left", &mousebstrafeleft);
@@ -184,6 +184,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddMouseControl(buttons_table, "Quick Reverse", &mousebreverse);
         AddMouseControl(buttons_table, "Mouse Look [*]", &mousebmouselook);
         AddMouseControl(buttons_table, "Jump [*]", &mousebjump);
+        AddMouseControl(buttons_table, "Vert. Aim Modifier [*]", &mousebvertaimmod);
     }
 
     TXT_AddWidgets(window,
@@ -191,7 +192,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
                    am_buttons_table = TXT_NewTable(4),
                    NULL);
 
-    TXT_SetColumnWidths(am_buttons_table, 16, 11, 16, 10);
+    TXT_SetColumnWidths(am_buttons_table, 24, 12, 24, 11);
 
     AddMouseMapControl(am_buttons_table, "Zoom in", &mousebmapzoomin);
     AddMouseMapControl(am_buttons_table, "Zoom out", &mousebmapzoomout);

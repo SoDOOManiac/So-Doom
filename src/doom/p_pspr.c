@@ -23,6 +23,9 @@
 
 #include "deh_misc.h"
 
+#include "g_game.h"        // [So Doom] mousebuttons variable for vertical aim modifier button
+#include "../m_controls.h" //  [So Doom] mousebvertaimmod variable
+
 #include "m_random.h"
 #include "p_local.h"
 #include "s_sound.h"
@@ -702,7 +705,9 @@ void P_BulletSlope (mobj_t*	mo)
 {
     angle_t	an;
     
-    if (critical->freeaim == FREEAIM_DIRECT)
+    if (critical->freeaim == FREEAIM_DIRECT ||
+       (critical->freeaim == FREEAIM_AUTO_MOD_DIRECT && mousebuttons[mousebvertaimmod]) || // [So Doom] introduced a mouse button changing autoaim to direct and vice versa
+       (critical->freeaim == FREEAIM_DIRECT_MOD_AUTO && !mousebuttons[mousebvertaimmod]) ) // while held in case of respective freeaim setting values
     {
 	bulletslope = PLAYER_SLOPE(mo->player);
     }
